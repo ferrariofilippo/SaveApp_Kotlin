@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/home"
+        android:contentDescription="@string/content_description_home"
+        android:icon="@drawable/round_home_24"
+        android:title="@string/home"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/history"
+        android:contentDescription="@string/content_description_history"
+        android:icon="@drawable/round_history_24"
+        android:title="@string/history"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/budget"
+        android:contentDescription="@string/content_description_budget"
+        android:icon="@drawable/round_credit_card_24"
+        android:title="@string/budget"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/stats"
+        android:contentDescription="@string/content_description_stats"
+        android:icon="@drawable/round_query_stats_24"
+        android:title="@string/stats"
+        app:iconTint="?attr/colorOnPrimary"
+        app:showAsAction="always" />
+
+</menu>

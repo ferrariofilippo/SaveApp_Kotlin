@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_50">#F7E4fE</color>
+    <color name="purple_100">#EABAFC</color>
+    <color name="purple_200">#DC8AFC</color>
+    <color name="purple_300">#CD52FC</color>
+    <color name="purple_400">#C000FB</color>
+    <color name="purple_500">#B300F9</color>
+    <color name="purple_600">#9F00F4</color>
+    <color name="purple_700">#8100EF</color>
+    <color name="purple_800">#6400EC</color>
+    <color name="purple_900">#0000E1</color>
+
+    <color name="yellow_50">#FEF8E1</color>
+    <color name="yellow_100">#FDECB3</color>
+    <color name="yellow_200">#FDE081</color>
+    <color name="yellow_300">#FCD54E</color>
+    <color name="yellow_400">#FBCA26</color>
+    <color name="yellow_500">#FBC000</color>
+    <color name="yellow_600">#FBB300</color>
+    <color name="yellow_700">#FBA000</color>
+    <color name="yellow_800">#FB8F00</color>
+    <color name="yellow_900">#FC6F00</color>
+
+    <color name="lime_50">#ECFFE5</color>
+    <color name="lime_100">#CEFFBD</color>
+    <color name="lime_200">#A9FF90</color>
+    <color name="lime_300">#78FE57</color>
+    <color name="lime_400">#3BFb00</color>
+    <color name="lime_500">#00F800</color>
+    <color name="lime_600">#00E500</color>
+    <color name="lime_700">#00D000</color>
+    <color name="lime_800">#00BB00</color>
+    <color name="lime_900">#009500</color>
+
+    <color name="blue_50">#EfE5FF</color>
+    <color name="blue_100">#D4C0FF</color>
+    <color name="blue_200">#B795FF</color>
+    <color name="blue_300">#9667FF</color>
+    <color name="blue_400">#7941FF</color>
+    <color name="blue_500">#5405FF</color>
+    <color name="blue_600">#4300FB</color>
+    <color name="blue_700">#1F00F3</color>
+    <color name="blue_800">#0000EF</color>
+    <color name="blue_900">#0000EC</color>
+
+    <color name="red_50">#FFEBF0</color>
+    <color name="red_100">#FFCCD6</color>
+    <color name="red_200">#FA969F</color>
+    <color name="red_300">#F56A79</color>
+    <color name="red_400">#FF3F56</color>
+    <color name="red_500">#FF183B</color>
+    <color name="red_600">#FB003B</color>
+    <color name="red_700">#E90034</color>
+    <color name="red_800">#DC002C</color>
+    <color name="red_900">#CE001E</color>
+
+    <color name="fuchsia_50">#FFE0F2</color>
+    <color name="fuchsia_100">#FFB1E0</color>
+    <color name="fuchsia_200">#FF75CC</color>
+    <color name="fuchsia_300">#FB00B8</color>
+    <color name="fuchsia_400">#F600AA</color>
+    <color name="fuchsia_500">#E70099</color>
+    <color name="fuchsia_600">#D90097</color>
+    <color name="fuchsia_700">#C50094</color>
+    <color name="fuchsia_800">#B30090</color>
+    <color name="fuchsia_900">#93008A</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

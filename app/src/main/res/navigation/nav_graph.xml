@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navgraph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ferrariofilippo.saveapp.view.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/newMovementFragment"
+        android:name="com.ferrariofilippo.saveapp.view.NewMovementFragment"
+        android:label="@string/add_movement" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.ferrariofilippo.saveapp.view.HistoryFragment"
+        android:label="HistoryFragment" />
+    <fragment
+        android:id="@+id/budgetsFragment"
+        android:name="com.ferrariofilippo.saveapp.view.BudgetsFragment"
+        android:label="BudgetsFragment" />
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.ferrariofilippo.saveapp.view.StatsFragment"
+        android:label="StatsFragment" />
+</navigation>
