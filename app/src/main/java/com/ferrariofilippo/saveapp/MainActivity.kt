@@ -7,24 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
-import com.ferrariofilippo.saveapp.util.DataStoreUtil
+import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class MainActivity : AppCompatActivity() {
-    lateinit var dataStore: DataStoreUtil
-
     private var lastFragmentId: Int = R.id.homeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        (application as SaveAppApplication).setCurrentActivity(this)
-        dataStore = DataStoreUtil(this)
+        val saveApp = application as SaveAppApplication
 
-        lifecycleScope.launch { CurrencyUtil.init() }
+        saveApp.setCurrentActivity(this)
+
+        SettingsUtil.init(saveApp)
+        lifecycleScope.launch { CurrencyUtil.init(saveApp) }
 
         setupButtons()
     }

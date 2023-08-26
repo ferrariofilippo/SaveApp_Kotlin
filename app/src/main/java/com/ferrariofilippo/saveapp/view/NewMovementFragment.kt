@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
+import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewMovementViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.time.Instant
@@ -71,9 +72,9 @@ class NewMovementFragment : Fragment() {
         val tagAutoComplete = binding.tagInput.editText as AutoCompleteTextView
         viewModel.tags.observe(viewLifecycleOwner, Observer {
             it?.let {
-                val adapter = ArrayAdapter<Tag>(
+                val adapter = TagsDropdownAdapter(
                     binding.tagInput.context,
-                    androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                    R.layout.tag_dropdown_item,
                     it
                 )
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.BR
 import com.ferrariofilippo.saveapp.MainActivity
+import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Subscription
@@ -19,6 +20,7 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
+import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -33,13 +35,10 @@ class NewMovementViewModel(
     private val movementRepository = saveAppApplication.movementRepository
     private val subscriptionRepository = saveAppApplication.subscriptionRepository
 
-    private val dataStore =
-        ((application as SaveAppApplication).getCurrentActivity() as MainActivity).dataStore
-
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
 
     val baseCurrency: Currencies =
-        runBlocking { Currencies.from(dataStore.getCurrency().first()) }
+        runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
 
     private var _amount: String = ""
     private var _currency: Currencies = baseCurrency
@@ -198,9 +197,9 @@ class NewMovementViewModel(
             val newAmount = updateToDefaultCurrency(amount)
 
             if (_isSubscription)
-                insertMovement(newAmount)
-            else
                 insertSubscription(newAmount)
+            else
+                insertMovement(newAmount)
 
             (saveAppApplication.getCurrentActivity() as MainActivity).goBack()
         } else {
@@ -225,7 +224,7 @@ class NewMovementViewModel(
     }
 
     private fun updateToDefaultCurrency(amount: Double): Double {
-        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.isEmpty())
+        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size)
             return amount;
 
         return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
@@ -256,7 +255,11 @@ class NewMovementViewModel(
             _tag?.id ?: 0,
             _budget?.budgetId ?: 0
         )
-        val movement = SubscriptionUtil.getMovementFromSub(subscription)
+        val movement = SubscriptionUtil.getMovementFromSub(
+            subscription, saveAppApplication.resources.getString(
+                R.string.payment_of
+            )
+        )
 
         subscriptionRepository.insert(subscription)
 

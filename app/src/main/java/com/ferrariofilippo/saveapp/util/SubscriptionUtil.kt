@@ -17,7 +17,7 @@ object SubscriptionUtil {
         }
     }
 
-    fun getMovementFromSub(s: Subscription): Movement? {
+    fun getMovementFromSub(s: Subscription, description: String): Movement? {
         if (s.nextRenewal.isAfter(LocalDate.now()))
             return null;
 
@@ -26,7 +26,7 @@ object SubscriptionUtil {
         return Movement(
             0,
             s.amount,
-            "Payment of: ${s.description} ${s.nextRenewal}",
+            String.format(description, s.description, s.nextRenewal.toString()),
             LocalDate.now(),
             s.tagId,
             s.budgetId

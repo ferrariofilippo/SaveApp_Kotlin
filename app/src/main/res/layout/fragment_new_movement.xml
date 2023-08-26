@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.ferrariofilippo.saveapp.converters.Converters" />
-
         <import type="android.view.View" />
-
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.NewMovementViewModel" />
@@ -113,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/budgetInput"
             android:hint="@string/tag_hint"
-            android:visibility="@{vm.tag == null ? View.VISIBLE : View.GONE}">
+            android:visibility="@{vm.budget == null ? View.VISIBLE : View.GONE}">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
