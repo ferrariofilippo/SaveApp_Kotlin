@@ -1,21 +1,27 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.ferrariofilippo.saveapp.data.repository.MovementRepository
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.SaveAppApplication
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 
-class HistoryViewModel(private val movementRepository: MovementRepository) : ViewModel() {
+class HistoryViewModel(application: Application) : AndroidViewModel(application) {
+    private val saveAppApplication = application as SaveAppApplication
 
-}
+    private val movementRepo = saveAppApplication.movementRepository
 
-sealed class HistoryViewModelFactory(private val movementRepository: MovementRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
-            @Suppress("UNCHECKED CAST")
-            return HistoryViewModel(movementRepository) as  T;
-        }
+    val sortAscending: MutableLiveData<Boolean> = MutableLiveData(false)
 
-        throw IllegalArgumentException("Unknown ViewModel class");
-    }
+    val isSearchHidden: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    val searchBarHint: MutableLiveData<String> =
+        MutableLiveData(application.resources.getString(R.string.searchbar_hint))
+
+    val searchQuery: MutableLiveData<String> = MutableLiveData("")
+
+    val allMovements: LiveData<List<TaggedMovement>> = movementRepo.allTaggedMovements.asLiveData()
 }

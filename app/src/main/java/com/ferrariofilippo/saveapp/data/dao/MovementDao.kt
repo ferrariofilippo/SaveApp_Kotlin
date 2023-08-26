@@ -15,7 +15,7 @@ interface MovementDao {
     @Query(
         "SELECT m.id, m.amount, m.description, m.date, m.tagId, m.budgetId, " +
                 "t.name AS tagName, t.color AS tagColor " +
-                "FROM movements AS m JOIN tags as t ON m.tagId = t.id"
+                "FROM movements AS m JOIN tags as t ON m.tagId = t.id ORDER BY m.date DESC"
     )
     fun getAllTagged(): Flow<List<TaggedMovement>>
 

@@ -9,6 +9,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.entities.Tag
 
@@ -42,7 +43,7 @@ class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Ar
             val tag = getItem(position)
             if (tag != null) {
                 viewHolder.name.text = tag.name
-                viewHolder.pill.setColorFilter(tag.color)
+                viewHolder.pill.setColorFilter(ContextCompat.getColor(context, tag.color))
             }
         }
 

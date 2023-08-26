@@ -11,7 +11,7 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="100dp"
+        android:paddingBottom="80dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="?attr/colorPrimary"
         app:menu="@menu/bottom_app_bar" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -31,7 +30,6 @@
         android:contentDescription="@string/add_movement"
         android:text="@string/movement"
         app:icon="@drawable/round_add_24"
-        app:layout_anchor="@id/bottomAppBar"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.FloatingActionButton" />
+        app:layout_anchor="@id/bottomAppBar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

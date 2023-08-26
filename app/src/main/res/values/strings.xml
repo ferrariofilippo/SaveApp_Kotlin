@@ -51,4 +51,8 @@
     <string name="amount_error">Amount is not valid</string>
     <string name="description_error">Description is empty</string>
     <string name="payment_of">Payment of %s %s</string>
+    <string name="change_sorting">Change sorting order</string>
+    <string name="shopping_cart">Shopping cart</string>
+    <string name="vertical_arrow">Vertical arrow</string>
+    <string name="history_clock">History clock</string>
 </resources>

@@ -27,9 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
-class NewMovementViewModel(
-    application: Application
-) : AndroidViewModel(application), Observable {
+class NewMovementViewModel(application: Application) : AndroidViewModel(application), Observable {
     private val saveAppApplication = application as SaveAppApplication
 
     private val movementRepository = saveAppApplication.movementRepository

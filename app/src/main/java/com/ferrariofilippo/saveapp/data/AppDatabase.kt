@@ -46,40 +46,40 @@ abstract class AppDatabase : RoomDatabase() {
             dao.deleteAll();
 
             dao.insert(
-                Tag(0, cxt.getString(R.string.bets), ContextCompat.getColor(cxt, R.color.yellow_200))
+                Tag(0, cxt.getString(R.string.bets), R.color.purple_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.clothes), ContextCompat.getColor(cxt, R.color.lime_200))
+                Tag(0, cxt.getString(R.string.clothes), R.color.emerald_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.culture), ContextCompat.getColor(cxt, R.color.red_200))
+                Tag(0, cxt.getString(R.string.culture), R.color.red_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.entertainment), ContextCompat.getColor(cxt, R.color.fuchsia_200))
+                Tag(0, cxt.getString(R.string.entertainment), R.color.green_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.food), ContextCompat.getColor(cxt, R.color.blue_200))
+                Tag(0, cxt.getString(R.string.food), R.color.cyan_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.gifts), ContextCompat.getColor(cxt, R.color.purple_200))
+                Tag(0, cxt.getString(R.string.gifts), R.color.blue_200)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.holidays), ContextCompat.getColor(cxt, R.color.yellow_800))
+                Tag(0, cxt.getString(R.string.holidays), R.color.purple_800)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.personal_care), ContextCompat.getColor(cxt, R.color.lime_800))
+                Tag(0, cxt.getString(R.string.personal_care), R.color.emerald_800)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.others), ContextCompat.getColor(cxt, R.color.red_800))
+                Tag(0, cxt.getString(R.string.others), R.color.red_800)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.sport), ContextCompat.getColor(cxt, R.color.fuchsia_800))
+                Tag(0, cxt.getString(R.string.sport), R.color.green_800)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.tech), ContextCompat.getColor(cxt, R.color.blue_800))
+                Tag(0, cxt.getString(R.string.tech), R.color.cyan_800)
             );
             dao.insert(
-                Tag(0, cxt.getString(R.string.transports), ContextCompat.getColor(cxt, R.color.purple_800))
+                Tag(0, cxt.getString(R.string.transports), R.color.blue_800)
             );
         }
     }

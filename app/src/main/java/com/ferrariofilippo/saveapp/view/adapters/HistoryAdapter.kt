@@ -4,15 +4,16 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.google.android.material.button.MaterialButton
 
-class HistoryAdapter :
+class HistoryAdapter(private val currency: Currencies) :
     ListAdapter<TaggedMovement, HistoryAdapter.MovementViewHolder>(MovementsComparator()) {
 
     override fun onBindViewHolder(holder: MovementViewHolder, position: Int) {
@@ -20,32 +21,35 @@ class HistoryAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovementViewHolder {
-        return MovementViewHolder(parent);
+        return MovementViewHolder.create(parent, currency);
     }
 
-    class MovementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val amountItemView = itemView.findViewById<TextView>(R.id.movementAmount);
-        private val descriptionItemView = itemView.findViewById<TextView>(R.id.movementDescription);
-        private val dateItemView = itemView.findViewById<TextView>(R.id.movementDate);
-        private val tagButtonItemView = itemView.findViewById<Button>(R.id.movementTagButton);
+    class MovementViewHolder(itemView: View, private val currency: Currencies) :
+        RecyclerView.ViewHolder(itemView) {
+        private val amountItemView = itemView.findViewById<TextView>(R.id.movementAmount)
+        private val descriptionItemView = itemView.findViewById<TextView>(R.id.movementDescription)
+        private val dateItemView = itemView.findViewById<TextView>(R.id.movementDate)
+        private val tagButtonItemView =
+            itemView.findViewById<MaterialButton>(R.id.movementTagButton)
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedMovement) {
-            amountItemView.text = "${"Currency"} ${item.amount}";
-            descriptionItemView.text = item.description;
-            dateItemView.text = item.date.toString();
-            tagButtonItemView.text = item.tagName;
-            tagButtonItemView.setTextColor(item.tagColor);
+            amountItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.amount)}"
+            descriptionItemView.text = item.description
+            dateItemView.text = item.date.toString()
+            tagButtonItemView.text = item.tagName
+            tagButtonItemView.setIconTintResource(item.tagColor)
+            tagButtonItemView.setStrokeColorResource(item.tagColor)
         }
 
         companion object {
-            fun create(parent: ViewGroup): MovementViewHolder {
+            fun create(parent: ViewGroup, currency: Currencies): MovementViewHolder {
                 val view: View =
                     LayoutInflater
                         .from(parent.context)
-                        .inflate(R.layout.movement_item, parent, false);
+                        .inflate(R.layout.movement_item, parent, false)
 
-                return MovementViewHolder(view);
+                return MovementViewHolder(view, currency)
             }
         }
     }

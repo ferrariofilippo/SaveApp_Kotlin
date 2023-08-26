@@ -15,10 +15,43 @@
         android:layout_height="match_parent"
         android:padding="20dp">
 
+        <RelativeLayout
+            android:id="@+id/add_movement_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/add_movement_icon"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/shopping_cart"
+                app:srcCompat="@drawable/baseline_add_shopping_cart_24"
+                app:tint="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/add_movement_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/add_movement_icon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/add_movement"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimaryDark" />
+
+        </RelativeLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/amountInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/add_movement_header"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@id/currencyInput"
             android:hint="@string/amount_hint"
@@ -41,6 +74,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/add_movement_header"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="12dp">
 
@@ -149,7 +183,7 @@
 
         <Button
             android:id="@+id/cancelButton"
-            style="@style/Widget.Material3.Button.TonalButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/renewalInput"
@@ -158,6 +192,7 @@
 
         <Button
             android:id="@+id/saveButton"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/renewalInput"

@@ -11,40 +11,45 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/movementTagButton"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <TextView
         android:id="@+id/movementDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/movementAmount"
-        android:textSize="20sp" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/movementTagButton"
+        android:textAppearance="?attr/textAppearanceCaption" />
 
     <TextView
         android:id="@+id/movementDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/movementDate"
+        android:layout_toStartOf="@id/movementTagButton"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="20sp" />
+        android:textAppearance="?attr/textAppearanceBodyMedium" />
 
     <Button
         android:id="@+id/movementTagButton"
-        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginVertical="14dp"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="12sp"
         app:icon="@drawable/round_circle_16" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:foreground="?attr/colorPrimary"
         android:layout_height="wrap_content"
-        android:layout_below="@id/movementDescription" />
+        android:layout_below="@id/movementDescription"
+        android:layout_marginTop="8dp"
+        android:foreground="?attr/colorPrimary" />
 
 </RelativeLayout>
