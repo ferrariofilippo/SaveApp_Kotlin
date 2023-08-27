@@ -8,7 +8,14 @@
         android:id="@+id/homeFragment"
         android:name="com.ferrariofilippo.saveapp.view.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_subscriptionsFragment"
+            app:destination="@id/subscriptionsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/newMovementFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewMovementFragment"
@@ -25,4 +32,12 @@
         android:id="@+id/statsFragment"
         android:name="com.ferrariofilippo.saveapp.view.StatsFragment"
         android:label="StatsFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ferrariofilippo.saveapp.view.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/subscriptionsFragment"
+        android:name="com.ferrariofilippo.saveapp.view.SubscriptionsFragment"
+        android:label="SubscriptionsFragment" />
 </navigation>

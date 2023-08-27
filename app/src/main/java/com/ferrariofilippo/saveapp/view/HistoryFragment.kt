@@ -32,7 +32,7 @@ class HistoryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHistoryBinding
             .inflate(inflater, container, false)
             .apply {

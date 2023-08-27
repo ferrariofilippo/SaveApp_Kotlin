@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         SettingsUtil.init(saveApp)
         lifecycleScope.launch { CurrencyUtil.init(saveApp) }
+        lifecycleScope.launch { StatsUtil.init(saveApp) }
 
         setupButtons()
     }
@@ -44,6 +46,14 @@ class MainActivity : AppCompatActivity() {
             R.id.statsFragment ->
                 findNavController(R.id.containerView).navigate(R.id.statsFragment)
         }
+    }
+
+    fun goToSettings() {
+        findNavController(R.id.containerView).navigate(R.id.settingsFragment)
+    }
+
+    fun goToSubscriptions() {
+        findNavController(R.id.containerView).navigate(R.id.subscriptionsFragment)
     }
 
     private fun setupButtons() {

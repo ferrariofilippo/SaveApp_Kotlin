@@ -46,6 +46,9 @@ abstract class AppDatabase : RoomDatabase() {
             dao.deleteAll();
 
             dao.insert(
+                Tag(0, cxt.getString(R.string.income), R.color.emerald_500)
+            )
+            dao.insert(
                 Tag(0, cxt.getString(R.string.bets), R.color.purple_200)
             );
             dao.insert(
