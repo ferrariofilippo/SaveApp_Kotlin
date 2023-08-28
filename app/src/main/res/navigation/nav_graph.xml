@@ -27,7 +27,11 @@
     <fragment
         android:id="@+id/budgetsFragment"
         android:name="com.ferrariofilippo.saveapp.view.BudgetsFragment"
-        android:label="BudgetsFragment" />
+        android:label="BudgetsFragment" >
+        <action
+            android:id="@+id/action_budgetsFragment_to_newBudgetFragment"
+            app:destination="@id/newBudgetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.ferrariofilippo.saveapp.view.StatsFragment"
@@ -40,4 +44,8 @@
         android:id="@+id/subscriptionsFragment"
         android:name="com.ferrariofilippo.saveapp.view.SubscriptionsFragment"
         android:label="SubscriptionsFragment" />
+    <fragment
+        android:id="@+id/newBudgetFragment"
+        android:name="com.ferrariofilippo.saveapp.view.NewBudgetFragment"
+        android:label="NewBudgetFragment" />
 </navigation>

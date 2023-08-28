@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_subscriptionsFragment)
     }
 
+    fun goToNewBudget() {
+        findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newBudgetFragment)
+    }
+
     private fun setupButtons() {
         val addMovementButton: Button = findViewById(R.id.addMovementFAB)
         addMovementButton.setOnClickListener {

@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="vm"
+            type="com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <RelativeLayout
+                android:id="@+id/activeBudgetsTitleBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="?attr/textAppearanceHeadline5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/addBudgetButton"
+                    android:text="@string/active_budgets"
+                    android:textColor="?attr/colorPrimaryVariant" />
+
+                <Button
+                    android:id="@+id/addBudgetButton"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/budget"
+                    app:icon="@drawable/round_add_24" />
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activeBudgetsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activeBudgetsTitleBar"
+                tools:listitem="@layout/budget_item" />
+
+            <RelativeLayout
+                android:id="@+id/pastBudgetsTitleBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activeBudgetsRecyclerView"
+                android:layout_marginTop="24dp">
+
+                <TextView
+                    style="?attr/textAppearanceHeadline5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/pastBudgetsCollapseButton"
+                    android:text="@string/past_budgets"
+                    android:textColor="?attr/colorPrimaryVariant" />
+
+                <Button
+                    android:id="@+id/pastBudgetsCollapseButton"
+                    style="?attr/materialIconButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    app:collapsibleIcon="@{vm.pastSectionCollapsed}"
+                    app:strokeWidth="0dp" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pastBudgetsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pastBudgetsTitleBar"
+                android:visibility="@{vm.pastSectionCollapsed ? View.GONE : View.VISIBLE}"
+                app:layout_anchorGravity="start|center"
+                tools:listitem="@layout/budget_item" />
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>

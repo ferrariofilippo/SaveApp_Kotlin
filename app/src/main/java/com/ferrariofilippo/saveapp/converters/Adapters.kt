@@ -17,6 +17,16 @@ fun View.setDynamicIcon(value: Boolean) {
     }
 }
 
+@BindingAdapter("collapsibleIcon")
+fun View.setCollapsibleIcon(isCollapsed: Boolean) {
+    isCollapsed.let {
+        (this as MaterialButton).setIconResource(
+            if (isCollapsed) R.drawable.baseline_keyboard_arrow_down_24
+            else R.drawable.baseline_keyboard_arrow_up_24
+        )
+    }
+}
+
 @BindingAdapter("dynamicTint")
 fun View.setDynamicTint(value: Int?) {
     value.let {
