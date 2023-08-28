@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.databinding.FragmentHomeBinding
 import com.ferrariofilippo.saveapp.view.viewmodels.HomeViewModel
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
@@ -39,7 +37,6 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        //lifecycleScope.launch { viewModel.init(viewLifecycleOwner) }
     }
 
     override fun onDestroyView() {

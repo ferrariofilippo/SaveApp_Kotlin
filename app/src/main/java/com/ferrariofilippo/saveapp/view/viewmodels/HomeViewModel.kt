@@ -1,11 +1,11 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
+import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
+import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
@@ -13,119 +13,137 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
-class HomeViewModel(private val application: SaveAppApplication) : AndroidViewModel(application) {
-    private val tagRepository: TagRepository = application.tagRepository
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
+    private val saveAppApplication = application as SaveAppApplication
 
-    private val months: Array<LiveData<Double>>
-    private val years: Array<LiveData<Double>>
-    private val life: Array<LiveData<Double>>
+    private val tagRepository: TagRepository = saveAppApplication.tagRepository
 
-    val symbol: String =
-        runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }.toSymbol()
+    private val months: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.monthKeys)
+    private val years: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.yearKeys)
+    private val life: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.lifeKeys)
 
-    val currentMonth: LiveData<String> = MutableLiveData(getMonth())
-    val monthSummary: MutableLiveData<Double> = MutableLiveData(0.0)
-    val monthExpenses: LiveData<Double>
-    val monthIncomes: LiveData<Double>
-    val monthHighestTag: MutableLiveData<Tag?> = MutableLiveData(Tag(0, "", R.color.emerald_500))
-    val monthHighestTagValue: MutableLiveData<Double> = MutableLiveData(0.0)
+    private val defaultTag: Tag = Tag(0, "", R.color.emerald_500)
 
+    private val _symbol = MutableLiveData(Currencies.EUR.toSymbol())
+    val symbol: LiveData<String> = _symbol
+
+    val zero = 0.0
+
+    // Month data
+    val currentMonth: LiveData<String> = MutableLiveData(setMonth())
+
+    private val _monthSummary = MutableLiveData(0.0)
+    val monthSummary: LiveData<Double> = _monthSummary
+
+    val monthExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.monthExpensesKey)
+    val monthIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.monthIncomesKey)
+
+    private val _monthHighestTag = MutableLiveData(defaultTag)
+    val monthHighestTag: LiveData<Tag?> = _monthHighestTag
+
+    private val _monthHighestTagValue = MutableLiveData(0.0)
+    val monthHighestTagValue: LiveData<Double> = _monthHighestTagValue
+
+    // Year data
     val currentYear: LiveData<String> = MutableLiveData(LocalDate.now().year.toString())
-    val yearSummary: MutableLiveData<Double> = MutableLiveData(0.0)
-    val yearExpenses: LiveData<Double>
-    val yearIncomes: LiveData<Double>
-    val yearHighestTag: MutableLiveData<Tag?> = MutableLiveData(Tag(0, "", R.color.emerald_500))
-    val yearHighestTagValue: MutableLiveData<Double> = MutableLiveData(0.0)
 
-    val lifeNetWorth: MutableLiveData<Double> = MutableLiveData(0.0)
-    val lifeExpenses: LiveData<Double>
-    val lifeIncomes: LiveData<Double>
-    val lifeHighestTag: MutableLiveData<Tag?> = MutableLiveData(Tag(0, "", R.color.emerald_500))
-    val lifeHighestTagValue: MutableLiveData<Double> = MutableLiveData(0.0)
+    private val _yearSummary = MutableLiveData(0.0)
+    val yearSummary: MutableLiveData<Double> = _yearSummary
+
+    val yearExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.yearExpensesKey)
+    val yearIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.yearIncomesKey)
+
+    private val _yearHighestTag = MutableLiveData(defaultTag)
+    val yearHighestTag: MutableLiveData<Tag?> = _yearHighestTag
+
+    private val _yearHighestTagValue = MutableLiveData(0.0)
+    val yearHighestTagValue: MutableLiveData<Double> = _yearHighestTagValue
+
+    // Life data
+    private val _lifeNetWorth = MutableLiveData(0.0)
+    val lifeNetWorth: MutableLiveData<Double> = _lifeNetWorth
+
+    val lifeExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.lifeExpensesKey)
+    val lifeIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.lifeIncomesKey)
+
+    private val _lifeHighestTag = MutableLiveData(defaultTag)
+    val lifeHighestTag: MutableLiveData<Tag?> = _lifeHighestTag
+
+    private val _lifeHighestTagValue = MutableLiveData(0.0)
+    val lifeHighestTagValue: MutableLiveData<Double> = _lifeHighestTagValue
 
     init {
-        months = StatsUtil.getMonthStats()
-        years = StatsUtil.getYearStats()
-        life = StatsUtil.getLifeStats()
+        viewModelScope.launch {
+            _symbol.value = Currencies.from(SettingsUtil.getCurrency().value ?: 0).toSymbol()
+        }
 
-        monthExpenses = months[0]
-        monthIncomes = months[1]
-
-        yearExpenses = years[0]
-        yearIncomes = years[1]
-
-        lifeExpenses = life[0]
-        lifeIncomes = life[1]
-    }
-
-    suspend fun init(owner: LifecycleOwner) {
-        monthExpenses.observe(owner, Observer {
-            val income = months[1].value ?: 0.0
-            monthSummary.value = income.minus(it)
+        monthExpenses.observeForever(Observer {
+            val income = monthIncomes.value ?: 0.0
+            _monthSummary.value = income.minus(it)
         })
-        monthIncomes.observe(owner, Observer {
-            monthSummary.value = it.minus(months[0].value ?: 0.0)
+        monthIncomes.observeForever(Observer {
+            _monthSummary.value = it.minus(monthExpenses.value ?: 0.0)
         })
         for (i: Int in 2 until months.size) {
-            months[i].observe(owner, Observer {
-                if (it > monthHighestTagValue.value!!) {
-                    monthHighestTagValue.value = it
-                    monthHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
+            months[i].observeForever(Observer {
+                if (it > _monthHighestTagValue.value!!) {
+                    _monthHighestTagValue.value = it
+                    _monthHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
                 }
             })
         }
 
-        years[0].observe(owner, Observer {
-            val income = years[1].value ?: 0.0
-            yearSummary.value = income.minus(it)
+        yearExpenses.observeForever(Observer {
+            val income = yearIncomes.value ?: 0.0
+            _yearSummary.value = income.minus(it)
         })
-        years[1].observe(owner, Observer {
-            yearSummary.value = it.minus(years[0].value ?: 0.0)
+        yearIncomes.observeForever(Observer {
+            _yearSummary.value = it.minus(yearExpenses.value ?: 0.0)
         })
         for (i: Int in 2 until years.size) {
-            years[i].observe(owner, Observer {
-                if (it > yearHighestTagValue.value!!) {
-                    yearHighestTagValue.value = it
-                    yearHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
+            years[i].observeForever(Observer {
+                if (it > _yearHighestTagValue.value!!) {
+                    _yearHighestTagValue.value = it
+                    _yearHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
                 }
             })
         }
 
-        life[0].observe(owner, Observer {
-            val income = life[1].value ?: 0.0
-            lifeNetWorth.value = income.minus(it)
+        lifeExpenses.observeForever(Observer {
+            val income = lifeIncomes.value ?: 0.0
+            _lifeNetWorth.value = income.minus(it)
         })
-        life[1].observe(owner, Observer {
-            lifeNetWorth.value = it.minus(life[0].value ?: 0.0)
+        lifeIncomes.observeForever(Observer {
+            lifeNetWorth.value = it.minus(lifeExpenses.value ?: 0.0)
         })
         for (i: Int in 2 until life.size) {
-            life[i].observe(owner, Observer {
+            life[i].observeForever(Observer {
                 if (it > lifeHighestTagValue.value!!) {
-                    lifeHighestTagValue.value = it
-                    lifeHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
+                    _lifeHighestTagValue.value = it
+                    _lifeHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
                 }
             })
         }
     }
 
-    private fun getMonth(): String {
+    private fun setMonth(): String {
         return when (LocalDate.now().monthValue) {
-            1 -> application.getString(R.string.january)
-            2 -> application.getString(R.string.february)
-            3 -> application.getString(R.string.march)
-            4 -> application.getString(R.string.april)
-            5 -> application.getString(R.string.may)
-            6 -> application.getString(R.string.june)
-            7 -> application.getString(R.string.july)
-            8 -> application.getString(R.string.august)
-            9 -> application.getString(R.string.september)
-            10 -> application.getString(R.string.october)
-            11 -> application.getString(R.string.november)
-            else -> application.getString(R.string.december)
+            1 -> saveAppApplication.getString(R.string.january)
+            2 -> saveAppApplication.getString(R.string.february)
+            3 -> saveAppApplication.getString(R.string.march)
+            4 -> saveAppApplication.getString(R.string.april)
+            5 -> saveAppApplication.getString(R.string.may)
+            6 -> saveAppApplication.getString(R.string.june)
+            7 -> saveAppApplication.getString(R.string.july)
+            8 -> saveAppApplication.getString(R.string.august)
+            9 -> saveAppApplication.getString(R.string.september)
+            10 -> saveAppApplication.getString(R.string.october)
+            11 -> saveAppApplication.getString(R.string.november)
+            else -> saveAppApplication.getString(R.string.december)
         }
     }
 }

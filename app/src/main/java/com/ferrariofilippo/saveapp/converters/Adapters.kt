@@ -18,8 +18,13 @@ fun View.setDynamicIcon(value: Boolean) {
 }
 
 @BindingAdapter("dynamicTint")
-fun View.setDynamicTint(value: Int) {
+fun View.setDynamicTint(value: Int?) {
     value.let {
-        (this as ImageView).setColorFilter(ContextCompat.getColor(context, value))
+        (this as ImageView).setColorFilter(
+            ContextCompat.getColor(
+                context,
+                if (value == null || value == 0) R.color.emerald_500 else value
+            )
+        )
     }
 }

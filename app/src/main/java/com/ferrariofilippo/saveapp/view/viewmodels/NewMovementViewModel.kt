@@ -36,7 +36,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
 
     val baseCurrency: Currencies =
-        runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
+        runBlocking { Currencies.from(SettingsUtil.getCurrency().value ?: 0) }
 
     private var _amount: String = ""
     private var _currency: Currencies = baseCurrency

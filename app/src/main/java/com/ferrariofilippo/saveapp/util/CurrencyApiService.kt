@@ -47,12 +47,15 @@ object CurrencyUtil {
 
     var rates: Array<Double> = arrayOf()
 
-    suspend fun init(application: SaveAppApplication) {
+    fun setStore(application: SaveAppApplication) {
+        ratesStore = application.ratesStore
+    }
+
+    suspend fun init() {
         keys = Currencies.values().map {
             doublePreferencesKey(it.name)
         }.toTypedArray()
 
-        ratesStore = application.ratesStore
         val oldDate = getDate()
 
         if (oldDate == null || oldDate.isBefore(LocalDate.now())) {

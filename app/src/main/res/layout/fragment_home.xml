@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.HomeViewModel" />
@@ -75,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="4dp"
-                        android:text='@{String.format("%s %.2f", vm.symbol, vm.monthSummary)}'
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.monthSummary ?? vm.zero)}'
                         android:textAppearance="?attr/textAppearanceHeadline4" />
 
                     <com.google.android.material.divider.MaterialDivider
@@ -105,7 +104,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.monthExpenses)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.monthExpenses ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
 
@@ -124,7 +123,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.monthIncomes)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.monthIncomes ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
                     </LinearLayout>
@@ -163,7 +162,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text='@{String.format("%s %.2f", vm.symbol, vm.monthHighestTagValue)}'
+                            android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.monthHighestTagValue ?? vm.zero)}'
                             android:textAppearance="?attr/textAppearanceHeadline6" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -215,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="4dp"
-                        android:text='@{String.format("%s %.2f", vm.symbol, vm.yearSummary)}'
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.yearSummary ?? vm.zero)}'
                         android:textAppearance="?attr/textAppearanceHeadline4" />
 
                     <com.google.android.material.divider.MaterialDivider
@@ -245,7 +244,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.yearExpenses)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.yearExpenses ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
 
@@ -264,7 +263,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.yearIncomes)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.yearIncomes ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
                     </LinearLayout>
@@ -303,7 +302,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text='@{String.format("%s %.2f", vm.symbol, vm.yearHighestTagValue)}'
+                            android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.yearHighestTagValue ?? vm.zero)}'
                             android:textAppearance="?attr/textAppearanceHeadline6" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -355,7 +354,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="4dp"
-                        android:text='@{String.format("%s %.2f", vm.symbol, vm.lifeNetWorth)}'
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lifeNetWorth ?? vm.zero)}'
                         android:textAppearance="?attr/textAppearanceHeadline4" />
 
                     <com.google.android.material.divider.MaterialDivider
@@ -385,7 +384,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.lifeExpenses)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lifeExpenses ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
 
@@ -404,7 +403,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text='@{String.format("%s %.2f", vm.symbol, vm.lifeIncomes)}'
+                                android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lifeIncomes ?? vm.zero)}'
                                 android:textAppearance="?attr/textAppearanceHeadline6" />
                         </LinearLayout>
                     </LinearLayout>
@@ -443,7 +442,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text='@{String.format("%s %.2f", vm.symbol, vm.lifeHighestTagValue)}'
+                            android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lifeHighestTagValue ?? vm.zero)}'
                             android:textAppearance="?attr/textAppearanceHeadline6" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>

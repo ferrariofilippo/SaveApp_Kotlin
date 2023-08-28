@@ -16,23 +16,22 @@ class MainActivity : AppCompatActivity() {
     private var lastFragmentId: Int = R.id.homeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val saveApp = application as SaveAppApplication
+        SettingsUtil.setStore(saveApp)
+        CurrencyUtil.setStore(saveApp)
+        StatsUtil.init(saveApp)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val saveApp = application as SaveAppApplication
-
         saveApp.setCurrentActivity(this)
 
-        SettingsUtil.init(saveApp)
-        lifecycleScope.launch { CurrencyUtil.init(saveApp) }
-        lifecycleScope.launch { StatsUtil.init(saveApp) }
+        lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()
     }
 
     fun goBack() {
-        lastFragmentId ?: return
-
         when (lastFragmentId) {
             R.id.homeFragment ->
                 findNavController(R.id.containerView).navigate(R.id.homeFragment)
@@ -49,11 +48,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToSettings() {
-        findNavController(R.id.containerView).navigate(R.id.settingsFragment)
+        findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_settingsFragment)
     }
 
     fun goToSubscriptions() {
-        findNavController(R.id.containerView).navigate(R.id.subscriptionsFragment)
+        findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_subscriptionsFragment)
     }
 
     private fun setupButtons() {
