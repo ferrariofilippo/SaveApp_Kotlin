@@ -1,15 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.ferrariofilippo.saveapp.converters.Converters" />
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.NewBudgetViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:id="@+id/add_budget_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/add_budget_icon"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/wallet"
+                app:srcCompat="@drawable/baseline_wallet_48"
+                app:tint="?attr/colorPrimaryVariant" />
+
+            <TextView
+                android:id="@+id/add_budget_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/add_budget_icon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/add_budget"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimaryVariant" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/budgetAmountInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_budget_header"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/budgetCurrencyInput"
+            android:hint="@string/amount_hint"
+            app:counterEnabled="true"
+            app:counterMaxLength="12"
+            app:endIconMode="clear_text"
+            app:prefixText="@{vm.currency.toSymbol()}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:text="@={vm.amount}"
+                android:textAlignment="textEnd" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/budgetCurrencyInput"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_budget_header"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/budgetNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/budgetAmountInput"
+            android:layout_marginVertical="12dp"
+            android:hint="@string/name_hint"
+            app:counterEnabled="true"
+            app:counterMaxLength="64"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:text="@={vm.name}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/budgetTagInput"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/budgetNameInput"
+            android:hint="@string/tag_hint">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fromDateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/budgetTagInput"
+            android:layout_marginVertical="12dp"
+            android:hint="@string/from_date_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fromDateEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@{Converters.dateToString(vm.fromDate)}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/toDateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fromDateInput"
+            android:layout_marginBottom="12dp"
+            android:hint="@string/to_date_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/toDateEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@{Converters.dateToString(vm.toDate)}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/budgetCancelButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toDateInput"
+            android:layout_toStartOf="@id/budgetSaveButton"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/budgetSaveButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toDateInput"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:text="@string/save" />
+    </RelativeLayout>
 </layout>

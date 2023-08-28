@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp">
+        android:padding="16dp">
 
         <RelativeLayout
             android:id="@+id/add_movement_header"
@@ -30,7 +30,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/shopping_cart"
                 app:srcCompat="@drawable/baseline_add_shopping_cart_24"
-                app:tint="?attr/colorPrimary" />
+                app:tint="?attr/colorPrimaryVariant" />
 
             <TextView
                 android:id="@+id/add_movement_title"
@@ -43,7 +43,7 @@
                 android:maxLines="1"
                 android:text="@string/add_movement"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimaryDark" />
+                android:textColor="?attr/colorPrimaryVariant" />
 
         </RelativeLayout>
 

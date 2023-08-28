@@ -1,7 +1,6 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
-import android.util.Log
 import android.view.View
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
@@ -207,7 +206,6 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun amountOnFocusChange(v: View, hasFocus: Boolean) {
-        Log.i("Amount", "Unfocused")
         if (!hasFocus) {
             val amount = _amount.replace(",", ".").toDoubleOrNull()
             setAmount(

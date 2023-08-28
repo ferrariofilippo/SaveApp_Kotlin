@@ -80,6 +80,12 @@
     <string name="to_display">To: %s</string>
     <string name="active_budgets">Active budgets</string>
     <string name="past_budgets">Past budgets</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_hint">Name</string>
+    <string name="from_date_hint">From date</string>
+    <string name="to_date_hint">To date</string>
+    <string name="add_budget">Add budget</string>
+    <string name="wallet">Wallet</string>
+    <string name="name_error">Name is empty</string>
+    <string name="initial_date">Initial date</string>
+    <string name="ending_date">Ending date</string>
 </resources>
