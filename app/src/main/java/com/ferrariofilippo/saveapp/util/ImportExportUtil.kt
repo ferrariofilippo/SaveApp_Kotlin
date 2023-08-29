@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.util.Log
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication

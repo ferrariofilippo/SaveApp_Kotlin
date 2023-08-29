@@ -52,7 +52,7 @@ class BudgetsAdapter(
             tagItemView.text = item.tagName
             tagItemView.setIconTintResource(item.tagColor)
             tagItemView.setStrokeColorResource(item.tagColor)
-            progressItemView.progress = (item.used / item.max).toInt()
+            progressItemView.progress = (item.used * 100.0 / item.max).toInt()
             maxItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.max)}"
         }
 

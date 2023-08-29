@@ -113,4 +113,7 @@
     <string name="movements_template">Movements_Template</string>
     <string name="subscriptions_template">Subscriptions_Template</string>
     <string name="budgets_template">Budgets_Template</string>
+    <string name="active_subscriptions">Active subscriptions:</string>
+    <string name="monthly_expense">Monthly expense:</string>
+    <string name="yearly_expense">Yearly expense:</string>
 </resources>

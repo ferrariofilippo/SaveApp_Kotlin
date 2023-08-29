@@ -464,7 +464,7 @@
                 android:layout_below="@id/cards_divider"
                 android:layout_centerHorizontal="true"
                 android:text="@string/subscriptions"
-                app:icon="@drawable/baseline_sync_24" />
+                app:icon="@drawable/baseline_autorenew_24" />
         </RelativeLayout>
     </ScrollView>
 </layout>

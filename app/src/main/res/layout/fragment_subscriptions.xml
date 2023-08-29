@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -7,9 +9,152 @@
             type="com.ferrariofilippo.saveapp.view.viewmodels.SubscriptionsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <RelativeLayout
+                android:id="@+id/subscriptionsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/subscriptions_page_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/subscriptions"
+                    app:srcCompat="@drawable/baseline_autorenew_48"
+                    app:tint="?attr/colorPrimaryVariant" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/subscriptions_page_icon"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/subscriptions"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                    android:textColor="?attr/colorPrimaryVariant" />
+            </RelativeLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/subscriptionsSummaryCard"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subscriptionsHeader"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:id="@+id/subscriptionsSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/summary"
+                        android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                    <TextView
+                        android:id="@+id/activeSubscriptionsLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/subscriptionsSummary"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginVertical="4dp"
+                        android:layout_toStartOf="@id/activeSubscriptionsCount"
+                        android:text="@string/active_subscriptions"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/activeSubscriptionsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/subscriptionsSummary"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginVertical="4dp"
+                        android:text="@{String.valueOf(vm.activeSubscriptionsCount)}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <TextView
+                        android:id="@+id/subscriptionsMonthlyLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activeSubscriptionsLabel"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginVertical="4dp"
+                        android:layout_toStartOf="@id/activeSubscriptionsCount"
+                        android:text="@string/monthly_expense"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/subscriptionsMonthlyCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/activeSubscriptionsCount"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginVertical="4dp"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.monthlyExpense)}'
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <TextView
+                        android:id="@+id/subscriptionsYearlyLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/subscriptionsMonthlyLabel"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginVertical="4dp"
+                        android:layout_toStartOf="@id/activeSubscriptionsCount"
+                        android:text="@string/yearly_expense"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/subscriptionsYearlyCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/subscriptionsMonthlyCount"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginVertical="4dp"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.yearlyExpense)}'
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/subscriptions_page_divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subscriptionsSummaryCard"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/subscriptionsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subscriptions_page_divider"
+                tools:listitem="@layout/subscription_item" />
+        </RelativeLayout>
+    </ScrollView>
+
 </layout>
