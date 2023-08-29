@@ -13,6 +13,7 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -78,7 +79,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            _symbol.value = Currencies.from(SettingsUtil.getCurrency().value ?: 0).toSymbol()
+            _symbol.value = Currencies.from(SettingsUtil.getCurrency().first()).toSymbol()
         }
 
         monthExpenses.observeForever(Observer {

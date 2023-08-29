@@ -15,6 +15,7 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.adapters.BudgetsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
@@ -56,7 +57,7 @@ class BudgetsFragment : Fragment() {
     // Methods
     private fun setupRecyclerViews() {
         val today = LocalDate.now()
-        val currency = Currencies.from(runBlocking { SettingsUtil.getCurrency().value ?: 0})
+        val currency = Currencies.from(runBlocking { SettingsUtil.getCurrency().first() })
         val from = getString(R.string.from_display)
         val to = getString(R.string.to_display)
 

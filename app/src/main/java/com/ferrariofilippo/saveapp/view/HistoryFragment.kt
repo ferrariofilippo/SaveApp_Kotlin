@@ -59,7 +59,7 @@ class HistoryFragment : Fragment() {
     // Methods
     private fun setupRecyclerView() {
         val adapter =
-            HistoryAdapter(Currencies.from(runBlocking { SettingsUtil.getCurrency().value ?: 0 }))
+            HistoryAdapter(Currencies.from(runBlocking { SettingsUtil.getCurrency().first() }))
 
         binding.movementsRecyclerView.adapter = adapter
         binding.movementsRecyclerView.layoutManager = LinearLayoutManager(context)

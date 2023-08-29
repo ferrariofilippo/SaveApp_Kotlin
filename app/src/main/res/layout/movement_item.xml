@@ -40,6 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="?attr/colorOnSurface"
         android:textSize="12sp"
         app:icon="@drawable/round_circle_16" />

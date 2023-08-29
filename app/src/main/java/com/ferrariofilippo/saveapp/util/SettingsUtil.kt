@@ -5,10 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
@@ -27,13 +26,13 @@ object SettingsUtil {
         }
     }
 
-    fun getCurrency(): LiveData<Int> {
+    fun getCurrency(): Flow<Int> {
         return settingsStore!!.data
             .catch {
                 emit(emptyPreferences())
             }
             .map { preferences ->
                 preferences[DEFAULT_CURRENCY] ?: 0
-            }.asLiveData()
+            }
     }
 }

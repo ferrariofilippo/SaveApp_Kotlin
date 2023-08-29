@@ -19,7 +19,7 @@
             android:id="@+id/history_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:paddingHorizontal="16dp">
 
@@ -32,7 +32,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/history_clock"
                 app:srcCompat="@drawable/round_history_24"
-                app:tint="?attr/colorPrimary" />
+                app:tint="?attr/colorPrimaryVariant" />
 
             <TextView
                 android:id="@+id/history_title"
@@ -45,7 +45,7 @@
                 android:maxLines="1"
                 android:text="@string/history"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimaryDark" />
+                android:textColor="?attr/colorPrimaryVariant" />
 
             <Button
                 android:id="@+id/search_button"

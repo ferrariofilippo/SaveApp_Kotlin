@@ -1,5 +1,6 @@
 package com.ferrariofilippo.saveapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
@@ -7,14 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
+import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var lastFragmentId: Int = R.id.homeFragment
 
+    // Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         val saveApp = application as SaveAppApplication
         SettingsUtil.setStore(saveApp)
@@ -31,6 +36,50 @@ class MainActivity : AppCompatActivity() {
         setupButtons()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val saveApp = application as SaveAppApplication
+        when (requestCode) {
+            ImportExportUtil.OPEN_MOVEMENTS_FILE,
+            ImportExportUtil.OPEN_SUBSCRIPTIONS_FILE,
+            ImportExportUtil.OPEN_BUDGETS_FILE -> {
+                if (resultCode == RESULT_OK && data?.data != null) {
+                    ImportExportUtil.import(
+                        requestCode,
+                        contentResolver.openInputStream(data.data!!) as FileInputStream,
+                        saveApp
+                    )
+                }
+            }
+
+            ImportExportUtil.CREATE_MOVEMENTS_FILE,
+            ImportExportUtil.CREATE_SUBSCRIPTIONS_FILE,
+            ImportExportUtil.CREATE_BUDGETS_FILE -> {
+                if (resultCode == RESULT_OK && data?.data != null) {
+                    ImportExportUtil.export(
+                        requestCode,
+                        contentResolver?.openOutputStream(data.data!!) as FileOutputStream,
+                        saveApp
+                    )
+                }
+            }
+
+            ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE,
+            ImportExportUtil.CREATE_SUBSCRIPTIONS_TEMPLATE,
+            ImportExportUtil.CREATE_BUDGETS_TEMPLATE -> {
+                if (resultCode == RESULT_OK && data?.data != null) {
+                    ImportExportUtil.writeTemplate(
+                        requestCode,
+                        contentResolver?.openOutputStream(data.data!!) as FileOutputStream,
+                        saveApp
+                    )
+                }
+            }
+        }
+    }
+
+    // Methods
     fun goBack() {
         when (lastFragmentId) {
             R.id.homeFragment ->
