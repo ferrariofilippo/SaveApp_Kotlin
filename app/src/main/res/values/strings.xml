@@ -116,4 +116,22 @@
     <string name="active_subscriptions">Active subscriptions:</string>
     <string name="monthly_expense">Monthly expense:</string>
     <string name="yearly_expense">Yearly expense:</string>
+    <string name="by_tag">By tag</string>
+    <string name="by_month">By month</string>
+    <string name="by_year">By year</string>
+    <string name="statistics">Statistics</string>
+    <string name="expenses_by_tag">Expenses by tag</string>
+    <string name="expenses_by_month">Expenses by month</string>
+    <string name="january_name">January</string>
+    <string name="february_name">February</string>
+    <string name="march_name">March</string>
+    <string name="april_name">April</string>
+    <string name="may_name">May</string>
+    <string name="june_name">June</string>
+    <string name="july_name">July</string>
+    <string name="august_name">August</string>
+    <string name="september_name">September</string>
+    <string name="october_name">October</string>
+    <string name="november_name">November</string>
+    <string name="december_name">December</string>
 </resources>
