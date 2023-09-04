@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -13,19 +12,24 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        // IDs start from 1. The first tag (ID = 1) is Income and it should be skipped
+        private const val FIRST_TAG_ID = 2
+    }
+
     private val saveAppApplication = application as SaveAppApplication
 
     private val tagRepository: TagRepository = saveAppApplication.tagRepository
 
-    private val months: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.monthKeys)
-    private val years: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.yearKeys)
-    private val life: Array<LiveData<Double>> = StatsUtil.getTagsStats(StatsUtil.lifeKeys)
+    private val months: Array<Flow<Double>> = StatsUtil.getTagsStats(StatsUtil.monthKeys)
+    private val years: Array<Flow<Double>> = StatsUtil.getTagsStats(StatsUtil.yearKeys)
+    private val life: Array<Flow<Double>> = StatsUtil.getTagsStats(StatsUtil.lifeKeys)
 
     private val defaultTag: Tag = Tag(0, "", R.color.emerald_500)
 
@@ -37,11 +41,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     // Month data
     val currentMonth: LiveData<String> = MutableLiveData(setMonth())
 
+    private val monthExpensesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.monthExpensesKey)
+    private val monthIncomesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.monthIncomesKey)
+
     private val _monthSummary = MutableLiveData(0.0)
     val monthSummary: LiveData<Double> = _monthSummary
 
-    val monthExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.monthExpensesKey)
-    val monthIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.monthIncomesKey)
+    private val _monthExpenses = MutableLiveData(0.0)
+    val monthExpenses: LiveData<Double> = _monthExpenses
+
+    private val _monthIncomes = MutableLiveData(0.0)
+    val monthIncomes: LiveData<Double> = _monthIncomes
 
     private val _monthHighestTag = MutableLiveData(defaultTag)
     val monthHighestTag: LiveData<Tag?> = _monthHighestTag
@@ -52,82 +62,116 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     // Year data
     val currentYear: LiveData<String> = MutableLiveData(LocalDate.now().year.toString())
 
+    private val yearExpensesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.yearExpensesKey)
+    private val yearIncomesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.yearIncomesKey)
+
     private val _yearSummary = MutableLiveData(0.0)
     val yearSummary: MutableLiveData<Double> = _yearSummary
 
-    val yearExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.yearExpensesKey)
-    val yearIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.yearIncomesKey)
+    private val _yearExpenses = MutableLiveData(0.0)
+    val yearExpenses: LiveData<Double> = _yearExpenses
+
+    private val _yearIncomes = MutableLiveData(0.0)
+    val yearIncomes: LiveData<Double> = _yearIncomes
 
     private val _yearHighestTag = MutableLiveData(defaultTag)
-    val yearHighestTag: MutableLiveData<Tag?> = _yearHighestTag
+    val yearHighestTag: LiveData<Tag?> = _yearHighestTag
 
     private val _yearHighestTagValue = MutableLiveData(0.0)
-    val yearHighestTagValue: MutableLiveData<Double> = _yearHighestTagValue
+    val yearHighestTagValue: LiveData<Double> = _yearHighestTagValue
 
     // Life data
-    private val _lifeNetWorth = MutableLiveData(0.0)
-    val lifeNetWorth: MutableLiveData<Double> = _lifeNetWorth
+    private val lifeExpensesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.lifeExpensesKey)
+    private val lifeIncomesFlow: Flow<Double> = StatsUtil.getStat(StatsUtil.lifeIncomesKey)
 
-    val lifeExpenses: LiveData<Double> = StatsUtil.getStat(StatsUtil.lifeExpensesKey)
-    val lifeIncomes: LiveData<Double> = StatsUtil.getStat(StatsUtil.lifeIncomesKey)
+    private val _lifeNetWorth = MutableLiveData(0.0)
+    val lifeNetWorth: LiveData<Double> = _lifeNetWorth
+
+    private val _lifeExpenses = MutableLiveData(0.0)
+    val lifeExpenses: LiveData<Double> = _lifeExpenses
+
+    private val _lifeIncomes = MutableLiveData(0.0)
+    val lifeIncomes: LiveData<Double> = _lifeIncomes
 
     private val _lifeHighestTag = MutableLiveData(defaultTag)
-    val lifeHighestTag: MutableLiveData<Tag?> = _lifeHighestTag
+    val lifeHighestTag: LiveData<Tag?> = _lifeHighestTag
 
     private val _lifeHighestTagValue = MutableLiveData(0.0)
-    val lifeHighestTagValue: MutableLiveData<Double> = _lifeHighestTagValue
+    val lifeHighestTagValue: LiveData<Double> = _lifeHighestTagValue
 
     init {
         viewModelScope.launch {
             _symbol.value = Currencies.from(SettingsUtil.getCurrency().first()).toSymbol()
         }
 
-        monthExpenses.observeForever(Observer {
-            val income = monthIncomes.value ?: 0.0
-            _monthSummary.value = income.minus(it)
-        })
-        monthIncomes.observeForever(Observer {
-            _monthSummary.value = it.minus(monthExpenses.value ?: 0.0)
-        })
-        for (i: Int in 2 until months.size) {
-            months[i].observeForever(Observer {
-                if (it > _monthHighestTagValue.value!!) {
-                    _monthHighestTagValue.value = it
-                    _monthHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
-                }
-            })
+        viewModelScope.launch {
+            monthExpensesFlow.collect {
+                _monthExpenses.value = it
+                _monthSummary.value = _monthIncomes.value!!.minus(it)
+            }
+        }
+        viewModelScope.launch {
+            monthIncomesFlow.collect {
+                _monthIncomes.value = it
+                _monthSummary.value = it.minus(_monthExpenses.value!!)
+            }
         }
 
-        yearExpenses.observeForever(Observer {
-            val income = yearIncomes.value ?: 0.0
-            _yearSummary.value = income.minus(it)
-        })
-        yearIncomes.observeForever(Observer {
-            _yearSummary.value = it.minus(yearExpenses.value ?: 0.0)
-        })
-        for (i: Int in 2 until years.size) {
-            years[i].observeForever(Observer {
-                if (it > _yearHighestTagValue.value!!) {
-                    _yearHighestTagValue.value = it
-                    _yearHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
+        for (i: Int in life.indices) {
+            viewModelScope.launch {
+                months[i].collect {
+                    if (it > _monthHighestTagValue.value!!) {
+                        _monthHighestTagValue.value = it
+                        _monthHighestTag.value = tagRepository.getById(i + FIRST_TAG_ID)
+                    }
                 }
-            })
+            }
         }
 
-        lifeExpenses.observeForever(Observer {
-            val income = lifeIncomes.value ?: 0.0
-            _lifeNetWorth.value = income.minus(it)
-        })
-        lifeIncomes.observeForever(Observer {
-            lifeNetWorth.value = it.minus(lifeExpenses.value ?: 0.0)
-        })
-        for (i: Int in 2 until life.size) {
-            life[i].observeForever(Observer {
-                if (it > lifeHighestTagValue.value!!) {
-                    _lifeHighestTagValue.value = it
-                    _lifeHighestTag.value = runBlocking { tagRepository.getById(i - 1) }
+        viewModelScope.launch {
+            yearExpensesFlow.collect {
+                _yearExpenses.value = it
+                _yearSummary.value = _yearIncomes.value!!.minus(it)
+            }
+        }
+        viewModelScope.launch {
+            yearIncomesFlow.collect {
+                _yearIncomes.value = it
+                _yearSummary.value = it.minus(_yearExpenses.value!!)
+            }
+        }
+        for (i: Int in life.indices) {
+            viewModelScope.launch {
+                years[i].collect {
+                    if (it > _yearHighestTagValue.value!!) {
+                        _yearHighestTagValue.value = it
+                        _yearHighestTag.value = tagRepository.getById(i + FIRST_TAG_ID)
+                    }
                 }
-            })
+            }
+        }
+
+        viewModelScope.launch {
+            lifeExpensesFlow.collect {
+                _lifeExpenses.value = it
+                _lifeNetWorth.value = _lifeIncomes.value!!.minus(it)
+            }
+        }
+        viewModelScope.launch {
+            lifeIncomesFlow.collect {
+                _lifeIncomes.value = it
+                _lifeNetWorth.value = it.minus(_lifeExpenses.value!!)
+            }
+        }
+        for (i: Int in life.indices) {
+            viewModelScope.launch {
+                life[i].collect {
+                    if (it > lifeHighestTagValue.value!!) {
+                        _lifeHighestTagValue.value = it
+                        _lifeHighestTag.value = tagRepository.getById(i + FIRST_TAG_ID)
+                    }
+                }
+            }
         }
     }
 

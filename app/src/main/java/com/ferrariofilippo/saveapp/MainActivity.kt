@@ -13,6 +13,7 @@ import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         val saveApp = application as SaveAppApplication
         SettingsUtil.setStore(saveApp)
         CurrencyUtil.setStore(saveApp)
-        StatsUtil.init(saveApp)
+        runBlocking { StatsUtil.init(saveApp) }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

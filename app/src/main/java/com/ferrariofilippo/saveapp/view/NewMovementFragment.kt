@@ -16,10 +16,12 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
+import com.ferrariofilippo.saveapp.view.adapters.BudgetsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewMovementViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 
 class NewMovementFragment : Fragment() {
@@ -89,10 +91,13 @@ class NewMovementFragment : Fragment() {
         val budgetAutoComplete = binding.budgetInput.editText as AutoCompleteTextView
         viewModel.budgets.observe(viewLifecycleOwner, Observer {
             it?.let {
-                val adapter = ArrayAdapter<TaggedBudget>(
+                val today = LocalDate.now()
+                val adapter = BudgetsDropdownAdapter(
                     binding.budgetInput.context,
-                    androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-                    it
+                    R.layout.budget_dropdown_item,
+                    it.filter { budget ->
+                        !budget.to.isBefore(today)
+                    }.toTypedArray()
                 )
 
                 budgetAutoComplete.setAdapter(adapter)

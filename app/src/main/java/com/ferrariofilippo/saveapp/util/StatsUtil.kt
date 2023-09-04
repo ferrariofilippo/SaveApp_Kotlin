@@ -4,12 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 object StatsUtil {
@@ -27,17 +27,15 @@ object StatsUtil {
     val lifeIncomesKey = doublePreferencesKey("life_incomes")
 
     var monthKeys: Array<Preferences.Key<Double>> = arrayOf()
-
     var yearKeys: Array<Preferences.Key<Double>> = arrayOf()
-
     var lifeKeys: Array<Preferences.Key<Double>> = arrayOf()
 
-    fun init(application: SaveAppApplication) {
+    suspend fun init(application: SaveAppApplication) {
         statsStore = application.statsStore
         tagRepository = application.tagRepository
         incomeStr = application.getString(R.string.income)
 
-        val tags = tagRepository!!.allTags.asLiveData().value?.filter {
+        val tags = tagRepository!!.allTags.first().filter {
             it.name != incomeStr
         }
 
@@ -47,7 +45,18 @@ object StatsUtil {
         lifeKeys = createKeys("life", tags)
     }
 
-    suspend fun setStat(name: String, value: Double) {
+    suspend fun setStat(key: Preferences.Key<Double>, value: Double) {
+        statsStore!!.edit { pref ->
+            pref[key] = value
+        }
+    }
+
+    suspend fun addToStat(key: Preferences.Key<Double>, value: Double) {
+        val oldValue = getStat(key).first()
+        setStat(key, oldValue + value)
+    }
+
+    suspend fun addToStat(name: String, value: Double) {
         var key: Preferences.Key<Double>? = monthKeys.firstOrNull {
             it.name == name
         }
@@ -62,24 +71,21 @@ object StatsUtil {
                 it.name == name
             }
 
-        if (key != null) {
-            statsStore!!.edit { pref ->
-                pref[key] = value
-            }
+        if (key != null)
+            addToStat(key, value)
+    }
+
+    fun getStat(key: Preferences.Key<Double>): Flow<Double> {
+        return statsStore!!.data.map { preferences ->
+            preferences[key] ?: 0.0
         }
     }
 
-    fun getStat(key: Preferences.Key<Double>): LiveData<Double> {
-        return statsStore!!.data.map { preferences ->
-            preferences[key] ?: 0.0
-        }.asLiveData()
-    }
-
-    fun getTagsStats(keys: Array<Preferences.Key<Double>>): Array<LiveData<Double>> {
+    fun getTagsStats(keys: Array<Preferences.Key<Double>>): Array<Flow<Double>> {
         return keys.map {
             statsStore!!.data.map { preferences ->
                 preferences[it] ?: 0.0
-            }.asLiveData()
+            }
         }.toTypedArray()
     }
 

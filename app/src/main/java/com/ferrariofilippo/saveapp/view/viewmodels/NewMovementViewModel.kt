@@ -5,6 +5,7 @@ import android.view.View
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,7 @@ import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -27,6 +29,10 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 class NewMovementViewModel(application: Application) : AndroidViewModel(application), Observable {
+    companion object {
+        private const val INCOME_TAG_ID = 1
+    }
+
     private val saveAppApplication = application as SaveAppApplication
 
     private val movementRepository = saveAppApplication.movementRepository
@@ -74,9 +80,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setAmount(value: String) {
         if (value == _amount)
-            return;
+            return
 
-        _amount = value
+        _amount = value.replace(',', '.')
         notifyPropertyChanged(BR.amount)
         onAmountChanged.invoke()
     }
@@ -88,7 +94,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setCurrency(value: Currencies) {
         if (value == _currency)
-            return;
+            return
 
         _currency = value
         notifyPropertyChanged(BR.currency)
@@ -101,7 +107,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setDescription(value: String) {
         if (value == _description)
-            return;
+            return
 
         _description = value
         notifyPropertyChanged(BR.description)
@@ -115,7 +121,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setDate(value: LocalDate) {
         if (value == _date)
-            return;
+            return
 
         _date = value
         notifyPropertyChanged(BR.date)
@@ -128,7 +134,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setTag(value: Tag?) {
         if (value == _tag)
-            return;
+            return
 
         _tag = value
         notifyPropertyChanged(BR.tag)
@@ -141,7 +147,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setBudget(value: TaggedBudget?) {
         if (value == _budget)
-            return;
+            return
 
         _budget = value
         notifyPropertyChanged(BR.budget)
@@ -154,7 +160,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setIsSubscription(value: Boolean) {
         if (value == _isSubscription)
-            return;
+            return
 
         _isSubscription = value
         notifyPropertyChanged(BR.isSubscription)
@@ -167,7 +173,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     fun setRenewalType(value: RenewalType) {
         if (value == _renewalType)
-            return;
+            return
 
         _renewalType = value
 
@@ -221,22 +227,23 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun updateToDefaultCurrency(amount: Double): Double {
         if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size)
-            return amount;
+            return amount
 
         return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
 
     private suspend fun insertMovement(amount: Double) {
-        movementRepository.insert(
-            Movement(
-                0,
-                amount,
-                _description,
-                _date,
-                _tag?.id ?: 0,
-                _budget?.budgetId ?: 0
-            )
+        val movement = Movement(
+            0,
+            amount,
+            _description,
+            _date,
+            _tag?.id ?: 0,
+            _budget?.budgetId ?: 0
         )
+
+        movementRepository.insert(movement)
+        addMovementToStats(movement)
     }
 
     private suspend fun insertSubscription(amount: Double) {
@@ -259,7 +266,35 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
         subscriptionRepository.insert(subscription)
 
-        if (movement != null)
+        if (movement != null) {
             movementRepository.insert(movement)
+            addMovementToStats(movement)
+        }
+    }
+
+    private suspend fun addMovementToStats(movement: Movement) {
+        if (LocalDate.now().month == movement.date.month)
+            addToStat(movement, StatsUtil.monthIncomesKey, StatsUtil.monthExpensesKey, "month")
+
+        if (LocalDate.now().year == movement.date.year)
+            addToStat(movement, StatsUtil.yearIncomesKey, StatsUtil.yearExpensesKey, "year")
+
+        addToStat(movement, StatsUtil.lifeIncomesKey, StatsUtil.lifeExpensesKey, "life")
+    }
+
+    private suspend fun addToStat(
+        movement: Movement,
+        incomesKey: Preferences.Key<Double>,
+        expensesKey: Preferences.Key<Double>,
+        tagKeyPrefix: String
+    ) {
+        if (movement.tagId == INCOME_TAG_ID) {
+            StatsUtil.addToStat(incomesKey, movement.amount)
+        } else {
+            StatsUtil.addToStat(expensesKey, movement.amount)
+
+            if (_tag != null)
+                StatsUtil.addToStat("${tagKeyPrefix}_${_tag!!.name}", movement.amount)
+        }
     }
 }
