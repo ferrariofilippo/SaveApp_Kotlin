@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
@@ -17,11 +18,13 @@ import java.time.LocalDate
 object StatsUtil {
     private const val INCOME_TAG_ID = 1
 
-    private var statsStore: DataStore<Preferences>? = null
+    private lateinit var statsStore: DataStore<Preferences>
 
-    private var tagRepository: TagRepository? = null
+    private lateinit var tagRepository: TagRepository
 
     private var incomeStr: String = ""
+
+    private val lastUpdateKey = stringPreferencesKey("last_update")
 
     val monthExpensesKey = doublePreferencesKey("month_expenses")
     val monthIncomesKey = doublePreferencesKey("month_incomes")
@@ -39,17 +42,19 @@ object StatsUtil {
         tagRepository = application.tagRepository
         incomeStr = application.getString(R.string.income)
 
-        val tags = tagRepository!!.allTags.first().filter {
+        val tags = tagRepository.allTags.first().filter {
             it.name != incomeStr
         }
 
         monthKeys = createKeys("month", tags)
         yearKeys = createKeys("year", tags)
         lifeKeys = createKeys("life", tags)
+
+        checkLastUpdate()
     }
 
     suspend fun setStat(key: Preferences.Key<Double>, value: Double) {
-        statsStore!!.edit { pref ->
+        statsStore.edit { pref ->
             pref[key] = value
         }
     }
@@ -65,14 +70,14 @@ object StatsUtil {
     }
 
     fun getStat(key: Preferences.Key<Double>): Flow<Double> {
-        return statsStore!!.data.map { preferences ->
+        return statsStore.data.map { preferences ->
             preferences[key] ?: 0.0
         }
     }
 
     fun getTagsStats(keys: Array<Preferences.Key<Double>>): Array<Flow<Double>> {
         return keys.map {
-            statsStore!!.data.map { preferences ->
+            statsStore.data.map { preferences ->
                 preferences[it] ?: 0.0
             }
         }.toTypedArray()
@@ -122,6 +127,43 @@ object StatsUtil {
 
             if (tag != null)
                 addToStat("${tagKeyPrefix}_${tag}", movement.amount)
+        }
+    }
+
+    private suspend fun checkLastUpdate() {
+        val dateStr = statsStore.data.map { preferences ->
+            preferences[lastUpdateKey]
+        }.first()
+
+        val date = if (dateStr == null) null else LocalDate.parse(dateStr)
+        if (date != null) {
+            if (date.monthValue != LocalDate.now().monthValue)
+                reset(monthIncomesKey, monthExpensesKey, monthKeys)
+
+            if (date.year != LocalDate.now().year)
+                reset(yearIncomesKey, yearExpensesKey, yearKeys)
+        }
+
+        statsStore.edit { pref ->
+            pref[lastUpdateKey] = LocalDate.now().toString()
+        }
+    }
+
+    private suspend fun reset(
+        incomesKey: Preferences.Key<Double>,
+        expensesKey: Preferences.Key<Double>,
+        tags: Array<Preferences.Key<Double>>
+    ) {
+        statsStore.edit { pref ->
+            pref[incomesKey] = 0.0
+        }
+        statsStore.edit { pref ->
+            pref[expensesKey] = 0.0
+        }
+        tags.map {
+            statsStore.edit { pref ->
+                pref[it] = 0.0
+            }
         }
     }
 }
