@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 object SubscriptionUtil {
     private fun updateNextRenewal(s: Subscription) {
-        when (s.renewalType) {
+        s.nextRenewal = when (s.renewalType) {
             RenewalType.WEEKLY -> s.nextRenewal.plusDays(7);
             RenewalType.MONTHLY -> s.nextRenewal.plusMonths(1);
             RenewalType.BIMONTHLY -> s.nextRenewal.plusMonths(2);
