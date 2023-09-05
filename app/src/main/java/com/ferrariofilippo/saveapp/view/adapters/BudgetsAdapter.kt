@@ -29,6 +29,10 @@ class BudgetsAdapter(
         return BudgetViewHolder.create(parent, currency, from, to)
     }
 
+    fun getItemAt(position: Int): TaggedBudget {
+        return getItem(position)
+    }
+
     class BudgetViewHolder(
         itemView: View,
         private val currency: Currencies,

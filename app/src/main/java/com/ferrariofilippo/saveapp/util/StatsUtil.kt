@@ -7,12 +7,16 @@ import androidx.datastore.preferences.core.edit
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
+import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 
 object StatsUtil {
+    private const val INCOME_TAG_ID = 1
+
     private var statsStore: DataStore<Preferences>? = null
 
     private var tagRepository: TagRepository? = null
@@ -39,7 +43,6 @@ object StatsUtil {
             it.name != incomeStr
         }
 
-        tags ?: return
         monthKeys = createKeys("month", tags)
         yearKeys = createKeys("year", tags)
         lifeKeys = createKeys("life", tags)
@@ -51,28 +54,14 @@ object StatsUtil {
         }
     }
 
-    suspend fun addToStat(key: Preferences.Key<Double>, value: Double) {
-        val oldValue = getStat(key).first()
-        setStat(key, oldValue + value)
-    }
+    suspend fun addMovementToStat(movement: Movement, tag: String?) {
+        if (LocalDate.now().month == movement.date.month)
+            addMovementToStat(movement, tag, monthIncomesKey, monthExpensesKey, "month")
 
-    suspend fun addToStat(name: String, value: Double) {
-        var key: Preferences.Key<Double>? = monthKeys.firstOrNull {
-            it.name == name
-        }
+        if (LocalDate.now().year == movement.date.year)
+            addMovementToStat(movement, tag, yearIncomesKey, yearExpensesKey, "year")
 
-        if (key == null)
-            key = yearKeys.firstOrNull {
-                it.name == name
-            }
-
-        if (key == null)
-            key = lifeKeys.firstOrNull {
-                it.name == name
-            }
-
-        if (key != null)
-            addToStat(key, value)
+        addMovementToStat(movement, tag, lifeIncomesKey, lifeExpensesKey, "life")
     }
 
     fun getStat(key: Preferences.Key<Double>): Flow<Double> {
@@ -93,5 +82,46 @@ object StatsUtil {
         return tags.map {
             doublePreferencesKey("${prefix}_${it.name}")
         }.toTypedArray()
+    }
+
+    private suspend fun addToStat(key: Preferences.Key<Double>, value: Double) {
+        val oldValue = getStat(key).first()
+        setStat(key, oldValue + value)
+    }
+
+    private suspend fun addToStat(name: String, value: Double) {
+        var key: Preferences.Key<Double>? = monthKeys.firstOrNull {
+            it.name == name
+        }
+
+        if (key == null)
+            key = yearKeys.firstOrNull {
+                it.name == name
+            }
+
+        if (key == null)
+            key = lifeKeys.firstOrNull {
+                it.name == name
+            }
+
+        if (key != null)
+            addToStat(key, value)
+    }
+
+    private suspend fun addMovementToStat(
+        movement: Movement,
+        tag: String?,
+        incomesKey: Preferences.Key<Double>,
+        expensesKey: Preferences.Key<Double>,
+        tagKeyPrefix: String
+    ) {
+        if (movement.tagId == INCOME_TAG_ID) {
+            addToStat(incomesKey, movement.amount)
+        } else {
+            addToStat(expensesKey, movement.amount)
+
+            if (tag != null)
+                addToStat("${tagKeyPrefix}_${tag}", movement.amount)
+        }
     }
 }

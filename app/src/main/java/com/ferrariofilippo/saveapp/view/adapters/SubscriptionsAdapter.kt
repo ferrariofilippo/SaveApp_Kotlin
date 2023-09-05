@@ -24,6 +24,10 @@ class SubscriptionsAdapter(private val currency: Currencies) :
         return SubscriptionViewHolder.create(parent, currency)
     }
 
+    fun getItemAt(position: Int): TaggedSubscription {
+        return getItem(position)
+    }
+
     class SubscriptionViewHolder(itemView: View, private val currency: Currencies) :
         RecyclerView.ViewHolder(itemView) {
         private val amountItemView = itemView.findViewById<TextView>(R.id.subscriptionAmount)

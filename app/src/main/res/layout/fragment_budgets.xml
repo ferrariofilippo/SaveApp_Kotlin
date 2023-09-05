@@ -10,7 +10,8 @@
             type="com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/budgets_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -89,5 +90,5 @@
                 tools:listitem="@layout/budget_item" />
 
         </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

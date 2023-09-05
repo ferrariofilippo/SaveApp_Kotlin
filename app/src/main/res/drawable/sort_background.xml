@@ -4,23 +4,15 @@
     android:height="72dp"
     android:viewportWidth="51.0"
     android:viewportHeight="72.0">
-    <group
-        android:name="sortBackground"
-        >
+    <group android:name="sortBackground">
         <path
             android:fillColor="?attr/colorPrimary"
-            android:pathData="M0 36C0 21.0883 12.0883 9 27 9H51V63H27C12.0883 63 0 50.9117 0 36Z" />
+            android:pathData="M51 0V9H42C42 9 46 9.00001 48.5 6.50003C51 4.00005 51 0 51 0Z" />
         <path
             android:fillColor="?attr/colorPrimary"
-            android:pathData="M51 1H27L27 9H51V1Z" />
-        <path
-            android:fillColor="?attr/colorSurface"
-            android:pathData="M51 0H27L27 9H42C46.9706 9 51 4.97056 51 0Z" />
+            android:pathData="M0 36C0 21.0883 12.0883 9 27 9L51 9V63H27C12.0883 63 0 50.9117 0 36Z" />
         <path
             android:fillColor="?attr/colorPrimary"
-            android:pathData="M51 63H27V72H51V63Z" />
-        <path
-            android:fillColor="?attr/colorSurface"
-            android:pathData="M51 72C51 67.0294 46.9706 63 42 63H27V72H51Z" />
+            android:pathData="M42 63H51L51 72C51 72 51 68 48.5 65.5C46 63 42 63 42 63Z" />
     </group>
 </vector>

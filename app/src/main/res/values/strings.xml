@@ -134,4 +134,8 @@
     <string name="october_name">October</string>
     <string name="november_name">November</string>
     <string name="december_name">December</string>
+    <string name="movement_deleted">Movement deleted.</string>
+    <string name="subscription_deleted">Subscription deleted.</string>
+    <string name="budget_deleted">Budget deleted.</string>
+    <string name="undo">Undo</string>
 </resources>

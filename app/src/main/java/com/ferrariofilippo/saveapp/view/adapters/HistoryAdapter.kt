@@ -15,13 +15,16 @@ import com.google.android.material.button.MaterialButton
 
 class HistoryAdapter(private val currency: Currencies) :
     ListAdapter<TaggedMovement, HistoryAdapter.MovementViewHolder>(MovementsComparator()) {
-
     override fun onBindViewHolder(holder: MovementViewHolder, position: Int) {
         holder.bind(getItem(position));
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovementViewHolder {
         return MovementViewHolder.create(parent, currency);
+    }
+
+    fun getItemAt(position: Int): TaggedMovement {
+        return getItem(position)
     }
 
     class MovementViewHolder(itemView: View, private val currency: Currencies) :

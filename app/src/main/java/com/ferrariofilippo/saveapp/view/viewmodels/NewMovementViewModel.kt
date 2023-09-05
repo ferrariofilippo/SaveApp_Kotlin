@@ -5,7 +5,6 @@ import android.view.View
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -29,10 +28,6 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 class NewMovementViewModel(application: Application) : AndroidViewModel(application), Observable {
-    companion object {
-        private const val INCOME_TAG_ID = 1
-    }
-
     private val saveAppApplication = application as SaveAppApplication
 
     private val movementRepository = saveAppApplication.movementRepository
@@ -233,17 +228,11 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private suspend fun insertMovement(amount: Double) {
-        val movement = Movement(
-            0,
-            amount,
-            _description,
-            _date,
-            _tag?.id ?: 0,
-            _budget?.budgetId ?: 0
-        )
+        val movement =
+            Movement(0, amount, _description, _date, _tag?.id ?: 0, _budget?.budgetId ?: 0)
 
         movementRepository.insert(movement)
-        addMovementToStats(movement)
+        StatsUtil.addMovementToStat(movement, _tag?.name)
     }
 
     private suspend fun insertSubscription(amount: Double) {
@@ -268,33 +257,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
         if (movement != null) {
             movementRepository.insert(movement)
-            addMovementToStats(movement)
-        }
-    }
-
-    private suspend fun addMovementToStats(movement: Movement) {
-        if (LocalDate.now().month == movement.date.month)
-            addToStat(movement, StatsUtil.monthIncomesKey, StatsUtil.monthExpensesKey, "month")
-
-        if (LocalDate.now().year == movement.date.year)
-            addToStat(movement, StatsUtil.yearIncomesKey, StatsUtil.yearExpensesKey, "year")
-
-        addToStat(movement, StatsUtil.lifeIncomesKey, StatsUtil.lifeExpensesKey, "life")
-    }
-
-    private suspend fun addToStat(
-        movement: Movement,
-        incomesKey: Preferences.Key<Double>,
-        expensesKey: Preferences.Key<Double>,
-        tagKeyPrefix: String
-    ) {
-        if (movement.tagId == INCOME_TAG_ID) {
-            StatsUtil.addToStat(incomesKey, movement.amount)
-        } else {
-            StatsUtil.addToStat(expensesKey, movement.amount)
-
-            if (_tag != null)
-                StatsUtil.addToStat("${tagKeyPrefix}_${_tag!!.name}", movement.amount)
+            StatsUtil.addMovementToStat(movement, _tag?.name)
         }
     }
 }
