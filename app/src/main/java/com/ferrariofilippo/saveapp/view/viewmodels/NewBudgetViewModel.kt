@@ -10,12 +10,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.BR
 import com.ferrariofilippo.saveapp.MainActivity
+import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Budget
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -164,7 +166,13 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
                 )
             )
 
-            (saveAppApplication.getCurrentActivity() as MainActivity).goBack()
+            val activity = saveAppApplication.getCurrentActivity() as MainActivity
+            activity.goBack()
+            Snackbar.make(
+                activity.findViewById(R.id.containerView),
+                R.string.budget_created,
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
         } else {
             onAmountChanged.invoke()
             onNameChanged.invoke()

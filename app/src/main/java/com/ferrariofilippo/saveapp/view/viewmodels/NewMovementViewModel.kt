@@ -22,6 +22,7 @@ import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -199,7 +200,13 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             else
                 insertMovement(newAmount)
 
-            (saveAppApplication.getCurrentActivity() as MainActivity).goBack()
+            val activity = saveAppApplication.getCurrentActivity() as MainActivity
+            activity.goBack()
+            Snackbar.make(
+                activity.findViewById(R.id.containerView),
+                if (_isSubscription) R.string.subscription_created else R.string.movement_created,
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
         } else {
             onAmountChanged.invoke()
             onDescriptionChanged.invoke()

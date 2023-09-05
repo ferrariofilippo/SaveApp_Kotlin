@@ -138,4 +138,7 @@
     <string name="subscription_deleted">Subscription deleted.</string>
     <string name="budget_deleted">Budget deleted.</string>
     <string name="undo">Undo</string>
+    <string name="movement_created">Movement created.</string>
+    <string name="subscription_created">Subscription created.</string>
+    <string name="budget_created">Budget created.</string>
 </resources>
