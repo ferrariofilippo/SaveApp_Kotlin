@@ -23,6 +23,7 @@ import com.ferrariofilippo.saveapp.databinding.FragmentHistoryBinding
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
@@ -103,7 +104,6 @@ class HistoryFragment : Fragment() {
         binding.movementsRecyclerView.setOnTouchListener { _, _ -> onRecyclerClick() }
 
         setupRecyclerGestures()
-        setupRecyclerDecorator()
     }
 
     private fun setupRecyclerGestures() {
@@ -215,57 +215,6 @@ class HistoryFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.movementsRecyclerView)
     }
 
-    private fun setupRecyclerDecorator() {
-        binding.movementsRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            lateinit var background: Drawable
-            var initiated: Boolean = false
-
-            private fun init() {
-                background =
-                    ColorDrawable(ContextCompat.getColor(requireContext(), R.color.red_200))
-                initiated = true
-            }
-
-            override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-                if (!initiated)
-                    init()
-
-                if (parent.itemAnimator?.isRunning == true) {
-                    var lastViewComingDown: View? = null
-                    var firstViewComingUp: View? = null
-
-                    var top = 0
-                    var bottom = 0
-
-                    val childCount = parent.layoutManager?.childCount ?: 0
-                    for (i: Int in 0 until childCount) {
-                        val child = parent.layoutManager!!.getChildAt(i)
-                        if (child!!.translationY < 0)
-                            lastViewComingDown = child
-                        else if (child.translationY > 0 && firstViewComingUp == null)
-                            firstViewComingUp = child
-                    }
-
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
-                        bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
-                    } else if (lastViewComingDown != null) {
-                        top = lastViewComingDown.bottom + lastViewComingDown.translationY.toInt()
-                        bottom = lastViewComingDown.bottom
-                    } else if (firstViewComingUp != null) {
-                        top = firstViewComingUp.top
-                        bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
-                    }
-
-                    background.setBounds(0, top, parent.width, bottom)
-                    background.draw(c)
-                }
-
-                super.onDraw(c, parent, state)
-            }
-        })
-    }
-
     private fun setupBottomSheet() {
         val bottomSheet = BottomSheetBehavior.from(binding.filtersBottomSheet)
         val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -319,6 +268,7 @@ class HistoryFragment : Fragment() {
         )
         lifecycleScope.launch {
             app.movementRepository.delete(movement)
+            BudgetUtil.removeMovementFromBudget(movement)
             movement.amount *= -1
             StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
         }
@@ -327,6 +277,7 @@ class HistoryFragment : Fragment() {
             .setAction(R.string.undo) {
                 lifecycleScope.launch {
                     movement.amount *= -1
+                    BudgetUtil.tryAddMovementToBudget(movement)
                     app.movementRepository.insert(movement)
                     StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
                 }

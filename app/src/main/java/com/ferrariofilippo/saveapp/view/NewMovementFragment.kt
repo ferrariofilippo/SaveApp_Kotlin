@@ -96,7 +96,7 @@ class NewMovementFragment : Fragment() {
                     binding.budgetInput.context,
                     R.layout.budget_dropdown_item,
                     it.filter { budget ->
-                        !budget.to.isBefore(today)
+                        budget.used < budget.max && !budget.to.isBefore(today)
                     }.toTypedArray()
                 )
 

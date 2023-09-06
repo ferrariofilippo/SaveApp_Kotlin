@@ -141,4 +141,7 @@
     <string name="movement_created">Movement created.</string>
     <string name="subscription_created">Subscription created.</string>
     <string name="budget_created">Budget created.</string>
+    <string name="budget_not_exists_error">Can\'t create movement. Budget does not exist.</string>
+    <string name="budget_empty_error">Can\'t create movement. Budget is empty.</string>
+    <string name="budget_date_error">Can\'t create movement. Date is not valid for the budget.</string>
 </resources>

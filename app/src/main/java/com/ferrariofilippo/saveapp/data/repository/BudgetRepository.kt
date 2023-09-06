@@ -11,7 +11,13 @@ class BudgetRepository(private val budgetDao: BudgetDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun getById(id: Int): TaggedBudget? {
+    suspend fun getById(id: Int) : Budget? {
+        return budgetDao.getById(id)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getTaggedById(id: Int): TaggedBudget? {
         return budgetDao.getTaggedById(id);
     }
 

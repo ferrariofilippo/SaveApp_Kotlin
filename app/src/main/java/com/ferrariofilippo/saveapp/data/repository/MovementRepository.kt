@@ -11,6 +11,13 @@ class MovementRepository(private val movementDao: MovementDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    suspend fun getById(id: Int): Movement? {
+        return movementDao.getById(id);
+    }
+
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun getTaggedById(id: Int): TaggedMovement? {
         return movementDao.getTaggedById(id);
     }

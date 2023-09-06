@@ -15,9 +15,11 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import com.ferrariofilippo.saveapp.model.enums.AddToBudgetResult
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
+import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
@@ -194,19 +196,22 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         val amount = _amount.replace(",", ".").toDoubleOrNull()
         if (amount != null && amount > 0.0 && _description.isNotBlank()) {
             val newAmount = updateToDefaultCurrency(amount)
+            var succeded = true
 
             if (_isSubscription)
                 insertSubscription(newAmount)
             else
-                insertMovement(newAmount)
+                succeded = tryInsertMovement(newAmount)
 
-            val activity = saveAppApplication.getCurrentActivity() as MainActivity
-            activity.goBack()
-            Snackbar.make(
-                activity.findViewById(R.id.containerView),
-                if (_isSubscription) R.string.subscription_created else R.string.movement_created,
-                Snackbar.LENGTH_SHORT
-            ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+            if (succeded) {
+                val activity = saveAppApplication.getCurrentActivity() as MainActivity
+                activity.goBack()
+                Snackbar.make(
+                    activity.findViewById(R.id.containerView),
+                    if (_isSubscription) R.string.subscription_created else R.string.movement_created,
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+            }
         } else {
             onAmountChanged.invoke()
             onDescriptionChanged.invoke()
@@ -234,15 +239,26 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
 
-    private suspend fun insertMovement(amount: Double) {
-        val movement =
-            Movement(0, amount, _description, _date, _tag?.id ?: 0, _budget?.budgetId ?: 0)
+    private suspend fun tryInsertMovement(amount: Double): Boolean {
+        val budgetId = _budget?.budgetId ?: 0
+        val tagId = _budget?.tagId ?: _tag?.id ?: 0
+        val movement = Movement(0, amount, _description, _date, tagId, budgetId)
+        if (budgetId != 0) {
+            val result = BudgetUtil.tryAddMovementToBudget(movement)
+            if (result != AddToBudgetResult.SUCCEEDED) {
+                handleAddBudgetResult(result)
+                return false
+            }
+        }
 
         movementRepository.insert(movement)
         StatsUtil.addMovementToStat(movement, _tag?.name)
+
+        return true
     }
 
     private suspend fun insertSubscription(amount: Double) {
+        val tagId = _budget?.tagId ?: _tag?.id ?: 0
         val subscription = Subscription(
             0,
             amount,
@@ -251,7 +267,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             _date,
             null,
             _date,
-            _tag?.id ?: 0,
+            tagId,
             _budget?.budgetId ?: 0
         )
         val movement = SubscriptionUtil.getMovementFromSub(
@@ -263,8 +279,23 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         subscriptionRepository.insert(subscription)
 
         if (movement != null) {
+            if (movement.budgetId != 0 && BudgetUtil.tryAddMovementToBudget(movement) != AddToBudgetResult.SUCCEEDED)
+                movement.budgetId = 0
+
             movementRepository.insert(movement)
             StatsUtil.addMovementToStat(movement, _tag?.name)
         }
+    }
+
+    private fun handleAddBudgetResult(result: AddToBudgetResult) {
+        val activity = saveAppApplication.getCurrentActivity() as MainActivity
+        val msg: Int = when (result) {
+            AddToBudgetResult.NOT_EXISTS -> R.string.budget_not_exists_error
+            AddToBudgetResult.BUDGET_EMPTY -> R.string.budget_empty_error
+            else -> R.string.budget_date_error
+        }
+
+        Snackbar.make(activity.findViewById(R.id.containerView), msg, Snackbar.LENGTH_SHORT)
+            .setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
     }
 }

@@ -173,11 +173,35 @@ object ImportExportUtil {
                 }
             }
             app.applicationScope.launch {
+                val tags = app.tagRepository.allTags.first()
                 addMovements.forEach {
+                    BudgetUtil.tryAddMovementToBudget(it)
                     app.movementRepository.insert(it)
+                    StatsUtil.addMovementToStat(
+                        it,
+                        tags.firstOrNull { tag -> tag.id == it.tagId }?.name
+                    )
                 }
                 updateMovements.forEach {
+                    val oldMovement = app.movementRepository.getById(it.id)
+                    if (oldMovement != null) {
+                        if (it.budgetId != 0) {
+                            BudgetUtil.removeMovementFromBudget(oldMovement)
+                            BudgetUtil.tryAddMovementToBudget(it)
+                        }
+
+                        oldMovement.amount *= -1
+                        StatsUtil.addMovementToStat(
+                            oldMovement,
+                            tags.firstOrNull { tag -> tag.id == oldMovement.tagId }?.name
+                        )
+                    }
+
                     app.movementRepository.update(it)
+                    StatsUtil.addMovementToStat(
+                        it,
+                        tags.firstOrNull { tag -> tag.id == it.tagId }?.name
+                    )
                 }
             }
         } catch (_: Exception) {

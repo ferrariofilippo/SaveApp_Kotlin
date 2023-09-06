@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val saveApp = application as SaveAppApplication
         SettingsUtil.setStore(saveApp)
         CurrencyUtil.setStore(saveApp)
+        BudgetUtil.init(saveApp)
         runBlocking { StatsUtil.init(saveApp) }
 
         super.onCreate(savedInstanceState)
