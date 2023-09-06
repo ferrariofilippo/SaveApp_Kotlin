@@ -12,6 +12,7 @@ import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
+import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         saveApp.setCurrentActivity(this)
 
+        lifecycleScope.launch { SubscriptionUtil.validateSubscriptions(saveApp) }
         lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()

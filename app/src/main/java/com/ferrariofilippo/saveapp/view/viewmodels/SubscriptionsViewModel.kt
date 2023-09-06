@@ -13,7 +13,7 @@ class SubscriptionsViewModel(application: Application) : AndroidViewModel(applic
     private val subscriptionRepository = (application as SaveAppApplication).subscriptionRepository
 
     val subscriptions: LiveData<List<TaggedSubscription>> =
-        subscriptionRepository.allSubscriptions.asLiveData()
+        subscriptionRepository.allTaggedSubscriptions.asLiveData()
 
     private val _symbol = MutableLiveData(Currencies.EUR.toSymbol())
     val symbol: LiveData<String> = _symbol

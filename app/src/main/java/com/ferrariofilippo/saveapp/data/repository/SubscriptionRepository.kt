@@ -7,7 +7,13 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
 import kotlinx.coroutines.flow.Flow
 
 class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
-    val allSubscriptions: Flow<List<TaggedSubscription>> = subscriptionDao.getAllTagged();
+    val allTaggedSubscriptions: Flow<List<TaggedSubscription>> = subscriptionDao.getAllTagged();
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getAll(): List<Subscription> {
+        return subscriptionDao.getAll()
+    }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

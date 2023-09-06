@@ -22,6 +22,12 @@ interface SubscriptionDao {
     fun getAllTagged(): Flow<List<TaggedSubscription>>
 
     @Query(
+        "SELECT id, amount, description, renewal_type, creation_date, last_paid, next_renewal, " +
+                "budgetId, tagId FROM subscriptions"
+    )
+    suspend fun getAll(): List<Subscription>
+
+    @Query(
         "SELECT s.id, s.amount, s.description, s.renewal_type as renewalType, " +
                 "s.creation_date as creationDate, s.last_paid as lastPaid, " +
                 "s.next_renewal as nextRenewal, s.budgetId, s.tagId, t.name AS tagName, " +

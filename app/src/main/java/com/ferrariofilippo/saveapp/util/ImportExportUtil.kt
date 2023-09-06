@@ -132,7 +132,8 @@ object ImportExportUtil {
     }
 
     private fun exportSubscriptions(writer: BufferedWriter, app: SaveAppApplication) {
-        val subscriptions = runBlocking { app.subscriptionRepository.allSubscriptions.first() }
+        val subscriptions =
+            runBlocking { app.subscriptionRepository.allTaggedSubscriptions.first() }
 
         writer.write(app.getString(R.string.subscriptions_export_header))
         writer.newLine()
