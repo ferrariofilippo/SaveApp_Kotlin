@@ -34,18 +34,24 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
         runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
 
     private var _amount: String = ""
+    private var _used: String = "0.00"
     private var _currency: Currencies = baseCurrency
     private var _name: String = ""
     private var _tag: Tag? = null
     private var _fromDate: LocalDate = LocalDate.now()
     private var _toDate: LocalDate = LocalDate.now().plusDays(1)
 
+    private var _isUsedInputVisible: Boolean = false
+
     val tags: MutableLiveData<Array<Tag>> = MutableLiveData<Array<Tag>>()
 
     val currencies: MutableLiveData<Array<Currencies>> =
         MutableLiveData<Array<Currencies>>(Currencies.values())
 
+    var editingBudget: Budget? = null
+
     var onAmountChanged: () -> Unit = { }
+    var onUsedChanged: () -> Unit = { }
     var onNameChanged: () -> Unit = { }
 
     init {
@@ -65,6 +71,20 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
             return;
 
         _amount = value
+        notifyPropertyChanged(BR.amount)
+        onAmountChanged.invoke()
+    }
+
+    @Bindable
+    fun getUsed(): String {
+        return _used
+    }
+
+    fun setUsed(value: String) {
+        if (value == _used)
+            return;
+
+        _used = value
         notifyPropertyChanged(BR.amount)
         onAmountChanged.invoke()
     }
@@ -135,6 +155,19 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
         notifyPropertyChanged(BR.toDate)
     }
 
+    @Bindable
+    fun getIsUsedInputVisible(): Boolean {
+        return _isUsedInputVisible
+    }
+
+    fun setIsUsedInputVisible(value: Boolean) {
+        if (value == _isUsedInputVisible)
+            return;
+
+        _isUsedInputVisible = value
+        notifyPropertyChanged(BR.toDate)
+    }
+
     // Overrides
     override fun addOnPropertyChangedCallback(
         callback: Observable.OnPropertyChangedCallback
@@ -151,30 +184,38 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     // Methods
     fun insert() = viewModelScope.launch {
         val amount = _amount.replace(",", ".").toDoubleOrNull()
-        if ((amount != null) && (amount > 0.0) && _name.isNotBlank()) {
-            val newAmount = updateToDefaultCurrency(amount)
+        val used = _used.replace(",", ".").toDoubleOrNull()
+        if (amount != null &&
+            amount > 0.0 &&
+            used != null &&
+            used >= 0.0 &&
+            amount >= used &&
+            _name.isNotBlank()
+        ) {
+            val updatedAmount = updateToDefaultCurrency(amount)
+            val updatedUsed = updateToDefaultCurrency(used)
 
-            budgetRepository.insert(
-                Budget(
-                    0,
-                    newAmount,
-                    0.0,
-                    _name,
-                    _fromDate,
-                    _toDate,
-                    _tag?.id ?: 0
-                )
+            val budget = Budget(
+                0, updatedAmount, updatedUsed, _name, _fromDate, _toDate, _tag?.id ?: 0
             )
+
+            if (editingBudget != null) {
+                budget.id = editingBudget!!.id
+                budgetRepository.update(budget)
+            } else {
+                budgetRepository.insert(budget)
+            }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
             activity.goBack()
             Snackbar.make(
                 activity.findViewById(R.id.containerView),
-                R.string.budget_created,
+                if (editingBudget != null) R.string.budget_updated else R.string.budget_created,
                 Snackbar.LENGTH_SHORT
             ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
         } else {
             onAmountChanged.invoke()
+            onUsedChanged.invoke()
             onNameChanged.invoke()
         }
     }
@@ -189,14 +230,24 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun usedOnFocusChange(v: View, hasFocus: Boolean) {
+        if (!hasFocus) {
+            val used = _used.replace(",", ".").toDoubleOrNull()
+            setUsed(
+                if (used == null) ""
+                else String.format("%.2f", used)
+            )
+        }
+    }
+
     private fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
     }
 
-    private fun updateToDefaultCurrency(amount: Double): Double {
+    private fun updateToDefaultCurrency(value: Double): Double {
         if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size)
-            return amount;
+            return value;
 
-        return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
+        return value * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
 }

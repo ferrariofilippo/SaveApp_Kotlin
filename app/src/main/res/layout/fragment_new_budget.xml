@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <import type="com.ferrariofilippo.saveapp.converters.Converters" />
         <variable
             name="vm"
@@ -85,10 +86,33 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/budgetUsedInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/budgetAmountInput"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/budgetCurrencyInput"
+            android:hint="@string/used_hint"
+            app:counterEnabled="true"
+            app:counterMaxLength="12"
+            app:endIconMode="clear_text"
+            android:visibility="@{vm.isUsedInputVisible ? View.VISIBLE : View.GONE}"
+            app:prefixText="@{vm.currency.toSymbol()}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:text="@={vm.used}"
+                android:textAlignment="textEnd" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/budgetNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/budgetAmountInput"
+            android:layout_below="@id/budgetUsedInput"
             android:layout_marginVertical="12dp"
             android:hint="@string/name_hint"
             app:counterEnabled="true"

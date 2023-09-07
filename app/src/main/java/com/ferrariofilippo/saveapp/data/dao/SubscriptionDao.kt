@@ -22,10 +22,12 @@ interface SubscriptionDao {
     fun getAllTagged(): Flow<List<TaggedSubscription>>
 
     @Query(
-        "SELECT id, amount, description, renewal_type, creation_date, last_paid, next_renewal, " +
-                "budgetId, tagId FROM subscriptions"
+        "SELECT * FROM subscriptions"
     )
     suspend fun getAll(): List<Subscription>
+
+    @Query("SELECT * FROM subscriptions WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Int): Subscription?
 
     @Query(
         "SELECT s.id, s.amount, s.description, s.renewal_type as renewalType, " +

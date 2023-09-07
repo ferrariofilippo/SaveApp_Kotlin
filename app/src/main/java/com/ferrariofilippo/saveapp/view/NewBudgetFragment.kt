@@ -11,12 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentNewBudgetBinding
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewBudgetViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.ZoneId
 
@@ -43,6 +45,7 @@ class NewBudgetFragment : Fragment() {
                 vm = viewModel
             }
 
+        checkIfEditing()
         setupUI()
 
         return binding.root
@@ -59,14 +62,34 @@ class NewBudgetFragment : Fragment() {
     }
 
     // Methods
+    private fun checkIfEditing() {
+        val itemId = arguments?.getInt("itemId") ?: 0
+        if (itemId == 0)
+            return
+
+        val application = requireActivity().application as SaveAppApplication
+        val budget = runBlocking { application.budgetRepository.getById(itemId) } ?: return
+
+        viewModel.editingBudget = budget
+        viewModel.setIsUsedInputVisible(true)
+        viewModel.setAmount(String.format("%.2f", budget.max))
+        viewModel.setUsed(String.format("%.2f", budget.used))
+        viewModel.setName(budget.name)
+        viewModel.setFromDate(budget.from)
+        viewModel.setToDate(budget.to)
+    }
+
     private fun setupUI() {
         binding.budgetAmountInput.editText?.setOnFocusChangeListener { view, b ->
             viewModel.amountOnFocusChange(view, b)
         }
+        binding.budgetUsedInput.editText?.setOnFocusChangeListener { view, b ->
+            viewModel.usedOnFocusChange(view, b)
+        }
 
         binding.budgetSaveButton.setOnClickListener { viewModel.insert() }
         binding.budgetCancelButton.setOnClickListener { (activity as MainActivity).goBack() }
-        
+
         binding.fromDateInput.editText?.setOnClickListener {
             showDatePicker(
                 getString(R.string.initial_date),
@@ -83,6 +106,7 @@ class NewBudgetFragment : Fragment() {
         setupPickers()
 
         viewModel.onAmountChanged = { manageAmountError() }
+        viewModel.onUsedChanged = { manageUsedError() }
         viewModel.onNameChanged = { manageNameError() }
     }
 
@@ -100,6 +124,12 @@ class NewBudgetFragment : Fragment() {
                 tagAutoComplete.setOnItemClickListener { parent, _, position, _ ->
                     val selection = parent.adapter.getItem(position) as Tag
                     viewModel.setTag(selection)
+                }
+
+                if (viewModel.editingBudget != null && viewModel.editingBudget!!.tagId != 0) {
+                    val i = it.indexOfFirst { tag -> tag.id == viewModel.editingBudget!!.tagId }
+                    tagAutoComplete.setText(it[i].name, false)
+                    viewModel.setTag(it[i])
                 }
             }
         })
@@ -129,6 +159,14 @@ class NewBudgetFragment : Fragment() {
         binding.budgetAmountInput.error =
             if (amount != null && amount > 0.0) null
             else context?.resources?.getString(R.string.amount_error)
+    }
+
+    private fun manageUsedError() {
+        val used = viewModel.getUsed().replace(",", ".").toDoubleOrNull()
+
+        binding.budgetAmountInput.error =
+            if (used != null && used >= 0.0) null
+            else context?.resources?.getString(R.string.used_not_valid)
     }
 
     private fun manageNameError() {

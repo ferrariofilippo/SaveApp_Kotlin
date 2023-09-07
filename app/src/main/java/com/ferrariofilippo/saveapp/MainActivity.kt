@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.ferrariofilippo.saveapp.util.BudgetUtil
@@ -111,6 +112,19 @@ class MainActivity : AppCompatActivity() {
 
     fun goToNewBudget() {
         findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newBudgetFragment)
+    }
+
+    fun goToEditMovementOrSubscription(id: Int, isMovement: Boolean) {
+        val bundle = bundleOf("itemId" to id, "isMovement" to isMovement)
+        findNavController(R.id.containerView).navigate(R.id.newMovementFragment, bundle)
+    }
+
+    fun goToEditBudget(id: Int) {
+        val bundle = bundleOf("itemId" to id)
+        findNavController(R.id.containerView).navigate(
+            R.id.action_budgetsFragment_to_newBudgetFragment,
+            bundle
+        )
     }
 
     private fun setupButtons() {

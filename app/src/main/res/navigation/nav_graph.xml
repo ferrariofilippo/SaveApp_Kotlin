@@ -19,7 +19,16 @@
     <fragment
         android:id="@+id/newMovementFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewMovementFragment"
-        android:label="@string/add_movement" />
+        android:label="@string/add_movement" >
+        <argument
+            android:name="itemId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="isMovement"
+            app:argType="boolean"
+            android:defaultValue="true" />
+    </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.ferrariofilippo.saveapp.view.HistoryFragment"
@@ -47,5 +56,10 @@
     <fragment
         android:id="@+id/newBudgetFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewBudgetFragment"
-        android:label="NewBudgetFragment" />
+        android:label="NewBudgetFragment" >
+        <argument
+            android:name="itemId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

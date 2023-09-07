@@ -144,4 +144,9 @@
     <string name="budget_not_exists_error">Can\'t create movement. Budget does not exist.</string>
     <string name="budget_empty_error">Can\'t create movement. Budget is empty.</string>
     <string name="budget_date_error">Can\'t create movement. Date is not valid for the budget.</string>
+    <string name="movement_updated">Movement updated.</string>
+    <string name="subscription_updated">Subscription updated.</string>
+    <string name="budget_updated">Budget updated.</string>
+    <string name="used_hint">Used</string>
+    <string name="used_not_valid">Used is not valid</string>
 </resources>

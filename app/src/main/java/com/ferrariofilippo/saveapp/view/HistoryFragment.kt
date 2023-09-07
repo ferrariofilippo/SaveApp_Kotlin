@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentHistoryBinding
@@ -108,7 +109,7 @@ class HistoryFragment : Fragment() {
 
     private fun setupRecyclerGestures() {
         val gestureCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             lateinit var deleteBackground: Drawable
             lateinit var deleteIcon: Drawable
             lateinit var editBackground: Drawable
@@ -138,11 +139,10 @@ class HistoryFragment : Fragment() {
                 val adapter = binding.movementsRecyclerView.adapter as HistoryAdapter
                 val movement = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT) {
-                    // Open edit page
-                } else if (direction == ItemTouchHelper.LEFT) {
+                if (direction == ItemTouchHelper.RIGHT)
+                    (activity as MainActivity).goToEditMovementOrSubscription(movement.id, true)
+                else if (direction == ItemTouchHelper.LEFT)
                     onRemoveMovementInvoked(movement)
-                }
             }
 
             override fun onChildDraw(

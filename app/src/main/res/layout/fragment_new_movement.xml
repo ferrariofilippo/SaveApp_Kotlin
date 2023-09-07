@@ -162,6 +162,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="4dp"
             android:checked="@={vm.isSubscription}"
+            android:enabled="@{vm.isSubscriptionSwitchEnabled}"
             android:text="@string/is_subscription" />
 
         <com.google.android.material.textfield.TextInputLayout

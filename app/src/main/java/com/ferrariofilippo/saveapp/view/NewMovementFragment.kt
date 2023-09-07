@@ -1,6 +1,7 @@
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +12,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentNewMovementBinding
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.view.adapters.BudgetsDropdownAdapter
+import com.ferrariofilippo.saveapp.view.adapters.RenewalDropdownAdapter
 import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewMovementViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -35,6 +39,7 @@ class NewMovementFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    // Overrides
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,6 +52,7 @@ class NewMovementFragment : Fragment() {
                 vm = viewModel
             }
 
+        checkIfEditing()
         setupUI()
 
         return binding.root;
@@ -62,6 +68,36 @@ class NewMovementFragment : Fragment() {
         _binding = null
     }
 
+    // Methods
+    private fun checkIfEditing() {
+        val itemId = arguments?.getInt("itemId") ?: 0
+        if (itemId == 0)
+            return
+
+        val application = requireActivity().application as SaveAppApplication
+        val isMovement = arguments?.getBoolean("isMovement") ?: true
+
+        viewModel.setIsSubscription(!isMovement)
+        viewModel.setIsSubscriptionSwitchEnabled(false)
+
+        if (isMovement) {
+            val movement = runBlocking { application.movementRepository.getById(itemId) } ?: return
+
+            viewModel.editingMovement = movement
+            viewModel.setAmount(String.format("%.2f", movement.amount))
+            viewModel.setDescription(movement.description)
+            viewModel.setDate(movement.date)
+        } else {
+            val sub = runBlocking { application.subscriptionRepository.getById(itemId) } ?: return
+
+            viewModel.editingSubscription = sub
+            viewModel.setAmount(String.format("%.2f", sub.amount))
+            viewModel.setDescription(sub.description)
+            viewModel.setDate(sub.creationDate)
+            viewModel.setRenewalType(sub.renewalType)
+        }
+    }
+
     private fun setupUI() {
         binding.amountInput.editText?.setOnFocusChangeListener { view, b ->
             viewModel.amountOnFocusChange(view, b)
@@ -71,6 +107,16 @@ class NewMovementFragment : Fragment() {
         binding.cancelButton.setOnClickListener { (activity as MainActivity).goBack() }
         binding.dateInput.editText?.setOnClickListener { showDatePicker() }
 
+        setupTagPicker()
+        setupBudgetPicker()
+        setupCurrencyPicker()
+        setupRenewalPicker()
+
+        viewModel.onAmountChanged = { manageAmountError() }
+        viewModel.onDescriptionChanged = { manageDescriptionError() }
+    }
+
+    private fun setupTagPicker() {
         val tagAutoComplete = binding.tagInput.editText as AutoCompleteTextView
         viewModel.tags.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -85,9 +131,22 @@ class NewMovementFragment : Fragment() {
                     val selection = parent.adapter.getItem(position) as Tag
                     viewModel.setTag(selection)
                 }
+
+                val tagId =
+                    if (viewModel.editingMovement != null) viewModel.editingMovement!!.tagId
+                    else if (viewModel.editingSubscription != null) viewModel.editingSubscription!!.tagId
+                    else 0
+
+                if (tagId != 0) {
+                    val i = it.indexOfFirst { tag -> tag.id == tagId }
+                    tagAutoComplete.setText(it[i].name, false)
+                    viewModel.setTag(it[i])
+                }
             }
         })
+    }
 
+    private fun setupBudgetPicker() {
         val budgetAutoComplete = binding.budgetInput.editText as AutoCompleteTextView
         viewModel.budgets.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -105,9 +164,22 @@ class NewMovementFragment : Fragment() {
                     val selection = parent.adapter.getItem(position) as TaggedBudget
                     viewModel.setBudget(selection)
                 }
+
+                val budgetId =
+                    if (viewModel.editingMovement != null) viewModel.editingMovement!!.budgetId
+                    else if (viewModel.editingSubscription != null) viewModel.editingSubscription!!.budgetId
+                    else 0
+
+                if (budgetId != 0) {
+                    val i = it.indexOfFirst { budget -> budget.budgetId == budgetId }
+                    budgetAutoComplete.setText(it[i].name, false)
+                    viewModel.setBudget(it[i])
+                }
             }
         })
+    }
 
+    private fun setupCurrencyPicker() {
         val currencyAutoComplete = binding.currencyInput.editText as AutoCompleteTextView
         viewModel.currencies.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -125,11 +197,13 @@ class NewMovementFragment : Fragment() {
                 currencyAutoComplete.setText(viewModel.baseCurrency.name, false)
             }
         })
+    }
 
+    private fun setupRenewalPicker() {
         val renewalAutoComplete = binding.renewalInput.editText as AutoCompleteTextView
         viewModel.renewalTypes.observe(viewLifecycleOwner, Observer {
             it?.let {
-                val adapter = ArrayAdapter<RenewalType>(
+                val adapter = RenewalDropdownAdapter(
                     binding.renewalInput.context,
                     androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                     it
@@ -140,11 +214,13 @@ class NewMovementFragment : Fragment() {
                     val selection = parent.adapter.getItem(position) as RenewalType
                     viewModel.setRenewalType(selection)
                 }
+
+                renewalAutoComplete.setText(
+                    adapter.getLocalizedName(viewModel.getRenewalType()),
+                    false
+                )
             }
         })
-
-        viewModel.onAmountChanged = { manageAmountError() }
-        viewModel.onDescriptionChanged = { manageDescriptionError() }
     }
 
     private fun manageAmountError() {

@@ -17,7 +17,13 @@ class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun getById(id: Int): TaggedSubscription? {
+    suspend fun getById(id: Int): Subscription? {
+        return subscriptionDao.getById(id);
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getTaggedById(id: Int): TaggedSubscription? {
         return subscriptionDao.getTaggedById(id);
     }
 

@@ -50,6 +50,8 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     private var _isSubscription: Boolean = false
     private var _renewalType: RenewalType = RenewalType.WEEKLY
 
+    private var _isSubscriptionSwitchEnabled: Boolean = true
+
     val tags: MutableLiveData<Array<Tag>> = MutableLiveData<Array<Tag>>()
 
     val budgets: MutableLiveData<Array<TaggedBudget>> = MutableLiveData<Array<TaggedBudget>>()
@@ -59,6 +61,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     val renewalTypes: MutableLiveData<Array<RenewalType>> =
         MutableLiveData<Array<RenewalType>>(RenewalType.values())
+
+    var editingSubscription: Subscription? = null
+    var editingMovement: Movement? = null
 
     var onAmountChanged: () -> Unit = { }
     var onDescriptionChanged: () -> Unit = { }
@@ -178,6 +183,20 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         notifyPropertyChanged(BR.renewalType)
     }
 
+    @Bindable
+    fun getIsSubscriptionSwitchEnabled(): Boolean {
+        return _isSubscriptionSwitchEnabled
+    }
+
+    fun setIsSubscriptionSwitchEnabled(value: Boolean) {
+        if (value == _isSubscriptionSwitchEnabled)
+            return
+
+        _isSubscriptionSwitchEnabled = value
+
+        notifyPropertyChanged(BR.isSubscriptionSwitchEnabled)
+    }
+
     // Overrides
     override fun addOnPropertyChangedCallback(
         callback: Observable.OnPropertyChangedCallback
@@ -208,7 +227,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
                 activity.goBack()
                 Snackbar.make(
                     activity.findViewById(R.id.containerView),
-                    if (_isSubscription) R.string.subscription_created else R.string.movement_created,
+                    getSaveSnackBarMessage(),
                     Snackbar.LENGTH_SHORT
                 ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
             }
@@ -243,15 +262,31 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         val budgetId = _budget?.budgetId ?: 0
         val tagId = _budget?.tagId ?: _tag?.id ?: 0
         val movement = Movement(0, amount, _description, _date, tagId, budgetId)
+
+        if (editingMovement != null && editingMovement!!.budgetId != 0)
+            BudgetUtil.removeMovementFromBudget(editingMovement!!)
+
         if (budgetId != 0) {
-            val result = BudgetUtil.tryAddMovementToBudget(movement)
+            val result = BudgetUtil.tryAddMovementToBudget(movement, editingMovement != null)
             if (result != AddToBudgetResult.SUCCEEDED) {
                 handleAddBudgetResult(result)
                 return false
             }
         }
 
-        movementRepository.insert(movement)
+        if (editingMovement != null) {
+            editingMovement!!.amount *= -1
+            StatsUtil.addMovementToStat(
+                editingMovement!!,
+                tags.value!!.firstOrNull { it.id == editingMovement!!.tagId }?.name
+            )
+
+            movement.id = editingMovement!!.id
+            movementRepository.update(movement)
+        } else {
+            movementRepository.insert(movement)
+        }
+
         StatsUtil.addMovementToStat(movement, _tag?.name)
 
         return true
@@ -265,8 +300,8 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             _description,
             _renewalType,
             _date,
-            null,
-            _date,
+            editingSubscription?.lastPaid,
+            editingSubscription?.nextRenewal ?: _date,
             tagId,
             _budget?.budgetId ?: 0
         )
@@ -276,7 +311,12 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
-        subscriptionRepository.insert(subscription)
+        if (editingSubscription != null) {
+            subscription.id = editingSubscription!!.id
+            subscriptionRepository.update(subscription)
+        } else {
+            subscriptionRepository.insert(subscription)
+        }
 
         if (movement != null) {
             if (movement.budgetId != 0 && BudgetUtil.tryAddMovementToBudget(movement) != AddToBudgetResult.SUCCEEDED)
@@ -297,5 +337,16 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
         Snackbar.make(activity.findViewById(R.id.containerView), msg, Snackbar.LENGTH_SHORT)
             .setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+    }
+
+    private fun getSaveSnackBarMessage(): Int {
+        return if (editingMovement != null)
+            R.string.movement_updated
+        else if (editingSubscription != null)
+            R.string.subscription_updated
+        else if (_isSubscription)
+            R.string.subscription_created
+        else
+            R.string.movement_created
     }
 }

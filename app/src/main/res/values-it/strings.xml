@@ -144,4 +144,9 @@
     <string name="budget_not_exists_error">Impossibile creare il movimento. Il budget non esiste.</string>
     <string name="budget_empty_error">Impossibile creare il movimento. Il budget è vuoto.</string>
     <string name="budget_date_error">Impossibile creare il movimento. La data non è valida per il budget.</string>
+    <string name="movement_updated">Movimento aggiornato.</string>
+    <string name="subscription_updated">Abbonamento aggiornato.</string>
+    <string name="budget_updated">Budget aggiornato.</string>
+    <string name="used_hint">Usati</string>
+    <string name="used_not_valid">Il valore di Usati non è valido</string>
 </resources>

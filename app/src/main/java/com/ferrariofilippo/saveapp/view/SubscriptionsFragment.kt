@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentSubscriptionsBinding
@@ -83,7 +84,7 @@ class SubscriptionsFragment : Fragment() {
 
     private fun setupRecyclerGestures() {
         val gestureCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             lateinit var deleteBackground: Drawable
             lateinit var deleteIcon: Drawable
             lateinit var editBackground: Drawable
@@ -111,13 +112,12 @@ class SubscriptionsFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val adapter = binding.subscriptionsRecyclerView.adapter as SubscriptionsAdapter
-                val subscription = adapter.getItemAt(position)
+                val sub = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT) {
-                    // Open edit page
-                } else if (direction == ItemTouchHelper.LEFT) {
-                    onRemoveMovementInvoked(subscription)
-                }
+                if (direction == ItemTouchHelper.RIGHT)
+                    (activity as MainActivity).goToEditMovementOrSubscription(sub.id, false)
+                else if (direction == ItemTouchHelper.LEFT)
+                    onRemoveMovementInvoked(sub)
             }
 
             override fun onChildDraw(

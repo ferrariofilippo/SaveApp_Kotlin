@@ -24,7 +24,6 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.adapters.BudgetsAdapter
-import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
@@ -102,7 +101,7 @@ class BudgetsFragment : Fragment() {
 
     private fun setupRecyclerGestures(recyclerView: RecyclerView) {
         val gestureCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             lateinit var deleteBackground: Drawable
             lateinit var deleteIcon: Drawable
             lateinit var editBackground: Drawable
@@ -132,11 +131,10 @@ class BudgetsFragment : Fragment() {
                 val adapter = recyclerView.adapter as BudgetsAdapter
                 val budget = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT) {
-                    // Open edit page
-                } else if (direction == ItemTouchHelper.LEFT) {
+                if (direction == ItemTouchHelper.RIGHT)
+                    (activity as MainActivity).goToEditBudget(budget.budgetId)
+                else if (direction == ItemTouchHelper.LEFT)
                     onRemoveMovementInvoked(budget)
-                }
             }
 
             override fun onChildDraw(
