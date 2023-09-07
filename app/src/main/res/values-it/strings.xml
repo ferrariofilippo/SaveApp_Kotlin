@@ -149,4 +149,6 @@
     <string name="budget_updated">Budget aggiornato.</string>
     <string name="used_hint">Usati</string>
     <string name="used_not_valid">Il valore di Usati non è valido</string>
+    <string name="year">Anno</string>
+    <string name="no_data_available">Nessun dato disponibile</string>
 </resources>

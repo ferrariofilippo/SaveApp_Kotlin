@@ -1,10 +1,12 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
@@ -13,6 +15,8 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class StatsByTagViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
@@ -22,8 +26,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     private val _app = application as SaveAppApplication
 
     private val _tags: LiveData<List<Tag>> = _app.tagRepository.allTags.asLiveData()
-    private val _movements: LiveData<List<TaggedMovement>> =
-        _app.movementRepository.allTaggedMovements.asLiveData()
+
+    private var _movements: List<TaggedMovement> = listOf()
 
     private val _tagSums: MutableMap<Int, Double> = mutableMapOf()
 
@@ -32,11 +36,21 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     private val _tagSumItems: MutableLiveData<List<TagMovementsSum>> = MutableLiveData(listOf())
     val tagSumItems get(): LiveData<List<TagMovementsSum>> = _tagSumItems
 
+    private val _year: MutableLiveData<String> = MutableLiveData(LocalDate.now().year.toString())
+    val year: LiveData<String> = _year
+
+    private val _showEmptyMessage: MutableLiveData<Boolean> = MutableLiveData(false)
+    val showEmptyMessage: LiveData<Boolean> = _showEmptyMessage
+
+    var years: List<String> = listOf()
+
     var dataSet: PieDataSet = PieDataSet(listOf(), _setLabel)
 
     var onMovementsChangeCallback: () -> Unit = { }
 
     init {
+        initYears()
+
         _tags.observeForever { tags ->
             tags.let {
                 _tagSums.clear()
@@ -45,26 +59,29 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
                         _tagSums[it.id] = 0.0
                 }
             }
-            _movements.value?.let { movements ->
-                calculateSums(movements)
-            }
+            calculateSums()
             updateEntries()
         }
-
-        _movements.observeForever { movements ->
-            _tagSums.keys.forEach {
-                _tagSums[it] = 0.0
+        _year.observeForever { value ->
+            viewModelScope.launch {
+                _movements = _app.movementRepository.getAllTaggedByYear(value)
+                _showEmptyMessage.value = _movements.isEmpty()
+                _tagSums.keys.forEach {
+                    _tagSums[it] = 0.0
+                }
+                calculateSums()
+                updateEntries()
             }
-            movements?.let {
-                calculateSums(movements)
-            }
-            updateEntries()
         }
     }
 
     // Methods
-    private fun calculateSums(movements: List<TaggedMovement>) {
-        movements.forEach {
+    fun setYear(value: String) {
+        _year.value = value
+    }
+
+    private fun calculateSums() {
+        _movements.forEach {
             if (it.tagId != INCOME_ID)
                 _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
         }
@@ -93,5 +110,14 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         dataSet.valueFormatter = PercentFormatter()
 
         onMovementsChangeCallback()
+    }
+
+    private fun initYears() {
+        val values = mutableStateListOf<String>()
+        val currentYear = LocalDate.now().year
+        for(i:Int in 0 until 7)
+            values.add((currentYear - i).toString())
+
+        years = values.toList()
     }
 }

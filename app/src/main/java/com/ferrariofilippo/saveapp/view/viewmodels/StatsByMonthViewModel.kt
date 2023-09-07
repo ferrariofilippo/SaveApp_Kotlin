@@ -1,11 +1,11 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.statsitems.MonthMovementsSum
@@ -13,12 +13,13 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class StatsByMonthViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
-    private val _movements: LiveData<List<TaggedMovement>> =
-        _app.movementRepository.allTaggedMovements.asLiveData()
+    private var _movements: List<TaggedMovement> = listOf()
 
     private val _monthSums: MutableList<Double> =
         mutableListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
@@ -40,7 +41,7 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         _app.getColor(R.color.cyan_800)
     )
 
-    val monthsNames: List<String> = listOf(
+    private val monthsNames: List<String> = listOf(
         _app.getString(R.string.january_name),
         _app.getString(R.string.february_name),
         _app.getString(R.string.march_name),
@@ -58,23 +59,38 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     private val _monthSumItems: MutableLiveData<List<MonthMovementsSum>> = MutableLiveData(listOf())
     val monthSumItems get(): LiveData<List<MonthMovementsSum>> = _monthSumItems
 
+    private val _year: MutableLiveData<String> = MutableLiveData(LocalDate.now().year.toString())
+    val year: LiveData<String> = _year
+
+    private val _showEmptyMessage: MutableLiveData<Boolean> = MutableLiveData(false)
+    val showEmptyMessage: LiveData<Boolean> = _showEmptyMessage
+
+    var years: List<String> = listOf()
+
     var dataSet: PieDataSet = PieDataSet(listOf(), _setLabel)
 
     var onMovementsChangeCallback: () -> Unit = { }
 
     init {
-        _movements.observeForever(Observer { movements ->
-            clearSums()
-            movements.let {
-                movements.forEach {
+        initYears()
+        _year.observeForever { value ->
+            viewModelScope.launch {
+                _movements = _app.movementRepository.getAllTaggedByYear(value)
+                _showEmptyMessage.value = _movements.isEmpty()
+                clearSums()
+                _movements.forEach {
                     _monthSums[it.date.monthValue - 1] += it.amount
                 }
+                updateEntries()
             }
-            updateEntries()
-        })
+        }
     }
 
     // Methods
+    fun setYear(value: String) {
+        _year.value = value
+    }
+
     private fun clearSums() {
         for (i: Int in _monthSums.indices)
             _monthSums[i] = 0.0
@@ -100,5 +116,14 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         dataSet.valueFormatter = PercentFormatter()
 
         onMovementsChangeCallback()
+    }
+
+    private fun initYears() {
+        val values = mutableStateListOf<String>()
+        val currentYear = LocalDate.now().year
+        for(i:Int in 0 until 7)
+            values.add((currentYear - i).toString())
+
+        years = values.toList()
     }
 }

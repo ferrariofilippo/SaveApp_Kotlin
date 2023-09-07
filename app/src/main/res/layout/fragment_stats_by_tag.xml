@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.StatsByTagViewModel" />
@@ -18,11 +19,36 @@
             android:layout_margin="16dp"
             android:orientation="vertical">
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/yearInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/year">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/tagsPieChart"
                 android:layout_width="match_parent"
                 android:layout_height="480dp"
-                android:layout_margin="16dp" />
+                android:layout_margin="16dp"
+                android:visibility="@{vm.showEmptyMessage ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="32dp"
+                android:text="@string/no_data_available"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="?attr/colorPrimary"
+                android:visibility="@{vm.showEmptyMessage ? View.VISIBLE : View.GONE}" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tagsRecyclerView"

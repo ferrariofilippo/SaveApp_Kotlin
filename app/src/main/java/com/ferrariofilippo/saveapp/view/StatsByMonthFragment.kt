@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.appcompat.R
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +41,7 @@ class StatsByMonthFragment : Fragment() {
 
         setupGraph()
         setupRecyclerView()
+        setupYearPicker()
 
         return binding.root
     }
@@ -73,6 +77,22 @@ class StatsByMonthFragment : Fragment() {
                 adapter.submitList(sums)
             }
         })
+    }
+
+    private fun setupYearPicker() {
+        val yearAutoComplete = binding.yearInput.editText as AutoCompleteTextView
+        val adapter = ArrayAdapter(
+            binding.yearInput.context,
+            R.layout.support_simple_spinner_dropdown_item,
+            viewModel.years
+        )
+
+        yearAutoComplete.setAdapter(adapter)
+        yearAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+            val selection = parent.adapter.getItem(position) as String
+            viewModel.setYear(selection)
+        }
+        yearAutoComplete.setText(viewModel.year.value, false)
     }
 
     private fun updateGraph() {

@@ -19,6 +19,13 @@ interface MovementDao {
     )
     fun getAllTagged(): Flow<List<TaggedMovement>>
 
+    @Query(
+        "SELECT m.id, m.amount, m.description, m.date, m.tagId, m.budgetId, t.name AS tagName, " +
+                "t.color AS tagColor FROM movements AS m JOIN tags as t ON m.tagId = t.id " +
+                "WHERE strftime(\"%Y\", m.date) = :year"
+    )
+    suspend fun getAllTaggedByYear(year: String): List<TaggedMovement>
+
     @Query("SELECT * FROM movements WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Movement?
 
