@@ -1,9 +1,10 @@
 package com.ferrariofilippo.saveapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,91 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
     private var lastFragmentId: Int = R.id.homeFragment
 
+    // IO Activities
+    val exportMovements = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.export(
+                ImportExportUtil.CREATE_MOVEMENTS_FILE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val exportSubscriptions = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.export(
+                ImportExportUtil.CREATE_SUBSCRIPTIONS_FILE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val exportBudgets = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.export(
+                ImportExportUtil.CREATE_BUDGETS_FILE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+
+    val importMovements = registerForActivityResult(GetContent()) { uri ->
+        if (uri != null) {
+            ImportExportUtil.import(
+                ImportExportUtil.OPEN_MOVEMENTS_FILE,
+                contentResolver.openInputStream(uri) as FileInputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val importSubscriptions = registerForActivityResult(GetContent()) { uri ->
+        if (uri != null) {
+            ImportExportUtil.import(
+                ImportExportUtil.OPEN_SUBSCRIPTIONS_FILE,
+                contentResolver.openInputStream(uri) as FileInputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val importBudgets = registerForActivityResult(GetContent()) { uri ->
+        if (uri != null) {
+            ImportExportUtil.import(
+                ImportExportUtil.OPEN_BUDGETS_FILE,
+                contentResolver.openInputStream(uri) as FileInputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+
+    val createMovementsTemplate = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.writeTemplate(
+                ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val createSubscriptionsTemplate = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.writeTemplate(
+                ImportExportUtil.CREATE_SUBSCRIPTIONS_TEMPLATE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+    val createBudgetsTemplate = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+        if (uri != null) {
+            ImportExportUtil.writeTemplate(
+                ImportExportUtil.CREATE_BUDGETS_TEMPLATE,
+                contentResolver?.openOutputStream(uri) as FileOutputStream,
+                application as SaveAppApplication
+            )
+        }
+    }
+
     // Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         val saveApp = application as SaveAppApplication
@@ -40,49 +126,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        val saveApp = application as SaveAppApplication
-        when (requestCode) {
-            ImportExportUtil.OPEN_MOVEMENTS_FILE,
-            ImportExportUtil.OPEN_SUBSCRIPTIONS_FILE,
-            ImportExportUtil.OPEN_BUDGETS_FILE -> {
-                if (resultCode == RESULT_OK && data?.data != null) {
-                    ImportExportUtil.import(
-                        requestCode,
-                        contentResolver.openInputStream(data.data!!) as FileInputStream,
-                        saveApp
-                    )
-                }
-            }
-
-            ImportExportUtil.CREATE_MOVEMENTS_FILE,
-            ImportExportUtil.CREATE_SUBSCRIPTIONS_FILE,
-            ImportExportUtil.CREATE_BUDGETS_FILE -> {
-                if (resultCode == RESULT_OK && data?.data != null) {
-                    ImportExportUtil.export(
-                        requestCode,
-                        contentResolver?.openOutputStream(data.data!!) as FileOutputStream,
-                        saveApp
-                    )
-                }
-            }
-
-            ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE,
-            ImportExportUtil.CREATE_SUBSCRIPTIONS_TEMPLATE,
-            ImportExportUtil.CREATE_BUDGETS_TEMPLATE -> {
-                if (resultCode == RESULT_OK && data?.data != null) {
-                    ImportExportUtil.writeTemplate(
-                        requestCode,
-                        contentResolver?.openOutputStream(data.data!!) as FileOutputStream,
-                        saveApp
-                    )
-                }
-            }
-        }
     }
 
     // Methods

@@ -1,11 +1,6 @@
 package com.ferrariofilippo.saveapp.util
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
-import android.os.Environment
-import android.provider.DocumentsContract
-import androidx.core.app.ActivityCompat.startActivityForResult
+import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Budget
@@ -36,35 +31,54 @@ object ImportExportUtil {
     const val OPEN_BUDGETS_FILE: Int = 19
     const val CREATE_BUDGETS_TEMPLATE = 23
 
-    fun createExportFile(dataType: Int, activity: Activity) {
+    fun createExportFile(dataType: Int, activity: MainActivity) {
         val today = LocalDate.now().toString()
-        val title = when (dataType) {
-            CREATE_MOVEMENTS_FILE -> String.format(
-                activity.getString(R.string.movements_file_name), today
-            )
+        when (dataType) {
+            CREATE_MOVEMENTS_FILE -> {
+                activity.exportMovements.launch(
+                    String.format(
+                        activity.getString(R.string.movements_file_name),
+                        today
+                    )
+                )
+            }
 
-            CREATE_SUBSCRIPTIONS_FILE -> String.format(
-                activity.getString(R.string.subscriptions_file_name), today
-            )
+            CREATE_SUBSCRIPTIONS_FILE -> {
+                activity.exportSubscriptions.launch(
+                    String.format(
+                        activity.getString(R.string.subscriptions_file_name),
+                        today
+                    )
+                )
+            }
 
-            CREATE_BUDGETS_FILE -> String.format(
-                activity.getString(R.string.budgets_file_name), today
-            )
+            CREATE_BUDGETS_FILE -> {
+                activity.exportBudgets.launch(
+                    String.format(
+                        activity.getString(R.string.budgets_file_name),
+                        today
+                    )
+                )
+            }
 
-            CREATE_MOVEMENTS_TEMPLATE -> activity.getString(R.string.movements_template)
-            CREATE_SUBSCRIPTIONS_TEMPLATE -> activity.getString(R.string.subscriptions_template)
-            else -> activity.getString(R.string.budgets_template)
+            CREATE_MOVEMENTS_TEMPLATE -> {
+                activity.createMovementsTemplate.launch(
+                    activity.getString(R.string.movements_template)
+                )
+            }
+
+            CREATE_SUBSCRIPTIONS_TEMPLATE -> {
+                activity.createSubscriptionsTemplate.launch(
+                    activity.getString(R.string.subscriptions_template)
+                )
+            }
+
+            else -> {
+                activity.createBudgetsTemplate.launch(
+                    activity.getString(R.string.budgets_template)
+                )
+            }
         }
-
-        val intent: Intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "text/csv"
-
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.DIRECTORY_DOWNLOADS)
-            putExtra(Intent.EXTRA_TITLE, title)
-        }
-
-        startActivityForResult(activity, intent, dataType, Bundle.EMPTY)
     }
 
     fun export(type: Int, outputStream: FileOutputStream, app: SaveAppApplication) {
@@ -93,16 +107,13 @@ object ImportExportUtil {
         outputStream.close()
     }
 
-    fun getFromFile(dataType: Int, activity: Activity) {
-        val intent: Intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE);
-            type = "*/*"
-
-            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("text/csv", "text/comma-separated-values"))
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.DIRECTORY_DOCUMENTS);
-        };
-
-        startActivityForResult(activity, intent, dataType, null);
+    fun getFromFile(dataType: Int, activity: MainActivity) {
+        val filter = "text/comma-separated-values"
+        when (dataType) {
+            OPEN_MOVEMENTS_FILE -> activity.importMovements.launch(filter)
+            OPEN_SUBSCRIPTIONS_FILE -> activity.importSubscriptions.launch(filter)
+            OPEN_BUDGETS_FILE -> activity.importBudgets.launch(filter)
+        }
     }
 
     fun import(type: Int, inputStream: FileInputStream, app: SaveAppApplication) {

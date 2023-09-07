@@ -1,6 +1,5 @@
 package com.ferrariofilippo.saveapp.view
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -82,7 +81,9 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupButtons() {
-        val act = (requireActivity().application as SaveAppApplication).getCurrentActivity()!!
+        val act = (requireActivity().application as SaveAppApplication)
+            .getCurrentActivity()!! as MainActivity
+
         setupMovementsButtons(act)
         setupSubscriptionsButtons(act)
         setupBudgetsButtons(act)
@@ -97,7 +98,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setupMovementsButtons(act: Activity) {
+    private fun setupMovementsButtons(act: MainActivity) {
         binding.templateMovementsButton.setOnClickListener {
             ImportExportUtil.createExportFile(ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE, act)
         }
@@ -109,7 +110,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setupSubscriptionsButtons(act: Activity) {
+    private fun setupSubscriptionsButtons(act: MainActivity) {
         binding.templateSubscriptionsButton.setOnClickListener {
             ImportExportUtil.createExportFile(ImportExportUtil.CREATE_SUBSCRIPTIONS_TEMPLATE, act)
         }
@@ -121,7 +122,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setupBudgetsButtons(act: Activity) {
+    private fun setupBudgetsButtons(act: MainActivity) {
         binding.templateBudgetsButton.setOnClickListener {
             ImportExportUtil.createExportFile(ImportExportUtil.CREATE_BUDGETS_TEMPLATE, act)
         }
