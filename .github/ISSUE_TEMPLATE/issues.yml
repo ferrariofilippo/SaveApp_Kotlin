@@ -1,0 +1,29 @@
+name: Issue
+description: Report a Bug or Propose a Feature to improve SaveApp
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: What is this issue about?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots & Videos
+      description: Post here screenshots or videos of the bug
+  - type: input
+    id: saveapp-version
+    attributes:
+      label: SaveApp Version
+      description: Which version of SaveApp are you using?
+      placeholder: 1.0.0.0
+    validations:
+      required: true
+  - type: input
+    id: android-version
+    attributes:
+      label: Android Version
+      description: Which version of Android are you using?
+      placeholder: 12 Snow Cone
+    validations:
+      required: true
