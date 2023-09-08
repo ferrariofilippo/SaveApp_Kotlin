@@ -106,6 +106,11 @@ class NewMovementFragment : Fragment() {
         binding.saveButton.setOnClickListener { viewModel.insert() }
         binding.cancelButton.setOnClickListener { (activity as MainActivity).goBack() }
         binding.dateInput.editText?.setOnClickListener { showDatePicker() }
+        binding.clearBudgetButton.setOnClickListener {
+            binding.budgetInput.editText?.text = null
+            binding.budgetInput.editText?.clearFocus()
+            viewModel.setBudget(null)
+        }
 
         setupTagPicker()
         setupBudgetPicker()
@@ -114,6 +119,7 @@ class NewMovementFragment : Fragment() {
 
         viewModel.onAmountChanged = { manageAmountError() }
         viewModel.onDescriptionChanged = { manageDescriptionError() }
+        viewModel.validateTag = { manageTagError() }
     }
 
     private fun setupTagPicker() {
@@ -235,6 +241,12 @@ class NewMovementFragment : Fragment() {
         binding.descriptionInput.error =
             if (viewModel.getDescription().isNotBlank()) null
             else context?.resources?.getString(R.string.description_error)
+    }
+
+    private fun manageTagError() {
+        binding.tagInput.error =
+            if (viewModel.getTag() != null) null
+            else context?.resources?.getString(R.string.tag_error)
     }
 
     private fun showDatePicker() {

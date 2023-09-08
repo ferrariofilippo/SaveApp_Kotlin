@@ -151,4 +151,6 @@
     <string name="used_not_valid">Il valore di Usati non è valido</string>
     <string name="year">Anno</string>
     <string name="no_data_available">Nessun dato disponibile</string>
+    <string name="clear">Annulla</string>
+    <string name="tag_error">Seleziona un tag</string>
 </resources>

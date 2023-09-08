@@ -115,7 +115,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     private fun initYears() {
         val values = mutableStateListOf<String>()
         val currentYear = LocalDate.now().year
-        for(i:Int in 0 until 7)
+        for (i: Int in 0 until 7)
             values.add((currentYear - i).toString())
 
         years = values.toList()

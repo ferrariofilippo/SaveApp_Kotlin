@@ -121,28 +121,47 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/budgetInput"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <RelativeLayout
+            android:id="@+id/budgetContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/dateInput"
-            android:layout_marginVertical="12dp"
-            android:hint="@string/budget_hint">
+            android:layout_below="@id/dateInput">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/budgetInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none" />
+                android:layout_alignParentStart="true"
+                android:layout_marginVertical="12dp"
+                android:layout_toStartOf="@id/clearBudgetButton"
+                android:hint="@string/budget_hint">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/clearBudgetButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:text="@string/clear"
+                android:visibility="@{vm.budget == null ? View.GONE : View.VISIBLE}" />
+        </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tagInput"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/budgetInput"
+            android:layout_below="@id/budgetContainer"
             android:hint="@string/tag_hint"
             android:visibility="@{vm.budget == null ? View.VISIBLE : View.GONE}">
 

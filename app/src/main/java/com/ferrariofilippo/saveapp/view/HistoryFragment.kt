@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,12 +23,14 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentHistoryBinding
 import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
+import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.HistoryViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -231,21 +234,65 @@ class HistoryFragment : Fragment() {
             binding.searchBar.editText?.clearFocus()
             bottomSheet.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
+
+        setupTagPicker()
+    }
+
+    private fun setupTagPicker() {
+        val tagAutoComplete = binding.tagFilterInput.editText as AutoCompleteTextView
+        viewModel.tags.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                val adapter = TagsDropdownAdapter(
+                    binding.tagFilterInput.context,
+                    R.layout.tag_dropdown_item,
+                    it
+                )
+
+                tagAutoComplete.setAdapter(adapter)
+                tagAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+                    val selection = parent.adapter.getItem(position) as Tag
+                    viewModel.tagId.value = selection.id
+                    setFilteredItems(
+                        binding.movementsRecyclerView.adapter as HistoryAdapter,
+                        viewModel.allMovements.value!!
+                    )
+                }
+            }
+        })
+
+        binding.clearTagFilterButton.setOnClickListener {
+            tagAutoComplete.text = null
+            tagAutoComplete.clearFocus()
+            viewModel.tagId.value = 0
+            setFilteredItems(
+                binding.movementsRecyclerView.adapter as HistoryAdapter,
+                viewModel.allMovements.value!!
+            )
+        }
     }
 
     private fun setFilteredItems(adapter: HistoryAdapter, movements: List<TaggedMovement>) {
-        if (viewModel.searchQuery.value!!.isBlank()) {
-            adapter.submitList(
-                if (viewModel.sortAscending.value!!) movements.reversed() else movements
-            )
-        } else {
+        val isFilteringByTag = viewModel.tagId.value != 0
+
+        val values = if (viewModel.searchQuery.value!!.isNotBlank() && isFilteringByTag) {
             val query = viewModel.searchQuery.value!!.lowercase()
-            adapter.submitList(
-                (if (viewModel.sortAscending.value!!) movements.reversed() else movements).filter {
-                    it.description.lowercase().contains(query)
-                }
-            )
+            movements.filter {
+                it.description.lowercase().contains(query) && it.tagId == viewModel.tagId.value
+            }
+        } else if (isFilteringByTag) {
+            movements.filter {
+                it.tagId == viewModel.tagId.value
+            }
+        } else if (viewModel.searchQuery.value!!.isNotBlank()) {
+            val query = viewModel.searchQuery.value!!.lowercase()
+            movements.filter {
+                it.description.lowercase().contains(query)
+            }
+        } else {
+            movements
         }
+
+        adapter.submitList(if (viewModel.sortAscending.value!!) values.reversed() else values)
     }
 
     private fun onRecyclerClick(): Boolean {

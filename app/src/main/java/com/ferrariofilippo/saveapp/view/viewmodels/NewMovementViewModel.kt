@@ -67,6 +67,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
     var onAmountChanged: () -> Unit = { }
     var onDescriptionChanged: () -> Unit = { }
+    var validateTag: () -> Unit = { }
 
     init {
         viewModelScope.launch {
@@ -213,7 +214,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     // Methods
     fun insert() = viewModelScope.launch {
         val amount = _amount.replace(",", ".").toDoubleOrNull()
-        if (amount != null && amount > 0.0 && _description.isNotBlank()) {
+        if (amount != null && amount > 0.0 && _description.isNotBlank() && _tag != null) {
             val newAmount = updateToDefaultCurrency(amount)
             var succeded = true
 
@@ -234,6 +235,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         } else {
             onAmountChanged.invoke()
             onDescriptionChanged.invoke()
+            validateTag.invoke()
         }
     }
 

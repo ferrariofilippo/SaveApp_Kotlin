@@ -151,4 +151,6 @@
     <string name="used_not_valid">Used is not valid</string>
     <string name="year">Year</string>
     <string name="no_data_available">No data available</string>
+    <string name="clear">Clear</string>
+    <string name="tag_error">Select a tag</string>
 </resources>
