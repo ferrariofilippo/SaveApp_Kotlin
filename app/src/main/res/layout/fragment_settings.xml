@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel" />
@@ -69,19 +70,36 @@
                         android:text="@string/currencies"
                         android:textAppearance="?attr/textAppearanceHeadline5" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/defaultCurrencyPicker"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:hint="@string/set_default_currency">
+                        android:layout_marginVertical="8dp">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/defaultCurrencyPicker"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/currencyUpdateProgress"
+                            android:hint="@string/set_default_currency">
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="@{!vm.isUpdatingCurrency}"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/currencyUpdateProgress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:indeterminate="true"
+                            android:visibility="@{vm.isUpdatingCurrency ? View.VISIBLE : View.GONE}" />
+                    </RelativeLayout>
 
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"

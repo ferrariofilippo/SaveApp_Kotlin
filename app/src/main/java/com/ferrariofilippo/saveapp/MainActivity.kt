@@ -7,8 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
@@ -16,6 +19,7 @@ import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.FileInputStream
@@ -23,6 +27,9 @@ import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var lastFragmentId: Int = R.id.homeFragment
+
+    private val _isUpdatingCurrencies: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUpdatingCurrencies: LiveData<Boolean> = _isUpdatingCurrencies
 
     // IO Activities
     val exportMovements = registerForActivityResult(CreateDocument("text/csv")) { uri ->
@@ -168,6 +175,20 @@ class MainActivity : AppCompatActivity() {
             R.id.action_budgetsFragment_to_newBudgetFragment,
             bundle
         )
+    }
+
+    fun updateAllToNewCurrency(value: Currencies) {
+        lifecycleScope.launch {
+            _isUpdatingCurrencies.value = true
+            CurrencyUtil.updateAllToNewCurrency(value)
+            _isUpdatingCurrencies.value = false
+
+            Snackbar.make(
+                findViewById(R.id.containerView),
+                R.string.default_currency_updated,
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(findViewById(R.id.bottomAppBar)).show()
+        }
     }
 
     private fun setupButtons() {

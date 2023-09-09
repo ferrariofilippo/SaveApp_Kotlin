@@ -153,4 +153,8 @@
     <string name="no_data_available">No data available</string>
     <string name="clear">Clear</string>
     <string name="tag_error">Select a tag</string>
+    <string name="warning">Warning</string>
+    <string name="dialog_continue">Continue</string>
+    <string name="change_default_currency_alert_message">This operation will affect all saved data and may take long to run. Closing SaveApp while this task is still running will make your data inconsistent. Would you like to continue?</string>
+    <string name="default_currency_updated">Default currency updated</string>
 </resources>

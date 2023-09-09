@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovementDao {
+    @Query("SELECT * FROM movements")
+    suspend fun getAll(): List<Movement>
+
     @Query(
         "SELECT m.id, m.amount, m.description, m.date, m.tagId, m.budgetId, " +
                 "t.name AS tagName, t.color AS tagColor " +

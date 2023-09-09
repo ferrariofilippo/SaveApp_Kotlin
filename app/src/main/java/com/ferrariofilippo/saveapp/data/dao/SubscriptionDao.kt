@@ -29,16 +29,6 @@ interface SubscriptionDao {
     @Query("SELECT * FROM subscriptions WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Subscription?
 
-    @Query(
-        "SELECT s.id, s.amount, s.description, s.renewal_type as renewalType, " +
-                "s.creation_date as creationDate, s.last_paid as lastPaid, " +
-                "s.next_renewal as nextRenewal, s.budgetId, s.tagId, t.name AS tagName, " +
-                "t.color AS tagColor " +
-                "FROM subscriptions AS s JOIN tags AS t ON s.tagId = t.id " +
-                "WHERE s.id = :id LIMIT 1"
-    )
-    suspend fun getTaggedById(id: Int): TaggedSubscription?
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(subscription: Subscription)
 

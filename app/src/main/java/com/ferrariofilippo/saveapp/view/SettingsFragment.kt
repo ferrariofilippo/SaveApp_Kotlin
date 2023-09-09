@@ -18,6 +18,7 @@ import com.ferrariofilippo.saveapp.databinding.FragmentSettingsBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -68,10 +69,23 @@ class SettingsFragment : Fragment() {
 
                 currencyAutoComplete.setAdapter(adapter)
                 currencyAutoComplete.setOnItemClickListener { parent, _, position, _ ->
-                    // TODO Show warning
+                    val activity = requireActivity()
+                    MaterialAlertDialogBuilder(activity)
+                        .setIcon(com.ferrariofilippo.saveapp.R.drawable.baseline_warning_amber_24)
+                        .setTitle(activity.getString(com.ferrariofilippo.saveapp.R.string.warning))
+                        .setMessage(activity.getString(com.ferrariofilippo.saveapp.R.string.change_default_currency_alert_message))
+                        .setNegativeButton(activity.getString(com.ferrariofilippo.saveapp.R.string.cancel)) { _, _ ->
+                            val currency =
+                                Currencies.from(runBlocking { viewModel.defaultCurrencyId.first() })
 
-                    val selection = parent.adapter.getItem(position) as Currencies
-                    viewModel.setDefaultCurrency(selection)
+                            currencyAutoComplete.setText(currency.name, false)
+                            currencyAutoComplete.clearFocus()
+                        }
+                        .setPositiveButton(activity.getString(com.ferrariofilippo.saveapp.R.string.dialog_continue)) { _, _ ->
+                            val selection = parent.adapter.getItem(position) as Currencies
+                            (requireActivity() as MainActivity).updateAllToNewCurrency(selection)
+                        }
+                        .show()
                 }
 
                 val currency = Currencies.from(runBlocking { viewModel.defaultCurrencyId.first() })

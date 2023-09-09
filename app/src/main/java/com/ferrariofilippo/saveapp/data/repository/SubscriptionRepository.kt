@@ -20,11 +20,6 @@ class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
     }
 
     @WorkerThread
-    suspend fun getTaggedById(id: Int): TaggedSubscription? {
-        return subscriptionDao.getTaggedById(id);
-    }
-
-    @WorkerThread
     suspend fun insert(subscription: Subscription) {
         subscriptionDao.insert(subscription);
     }

@@ -53,10 +53,17 @@ object StatsUtil {
         checkLastUpdate()
     }
 
-    suspend fun setStat(key: Preferences.Key<Double>, value: Double) {
-        statsStore.edit { pref ->
-            pref[key] = value
-        }
+    suspend fun applyRateToAll(rate: Double) {
+        monthKeys.forEach { setStat(it, getStat(it).first() * rate) }
+        yearKeys.forEach { setStat(it, getStat(it).first() * rate) }
+        lifeKeys.forEach { setStat(it, getStat(it).first() * rate) }
+
+        setStat(monthExpensesKey, getStat(monthExpensesKey).first() * rate)
+        setStat(monthIncomesKey, getStat(monthIncomesKey).first() * rate)
+        setStat(yearExpensesKey, getStat(yearExpensesKey).first() * rate)
+        setStat(yearIncomesKey, getStat(yearIncomesKey).first() * rate)
+        setStat(lifeExpensesKey, getStat(lifeExpensesKey).first() * rate)
+        setStat(lifeIncomesKey, getStat(lifeIncomesKey).first() * rate)
     }
 
     suspend fun addMovementToStat(movement: Movement, tag: String?) {
@@ -81,6 +88,12 @@ object StatsUtil {
                 preferences[it] ?: 0.0
             }
         }.toTypedArray()
+    }
+
+    private suspend fun setStat(key: Preferences.Key<Double>, value: Double) {
+        statsStore.edit { pref ->
+            pref[key] = value
+        }
     }
 
     private fun createKeys(prefix: String, tags: List<Tag>): Array<Preferences.Key<Double>> {

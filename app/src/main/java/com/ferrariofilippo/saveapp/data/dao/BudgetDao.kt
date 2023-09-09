@@ -19,6 +19,9 @@ interface BudgetDao {
     )
     fun getAllTagged(): Flow<List<TaggedBudget>>
 
+    @Query("SELECT * FROM budgets")
+    suspend fun getAll(): List<Budget>
+
     @Query("SELECT * FROM budgets WHERE id = :id LIMIT 1")
    suspend fun getById(id: Int): Budget?
 

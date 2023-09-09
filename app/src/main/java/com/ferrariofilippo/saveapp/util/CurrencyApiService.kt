@@ -7,6 +7,9 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ferrariofilippo.saveapp.SaveAppApplication
+import com.ferrariofilippo.saveapp.data.repository.BudgetRepository
+import com.ferrariofilippo.saveapp.data.repository.MovementRepository
+import com.ferrariofilippo.saveapp.data.repository.SubscriptionRepository
 import com.ferrariofilippo.saveapp.model.CurrencyApiResponse
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.squareup.moshi.Moshi
@@ -39,7 +42,11 @@ object CurrencyUtil {
         retrofit.create(CurrencyApiServer::class.java)
     }
 
-    private var ratesStore: DataStore<Preferences>? = null
+    private lateinit var movementRepository: MovementRepository
+    private lateinit var subscriptionRepository: SubscriptionRepository
+    private lateinit var budgetRepository: BudgetRepository
+
+    private lateinit var ratesStore: DataStore<Preferences>
 
     private var keys: Array<Preferences.Key<Double>> = arrayOf()
 
@@ -49,6 +56,9 @@ object CurrencyUtil {
 
     fun setStore(application: SaveAppApplication) {
         ratesStore = application.ratesStore
+        movementRepository = application.movementRepository
+        subscriptionRepository = application.subscriptionRepository
+        budgetRepository = application.budgetRepository
     }
 
     suspend fun init() {
@@ -74,9 +84,33 @@ object CurrencyUtil {
         }
     }
 
+    suspend fun updateAllToNewCurrency(newCurrency: Currencies) {
+        val oldCurrency = SettingsUtil.getCurrency().first()
+        if (newCurrency.id != oldCurrency) {
+            val rate = rates[newCurrency.id] / rates[oldCurrency]
+            SettingsUtil.setCurrency(newCurrency)
+
+            movementRepository.getAll().forEach {
+                it.amount *= rate
+                movementRepository.update(it)
+            }
+            subscriptionRepository.getAll().forEach {
+                it.amount *= rate
+                subscriptionRepository.update(it)
+            }
+            budgetRepository.getAll().forEach {
+                it.max *= rate
+                it.used *= rate
+                budgetRepository.update(it)
+            }
+
+            StatsUtil.applyRateToAll(rate)
+        }
+    }
+
     private suspend fun setRates(rates: Array<Double>) {
         for (i: Int in rates.indices) {
-            ratesStore!!.edit { pref ->
+            ratesStore.edit { pref ->
                 pref[keys[i]] = rates[i]
             }
         }
@@ -84,20 +118,20 @@ object CurrencyUtil {
 
     private suspend fun getRates(): Array<Double> {
         return keys.map {
-            ratesStore!!.data.map { preferences ->
+            ratesStore.data.map { preferences ->
                 preferences[it] ?: 0.0
             }.first()
         }.toTypedArray()
     }
 
     private suspend fun setDate(date: String) {
-        ratesStore!!.edit { pref ->
+        ratesStore.edit { pref ->
             pref[DATE_KEY] = date
         }
     }
 
     private suspend fun getDate(): LocalDate? {
-        val dateStr = ratesStore!!.data.map { preferences ->
+        val dateStr = ratesStore.data.map { preferences ->
             preferences[DATE_KEY]
         }.first()
 

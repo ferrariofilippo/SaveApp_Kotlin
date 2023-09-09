@@ -10,6 +10,11 @@ class MovementRepository(private val movementDao: MovementDao) {
     val allTaggedMovements: Flow<List<TaggedMovement>> = movementDao.getAllTagged();
 
     @WorkerThread
+    suspend fun getAll(): List<Movement> {
+        return movementDao.getAll()
+    }
+
+    @WorkerThread
     suspend fun getAllTaggedByYear(year: String): List<TaggedMovement> {
         return movementDao.getAllTaggedByYear(year)
     }

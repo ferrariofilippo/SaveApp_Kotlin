@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.Flow
 class BudgetRepository(private val budgetDao: BudgetDao) {
     val allBudgets: Flow<List<TaggedBudget>> = budgetDao.getAllTagged();
 
-    @WorkerThread
-    suspend fun getById(id: Int) : Budget? {
-        return budgetDao.getById(id)
+    suspend fun getAll(): List<Budget> {
+        return budgetDao.getAll()
     }
 
     @WorkerThread
-    suspend fun getTaggedById(id: Int): TaggedBudget? {
-        return budgetDao.getTaggedById(id);
+    suspend fun getById(id: Int) : Budget? {
+        return budgetDao.getById(id)
     }
 
     @WorkerThread

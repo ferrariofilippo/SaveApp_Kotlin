@@ -153,4 +153,8 @@
     <string name="no_data_available">Nessun dato disponibile</string>
     <string name="clear">Annulla</string>
     <string name="tag_error">Seleziona un tag</string>
+    <string name="warning">Attenzione</string>
+    <string name="dialog_continue">Continua</string>
+    <string name="change_default_currency_alert_message">Questa operazione modificherà tutti i dati salvati e potrebbe richiedere molto tempo per essere eseguita. Chiudere SaveApp mentre questo lavoro è ancora in corso renderà i tuoi dati inconsistenti. Vuoi continuare?</string>
+    <string name="default_currency_updated">Valuta predefinita aggiornata</string>
 </resources>
