@@ -20,6 +20,11 @@ class MovementRepository(private val movementDao: MovementDao) {
     }
 
     @WorkerThread
+    suspend fun getAllTaggedByYearSorted(year: String): List<TaggedMovement> {
+        return movementDao.getAllTaggedByYearSorted(year)
+    }
+
+    @WorkerThread
     suspend fun getById(id: Int): Movement? {
         return movementDao.getById(id);
     }

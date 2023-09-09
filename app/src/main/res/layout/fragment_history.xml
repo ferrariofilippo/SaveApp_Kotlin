@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.HistoryViewModel" />
@@ -99,9 +97,19 @@
                 android:id="@+id/movementsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{vm.showEmptyMessage ? View.GONE : View.VISIBLE}"
                 app:layout_anchor="@+id/relativeLayout"
                 app:layout_anchorGravity="start|center"
                 tools:listitem="@layout/movement_item" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/no_data_available"
+                android:gravity="center_vertical|center_horizontal"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="?attr/colorPrimary"
+                android:visibility="@{vm.showEmptyMessage ? View.VISIBLE : View.GONE}" />
 
             <FrameLayout
                 android:id="@+id/filtersBottomSheet"
@@ -121,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="32dp"
-                    android:layout_marginBottom="96dp"
+                    android:layout_marginBottom="148dp"
                     android:background="@drawable/search_background"
                     android:hint="@{vm.searchBarHint}"
                     android:paddingHorizontal="8dp"
@@ -173,6 +181,45 @@
                         android:visibility="@{vm.tagId == 0 ? View.GONE : View.VISIBLE}" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="164dp"
+                    android:background="@drawable/year_selector_background"
+                    android:paddingHorizontal="4dp">
+
+                    <Button
+                        android:id="@+id/decrease_year_button"
+                        style="?attr/materialIconButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        app:icon="@drawable/baseline_remove_24"
+                        app:strokeWidth="0dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="32dp"
+                        android:layout_toStartOf="@id/increase_year_button"
+                        android:layout_toEndOf="@id/decrease_year_button"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{String.valueOf(vm.year)}"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorPrimaryVariant" />
+
+                    <Button
+                        android:id="@+id/increase_year_button"
+                        style="?attr/materialIconButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        app:icon="@drawable/round_add_24" />
+                </RelativeLayout>
             </FrameLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>

@@ -37,6 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 
 class HistoryFragment : Fragment() {
     private lateinit var viewModel: HistoryViewModel
@@ -81,7 +82,7 @@ class HistoryFragment : Fragment() {
         binding.movementsRecyclerView.adapter = adapter
         binding.movementsRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        viewModel.allMovements.observe(viewLifecycleOwner, Observer { movements ->
+        viewModel.movements.observe(viewLifecycleOwner, Observer { movements ->
             movements?.let {
                 setFilteredItems(adapter, it)
             }
@@ -100,8 +101,8 @@ class HistoryFragment : Fragment() {
 
         viewModel.searchQuery.observe(viewLifecycleOwner, Observer { query ->
             query?.let {
-                if (viewModel.allMovements.value != null)
-                    setFilteredItems(adapter, viewModel.allMovements.value!!)
+                if (viewModel.movements.value != null)
+                    setFilteredItems(adapter, viewModel.movements.value!!)
             }
         })
 
@@ -236,6 +237,13 @@ class HistoryFragment : Fragment() {
         }
 
         setupTagPicker()
+
+        binding.decreaseYearButton.setOnClickListener {
+            viewModel.year.value = (viewModel.year.value ?: LocalDate.now().year) - 1
+        }
+        binding.increaseYearButton.setOnClickListener {
+            viewModel.year.value = (viewModel.year.value ?: LocalDate.now().year) + 1
+        }
     }
 
     private fun setupTagPicker() {
@@ -254,7 +262,7 @@ class HistoryFragment : Fragment() {
                     viewModel.tagId.value = selection.id
                     setFilteredItems(
                         binding.movementsRecyclerView.adapter as HistoryAdapter,
-                        viewModel.allMovements.value!!
+                        viewModel.movements.value!!
                     )
                 }
             }
@@ -266,7 +274,7 @@ class HistoryFragment : Fragment() {
             viewModel.tagId.value = 0
             setFilteredItems(
                 binding.movementsRecyclerView.adapter as HistoryAdapter,
-                viewModel.allMovements.value!!
+                viewModel.movements.value!!
             )
         }
     }
