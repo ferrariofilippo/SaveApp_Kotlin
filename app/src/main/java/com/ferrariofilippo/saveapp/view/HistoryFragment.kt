@@ -1,16 +1,12 @@
 package com.ferrariofilippo.saveapp.view
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +23,7 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.ferrariofilippo.saveapp.util.BudgetUtil
+import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
@@ -112,32 +109,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerGestures() {
-        val gestureCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            lateinit var deleteBackground: Drawable
-            lateinit var deleteIcon: Drawable
-            lateinit var editBackground: Drawable
-            lateinit var editIcon: Drawable
-            val iconMargin: Int = 16
-            var initiated: Boolean = false
-
-            private fun init() {
-                val ctx = requireContext()
-                deleteBackground = ColorDrawable(ContextCompat.getColor(ctx, R.color.red_200))
-                deleteIcon = ContextCompat.getDrawable(ctx, R.drawable.baseline_delete_24)!!
-                editBackground = ColorDrawable(ContextCompat.getColor(ctx, R.color.emerald_200))
-                editIcon = ContextCompat.getDrawable(ctx, R.drawable.baseline_edit_24)!!
-                initiated = true
-            }
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
+        val gestureCallback = object : RecyclerEditAndDeleteGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val adapter = binding.movementsRecyclerView.adapter as HistoryAdapter
@@ -147,71 +119,6 @@ class HistoryFragment : Fragment() {
                     (activity as MainActivity).goToEditMovementOrSubscription(movement.id, true)
                 else if (direction == ItemTouchHelper.LEFT)
                     onRemoveMovementInvoked(movement)
-            }
-
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                if (viewHolder.adapterPosition == -1)
-                    return
-
-                if (!initiated)
-                    init()
-
-                if (dX != 0f) {
-                    val background: Drawable
-                    val icon: Drawable
-                    val backgroundLeft: Int
-                    val backgroundRight: Int
-                    val iconLeft: Int
-                    val iconRight: Int
-
-                    if (dX > 0) {
-                        background = editBackground
-                        icon = editIcon
-                        backgroundLeft = 0
-                        backgroundRight = dX.toInt()
-                        iconLeft = iconMargin
-                        iconRight = iconMargin + icon.intrinsicWidth
-                    } else {
-                        background = deleteBackground
-                        icon = deleteIcon
-                        backgroundLeft = viewHolder.itemView.right + dX.toInt()
-                        backgroundRight = viewHolder.itemView.right
-                        iconLeft = viewHolder.itemView.right - iconMargin - icon.intrinsicWidth
-                        iconRight = viewHolder.itemView.right - iconMargin
-                    }
-
-                    background.setBounds(
-                        backgroundLeft,
-                        viewHolder.itemView.top,
-                        backgroundRight,
-                        viewHolder.itemView.bottom
-                    )
-                    background.draw(c)
-
-                    val height = viewHolder.itemView.bottom - viewHolder.itemView.top
-                    val iconTop = viewHolder.itemView.top + (height - icon.intrinsicHeight) / 2
-
-                    icon.setBounds(iconLeft, iconTop, iconRight, iconTop + icon.intrinsicHeight)
-                    icon.draw(c)
-                }
-
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
             }
         }
 
@@ -324,6 +231,7 @@ class HistoryFragment : Fragment() {
         lifecycleScope.launch {
             app.movementRepository.delete(movement)
             BudgetUtil.removeMovementFromBudget(movement)
+            viewModel.updateMovements()
             movement.amount *= -1
             StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
         }
@@ -334,6 +242,7 @@ class HistoryFragment : Fragment() {
                     movement.amount *= -1
                     BudgetUtil.tryAddMovementToBudget(movement)
                     app.movementRepository.insert(movement)
+                    viewModel.updateMovements()
                     StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
                 }
             }.show()

@@ -47,9 +47,13 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
         year.observeForever {
             viewModelScope.launch {
-                _movements.value = movementRepo.getAllTaggedByYearSorted(year.value!!.toString())
-                showEmptyMessage.value = _movements.value?.size == 0
+                updateMovements()
             }
         }
+    }
+
+    suspend fun updateMovements() {
+        _movements.value = movementRepo.getAllTaggedByYearSorted(year.value!!.toString())
+        showEmptyMessage.value = _movements.value?.size == 0
     }
 }

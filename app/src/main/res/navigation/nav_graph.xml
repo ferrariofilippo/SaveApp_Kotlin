@@ -48,7 +48,11 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.ferrariofilippo.saveapp.view.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_manageTagsFragment"
+            app:destination="@id/manageTagsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/subscriptionsFragment"
         android:name="com.ferrariofilippo.saveapp.view.SubscriptionsFragment"
@@ -61,5 +65,27 @@
             android:name="itemId"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageTagsFragment"
+        android:name="com.ferrariofilippo.saveapp.view.ManageTagsFragment"
+        android:label="fragment_manage_tags"
+        tools:layout="@layout/fragment_manage_tags" >
+        <action
+            android:id="@+id/action_manageTagsFragment_to_newTagFragment"
+            app:destination="@id/newTagFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newTagFragment"
+        android:name="com.ferrariofilippo.saveapp.NewTagFragment"
+        android:label="fragment_new_tag"
+        tools:layout="@layout/fragment_new_tag" >
+        <argument
+            android:name="tagId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_newTagFragment_to_manageTagsFragment"
+            app:destination="@id/manageTagsFragment" />
     </fragment>
 </navigation>

@@ -40,12 +40,9 @@ interface MovementDao {
     suspend fun getById(id: Int): Movement?
 
     @Query(
-        "SELECT m.id, m.amount, m.description, m.date, m.tagId, m.budgetId, " +
-                "t.name AS tagName, t.color AS tagColor " +
-                "FROM movements AS m JOIN tags as t ON m.tagId = t.id " +
-                "WHERE m.id = :id LIMIT 1"
+        "SELECT * FROM movements WHERE tagId = :id LIMIT 1"
     )
-    suspend fun getTaggedById(id: Int): TaggedMovement?
+    suspend fun getFirstWithTag(id: Int) : Movement?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(movement: Movement)

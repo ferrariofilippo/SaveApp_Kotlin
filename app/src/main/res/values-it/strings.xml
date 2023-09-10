@@ -157,4 +157,15 @@
     <string name="dialog_continue">Continua</string>
     <string name="change_default_currency_alert_message">Questa operazione modificherà tutti i dati salvati e potrebbe richiedere molto tempo per essere eseguita. Chiudere SaveApp mentre questo lavoro è ancora in corso renderà i tuoi dati inconsistenti. Vuoi continuare?</string>
     <string name="default_currency_updated">Valuta predefinita aggiornata</string>
+    <string name="tags">Tag</string>
+    <string name="manage">Gestisci</string>
+    <string name="tag_card_description">Applicare dei tag ai movimenti permette di organizzare più facilmente i dati. Per personalizzare i tag clicca sul bottone qui sotto.</string>
+    <string name="manage_tags">Gestisci i tag</string>
+    <string name="tag">Tag</string>
+    <string name="add_tag">Aggiungi un tag</string>
+    <string name="tag_deleted">Tag eliminato.</string>
+    <string name="name_already_used">Nome già in uso</string>
+    <string name="tag_created">Tag creato.</string>
+    <string name="tag_updated">Tag aggiornato.</string>
+    <string name="cannot_delete_tag">Impossibile eliminare il tag. Il tag è usato da altri dati.</string>
 </resources>

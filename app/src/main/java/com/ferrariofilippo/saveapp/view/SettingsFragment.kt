@@ -102,6 +102,7 @@ class SettingsFragment : Fragment() {
         setupSubscriptionsButtons(act)
         setupBudgetsButtons(act)
 
+        binding.manageTagsButton.setOnClickListener { act.goToManageTags() }
         binding.creditsButton.setOnClickListener {
             val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin")
             startActivity(Intent(Intent.ACTION_VIEW, uri))

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ferrariofilippo.saveapp.view.viewmodels.NewTagViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+
+        <TextView
+            android:id="@+id/add_tag_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/add_tag"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textColor="?attr/colorPrimaryVariant" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tagNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_tag_title"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/colorInput"
+            android:hint="@string/name_hint"
+            android:enabled="@{vm.oldTag == null || vm.oldTag.id != 1}"
+            app:counterEnabled="true"
+            app:counterMaxLength="32"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@={vm.tagName}"
+                android:textAlignment="textEnd" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/colorInput"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_tag_title"
+            android:layout_alignParentEnd="true"
+            app:boxBackgroundColor="@{vm.displayColor}"
+            android:layout_marginStart="12dp">
+
+            <AutoCompleteTextView
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/cancelButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/colorInput"
+            android:layout_marginTop="28dp"
+            android:layout_toStartOf="@id/saveButton"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/saveButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/colorInput"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/save" />
+    </RelativeLayout>
+</layout>

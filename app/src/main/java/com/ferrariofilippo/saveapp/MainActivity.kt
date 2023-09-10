@@ -177,6 +177,22 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    fun goToManageTags() {
+        findNavController(R.id.containerView).navigate(R.id.action_settingsFragment_to_manageTagsFragment)
+    }
+
+    fun gotToAddOrEditTag(id: Int) {
+        val bundle = bundleOf("tagId" to id)
+        findNavController(R.id.containerView).navigate(
+            R.id.action_manageTagsFragment_to_newTagFragment,
+            bundle
+        )
+    }
+
+    fun goBackToManageTags() {
+        findNavController(R.id.containerView).navigate(R.id.action_newTagFragment_to_manageTagsFragment)
+    }
+
     fun updateAllToNewCurrency(value: Currencies) {
         lifecycleScope.launch {
             _isUpdatingCurrencies.value = true

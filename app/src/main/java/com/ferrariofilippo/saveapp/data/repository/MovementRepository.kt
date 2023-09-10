@@ -30,8 +30,8 @@ class MovementRepository(private val movementDao: MovementDao) {
     }
 
     @WorkerThread
-    suspend fun getTaggedById(id: Int): TaggedMovement? {
-        return movementDao.getTaggedById(id);
+    suspend fun getFirstWithTag(id: Int): Movement? {
+        return movementDao.getFirstWithTag(id)
     }
 
     @WorkerThread
