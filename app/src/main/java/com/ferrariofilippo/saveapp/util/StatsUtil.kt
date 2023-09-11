@@ -136,24 +136,26 @@ object StatsUtil {
     }
 
     private fun readJSON(reader: JsonReader) {
-        reader.beginObject()
+        reader.use { jsonReader ->
+            jsonReader.beginObject()
 
-        while (reader.hasNext()) {
-            when (reader.nextName()) {
-                LAST_UPDATE -> _lastUpdate = LocalDate.parse(reader.nextString())
-                MONTH_EXPENSES -> _monthExpenses.value = reader.nextDouble()
-                MONTH_INCOMES -> _monthIncomes.value = reader.nextDouble()
-                YEAR_EXPENSES -> _yearExpenses.value = reader.nextDouble()
-                YEAR_INCOMES -> _yearIncomes.value = reader.nextDouble()
-                LIFE_EXPENSES -> _lifeExpenses.value = reader.nextDouble()
-                LIFE_INCOMES -> _lifeIncomes.value = reader.nextDouble()
-                MONTH_TAGS -> monthTags = readMap(reader)
-                YEAR_TAGS -> yearTags = readMap(reader)
-                LIFE_TAGS -> lifeTags = readMap(reader)
+            while (jsonReader.hasNext()) {
+                when (jsonReader.nextName()) {
+                    LAST_UPDATE -> _lastUpdate = LocalDate.parse(jsonReader.nextString())
+                    MONTH_EXPENSES -> _monthExpenses.value = jsonReader.nextDouble()
+                    MONTH_INCOMES -> _monthIncomes.value = jsonReader.nextDouble()
+                    YEAR_EXPENSES -> _yearExpenses.value = jsonReader.nextDouble()
+                    YEAR_INCOMES -> _yearIncomes.value = jsonReader.nextDouble()
+                    LIFE_EXPENSES -> _lifeExpenses.value = jsonReader.nextDouble()
+                    LIFE_INCOMES -> _lifeIncomes.value = jsonReader.nextDouble()
+                    MONTH_TAGS -> monthTags = readMap(jsonReader)
+                    YEAR_TAGS -> yearTags = readMap(jsonReader)
+                    LIFE_TAGS -> lifeTags = readMap(jsonReader)
+                }
             }
-        }
 
-        reader.endObject()
+            jsonReader.endObject()
+        }
     }
 
     private fun readMap(reader: JsonReader): Map<Int, MutableLiveData<Double>> {
