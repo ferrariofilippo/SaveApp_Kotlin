@@ -1,7 +1,6 @@
 package com.ferrariofilippo.saveapp.data
 
 import android.content.Context
-import androidx.core.content.ContextCompat
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -16,6 +15,7 @@ import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 
 @Database(entities = [Budget::class, Movement::class, Subscription::class, Tag::class], version = 1)
@@ -36,7 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { database ->
-                scope.launch {
+                scope.launch(scope.coroutineContext, CoroutineStart.UNDISPATCHED) {
                     populateDb(database.tagDao());
                 }
             }

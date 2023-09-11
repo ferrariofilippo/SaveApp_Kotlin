@@ -6,10 +6,10 @@ import android.util.JsonReader
 import android.util.JsonWriter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -70,17 +70,19 @@ object StatsUtil {
             }
         } catch (_: FileNotFoundException) {
         } finally {
-            application.tagRepository.allTags.asLiveData().observeForever {
-                val tags = it.filter { tag -> tag.id != INCOME_TAG_ID }
+            application.applicationScope.launch {
+                application.tagRepository.allTags.collect {
+                    val tags = it.filter { tag -> tag.id != INCOME_TAG_ID }
 
-                if (monthTags.isEmpty() || (monthTags.size == 1 && monthTags.containsKey(0)))
-                    monthTags = getMapFromTags(tags)
+                    if (monthTags.isEmpty() || monthTags.size != tags.size)
+                        monthTags = getMapFromTags(tags)
 
-                if (yearTags.isEmpty() || (yearTags.size == 1 && yearTags.containsKey(0)))
-                    yearTags = getMapFromTags(tags)
+                    if (yearTags.isEmpty() || yearTags.size != tags.size)
+                        yearTags = getMapFromTags(tags)
 
-                if (lifeTags.isEmpty() || (lifeTags.size == 1 && lifeTags.containsKey(0)))
-                    lifeTags = getMapFromTags(tags)
+                    if (lifeTags.isEmpty() || lifeTags.size != tags.size)
+                        lifeTags = getMapFromTags(tags)
+                }
             }
         }
     }
