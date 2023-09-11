@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/newTagFragment"
-        android:name="com.ferrariofilippo.saveapp.NewTagFragment"
+        android:name="com.ferrariofilippo.saveapp.view.NewTagFragment"
         android:label="fragment_new_tag"
         tools:layout="@layout/fragment_new_tag" >
         <argument

@@ -5,7 +5,6 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
-import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 
 object SubscriptionUtil {
@@ -38,7 +37,6 @@ object SubscriptionUtil {
 
     suspend fun validateSubscriptions(application: SaveAppApplication) {
         val subscriptions = application.subscriptionRepository.getAll()
-        val tags = application.tagRepository.allTags.first()
         val description = application.getString(R.string.payment_of)
 
         for (subscription in subscriptions) {
@@ -46,10 +44,7 @@ object SubscriptionUtil {
             while (movement != null) {
                 BudgetUtil.tryAddMovementToBudget(movement)
                 application.movementRepository.insert(movement)
-                StatsUtil.addMovementToStat(
-                    movement,
-                    tags.firstOrNull { it.id == movement!!.tagId }?.name
-                )
+                StatsUtil.addMovementToStat(application, movement)
                 movement = getMovementFromSub(subscription, description)
             }
             application.subscriptionRepository.update(subscription)

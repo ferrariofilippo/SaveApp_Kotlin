@@ -1,5 +1,6 @@
 package com.ferrariofilippo.saveapp.util
 
+import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -84,7 +85,7 @@ object CurrencyUtil {
         }
     }
 
-    suspend fun updateAllToNewCurrency(newCurrency: Currencies) {
+    suspend fun updateAllToNewCurrency(context: Context, newCurrency: Currencies) {
         val oldCurrency = SettingsUtil.getCurrency().first()
         if (newCurrency.id != oldCurrency) {
             val rate = rates[newCurrency.id] / rates[oldCurrency]
@@ -104,7 +105,7 @@ object CurrencyUtil {
                 budgetRepository.update(it)
             }
 
-            StatsUtil.applyRateToAll(rate)
+            StatsUtil.applyRateToAll(context, rate)
         }
     }
 

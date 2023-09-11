@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         SettingsUtil.setStore(saveApp)
         CurrencyUtil.setStore(saveApp)
         BudgetUtil.init(saveApp)
-        runBlocking { StatsUtil.init(saveApp) }
+        StatsUtil.init(saveApp)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
     fun updateAllToNewCurrency(value: Currencies) {
         lifecycleScope.launch {
             _isUpdatingCurrencies.value = true
-            CurrencyUtil.updateAllToNewCurrency(value)
+            CurrencyUtil.updateAllToNewCurrency(application, value)
             _isUpdatingCurrencies.value = false
 
             Snackbar.make(

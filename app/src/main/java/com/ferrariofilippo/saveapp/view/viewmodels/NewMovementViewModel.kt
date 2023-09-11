@@ -278,10 +278,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
         if (editingMovement != null) {
             editingMovement!!.amount *= -1
-            StatsUtil.addMovementToStat(
-                editingMovement!!,
-                tags.value!!.firstOrNull { it.id == editingMovement!!.tagId }?.name
-            )
+            StatsUtil.addMovementToStat(saveAppApplication, editingMovement!!)
 
             movement.id = editingMovement!!.id
             movementRepository.update(movement)
@@ -289,7 +286,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             movementRepository.insert(movement)
         }
 
-        StatsUtil.addMovementToStat(movement, _tag?.name)
+        StatsUtil.addMovementToStat(saveAppApplication, movement)
 
         return true
     }
@@ -325,7 +322,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
                 movement.budgetId = 0
 
             movementRepository.insert(movement)
-            StatsUtil.addMovementToStat(movement, _tag?.name)
+            StatsUtil.addMovementToStat(saveAppApplication, movement)
         }
     }
 

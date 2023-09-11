@@ -1,15 +1,16 @@
-package com.ferrariofilippo.saveapp
+package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.lifecycle.ViewModelProvider
+import com.ferrariofilippo.saveapp.MainActivity
+import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentNewTagBinding
-import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.view.adapters.ColorDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewTagViewModel
 import kotlinx.coroutines.runBlocking

@@ -189,10 +189,7 @@ object ImportExportUtil {
                 addMovements.forEach {
                     BudgetUtil.tryAddMovementToBudget(it)
                     app.movementRepository.insert(it)
-                    StatsUtil.addMovementToStat(
-                        it,
-                        tags.firstOrNull { tag -> tag.id == it.tagId }?.name
-                    )
+                    StatsUtil.addMovementToStat(app, it)
                 }
                 updateMovements.forEach {
                     val oldMovement = app.movementRepository.getById(it.id)
@@ -203,17 +200,11 @@ object ImportExportUtil {
                         }
 
                         oldMovement.amount *= -1
-                        StatsUtil.addMovementToStat(
-                            oldMovement,
-                            tags.firstOrNull { tag -> tag.id == oldMovement.tagId }?.name
-                        )
+                        StatsUtil.addMovementToStat(app, oldMovement)
                     }
 
                     app.movementRepository.update(it)
-                    StatsUtil.addMovementToStat(
-                        it,
-                        tags.firstOrNull { tag -> tag.id == it.tagId }?.name
-                    )
+                    StatsUtil.addMovementToStat(app, it)
                 }
             }
         } catch (_: Exception) {

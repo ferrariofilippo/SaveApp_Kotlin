@@ -30,8 +30,6 @@ class SaveAppApplication : Application() {
 
     val settingsStore: DataStore<Preferences> by preferencesDataStore("settings")
 
-    val statsStore: DataStore<Preferences> by preferencesDataStore("stats")
-
     private var currentActivity: Activity? = null;
 
     fun getCurrentActivity(): Activity? {

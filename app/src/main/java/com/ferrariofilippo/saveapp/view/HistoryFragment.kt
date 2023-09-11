@@ -233,7 +233,7 @@ class HistoryFragment : Fragment() {
             BudgetUtil.removeMovementFromBudget(movement)
             viewModel.updateMovements()
             movement.amount *= -1
-            StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
+            StatsUtil.addMovementToStat(app, movement)
         }
 
         Snackbar.make(binding.coordinatorLayout, R.string.movement_deleted, Snackbar.LENGTH_SHORT)
@@ -243,7 +243,7 @@ class HistoryFragment : Fragment() {
                     BudgetUtil.tryAddMovementToBudget(movement)
                     app.movementRepository.insert(movement)
                     viewModel.updateMovements()
-                    StatsUtil.addMovementToStat(movement, taggedMovement.tagName)
+                    StatsUtil.addMovementToStat(app, movement)
                 }
             }.show()
     }
