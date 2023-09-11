@@ -6,6 +6,8 @@ SaveApp is an open-source Android app that helps keep track of expenses.
 All data is saved locally on your phone.
 
 ## Screenshots
+![Screenshot_20230910-175243 (Piccola)](https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/573c9072-7486-42ed-997f-eefc189b6704)
+![Screenshot_20230910-175235 (Piccola)](https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/fe8e3fca-05df-444d-bf79-519a6df44faf)
 
 ## Contribute
 Feel free to open <a href="https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/">issues</a> to track bugs and/or feature requests.<br/>
