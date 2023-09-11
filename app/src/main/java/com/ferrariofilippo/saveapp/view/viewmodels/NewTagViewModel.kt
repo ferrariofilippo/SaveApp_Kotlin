@@ -34,7 +34,7 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
         colors = initializeColors()
 
         viewModelScope.launch {
-            tags.value = saveAppApplication.tagRepository.allTags.first()
+            tags.value = saveAppApplication.tagRepository.allTags.first() ?: listOf()
         }
     }
 
