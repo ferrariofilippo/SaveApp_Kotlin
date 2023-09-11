@@ -17,6 +17,10 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class StatsByMonthViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        private const val INCOME_ID = 1
+    }
+
     private val _app = application as SaveAppApplication
 
     private var _movements: List<TaggedMovement> = listOf()
@@ -79,7 +83,8 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
                 _showEmptyMessage.value = _movements.isEmpty()
                 clearSums()
                 _movements.forEach {
-                    _monthSums[it.date.monthValue - 1] += it.amount
+                    if (it.tagId != INCOME_ID)
+                        _monthSums[it.date.monthValue - 1] += it.amount
                 }
                 updateEntries()
             }
@@ -121,7 +126,7 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     private fun initYears() {
         val values = mutableStateListOf<String>()
         val currentYear = LocalDate.now().year
-        for(i:Int in 0 until 7)
+        for (i: Int in 0 until 7)
             values.add((currentYear - i).toString())
 
         years = values.toList()

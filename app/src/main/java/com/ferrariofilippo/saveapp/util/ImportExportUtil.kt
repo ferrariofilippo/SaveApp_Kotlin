@@ -185,7 +185,6 @@ object ImportExportUtil {
                 }
             }
             app.applicationScope.launch {
-                val tags = app.tagRepository.allTags.first()
                 addMovements.forEach {
                     BudgetUtil.tryAddMovementToBudget(it)
                     app.movementRepository.insert(it)

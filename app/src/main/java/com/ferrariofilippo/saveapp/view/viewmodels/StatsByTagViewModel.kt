@@ -96,7 +96,9 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         val colors: MutableList<Int> = mutableListOf()
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
-            items.add(TagMovementsSum(it.id, it.name, it.color, sum))
+            if (it.id != INCOME_ID)
+                items.add(TagMovementsSum(it.id, it.name, it.color, sum))
+
             if (sum != 0.0) {
                 colors.add(_app.getColor(it.color))
                 entries.add(PieEntry((sum * 100.0 / generalSum).toFloat(), it.name))

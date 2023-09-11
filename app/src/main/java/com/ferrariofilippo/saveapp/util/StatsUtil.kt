@@ -1,6 +1,7 @@
 package com.ferrariofilippo.saveapp.util
 
 import android.content.Context
+import android.os.Handler
 import android.util.JsonReader
 import android.util.JsonWriter
 import androidx.lifecycle.LiveData
@@ -107,27 +108,30 @@ object StatsUtil {
 
         val isSameYear = LocalDate.now().year == mov.date.year
 
-        if (mov.tagId == INCOME_TAG_ID) {
-            if (isSameMonth)
-                _monthIncomes.value = _monthIncomes.value!! + mov.amount
+        val handler = Handler(context.mainLooper)
+        handler.post {
+            if (mov.tagId == INCOME_TAG_ID) {
+                if (isSameMonth)
+                    _monthIncomes.value = _monthIncomes.value!! + mov.amount
 
-            if (isSameYear)
-                _yearIncomes.value = _yearIncomes.value!! + mov.amount
+                if (isSameYear)
+                    _yearIncomes.value = _yearIncomes.value!! + mov.amount
 
-            _lifeIncomes.value = _lifeIncomes.value!! + mov.amount
-        } else {
-            if (isSameMonth) {
-                _monthExpenses.value = _monthExpenses.value!! + mov.amount
-                monthTags[mov.tagId]!!.value = monthTags[mov.tagId]!!.value!! + mov.amount
+                _lifeIncomes.value = _lifeIncomes.value!! + mov.amount
+            } else {
+                if (isSameMonth) {
+                    _monthExpenses.value = _monthExpenses.value!! + mov.amount
+                    monthTags[mov.tagId]!!.value = monthTags[mov.tagId]!!.value!! + mov.amount
+                }
+
+                if (isSameYear) {
+                    _yearExpenses.value = _yearExpenses.value!! + mov.amount
+                    yearTags[mov.tagId]!!.value = yearTags[mov.tagId]!!.value!! + mov.amount
+                }
+
+                _lifeExpenses.value = _lifeExpenses.value!! + mov.amount
+                lifeTags[mov.tagId]!!.value = lifeTags[mov.tagId]!!.value!! + mov.amount
             }
-
-            if (isSameYear) {
-                _yearExpenses.value = _yearExpenses.value!! + mov.amount
-                yearTags[mov.tagId]!!.value = yearTags[mov.tagId]!!.value!! + mov.amount
-            }
-
-            _lifeExpenses.value = _lifeExpenses.value!! + mov.amount
-            lifeTags[mov.tagId]!!.value = lifeTags[mov.tagId]!!.value!! + mov.amount
         }
 
         context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
