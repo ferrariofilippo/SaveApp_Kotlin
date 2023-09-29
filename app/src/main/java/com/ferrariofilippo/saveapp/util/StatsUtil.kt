@@ -134,10 +134,10 @@ object StatsUtil {
                 _lifeExpenses.value = _lifeExpenses.value!! + mov.amount
                 lifeTags[mov.tagId]!!.value = lifeTags[mov.tagId]!!.value!! + mov.amount
             }
-        }
 
-        context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
-            writeJSON(JsonWriter(OutputStreamWriter(it, "UTF-8")))
+            context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
+                writeJSON(JsonWriter(OutputStreamWriter(it, "UTF-8")))
+            }
         }
     }
 
