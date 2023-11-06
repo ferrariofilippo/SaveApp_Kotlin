@@ -8,9 +8,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
-import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
 
 class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecoration() {
     private lateinit var background: Drawable

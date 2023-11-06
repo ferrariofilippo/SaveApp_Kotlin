@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.ferrariofilippo.saveapp.R
-import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 
 class BudgetsDropdownAdapter(

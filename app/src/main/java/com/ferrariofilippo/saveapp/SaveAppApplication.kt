@@ -30,13 +30,13 @@ class SaveAppApplication : Application() {
 
     val settingsStore: DataStore<Preferences> by preferencesDataStore("settings")
 
-    private var currentActivity: Activity? = null;
+    private var currentActivity: Activity? = null
 
     fun getCurrentActivity(): Activity? {
-        return currentActivity;
+        return currentActivity
     }
 
     fun setCurrentActivity(activity: Activity?) {
-        currentActivity = activity;
+        currentActivity = activity
     }
 }

@@ -64,6 +64,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/byYearIncomesLabel"
         android:layout_marginTop="8dp"
-        android:layout_weight="2"
         android:foreground="?attr/colorPrimary" />
 </RelativeLayout>

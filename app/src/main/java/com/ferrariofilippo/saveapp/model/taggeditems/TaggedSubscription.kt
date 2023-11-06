@@ -1,6 +1,5 @@
 package com.ferrariofilippo.saveapp.model.taggeditems
 
-import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
 import com.ferrariofilippo.saveapp.data.converters.DateConverter
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
@@ -19,4 +18,4 @@ data class TaggedSubscription(
     var tagName: String,
     var tagColor: Int,
     var budgetId: Int?
-);
+)

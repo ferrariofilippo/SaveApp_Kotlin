@@ -16,4 +16,4 @@ data class Movement(
     var date: LocalDate,
     var tagId: Int,
     var budgetId: Int?
-);
+)

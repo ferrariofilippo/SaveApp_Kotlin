@@ -19,7 +19,7 @@ object BudgetUtil {
 
         val budget: Budget? = budgetsRepository.getById(m.budgetId!!)
         if (budget == null) {
-            m.budgetId = 0;
+            m.budgetId = 0
             return if (force) AddToBudgetResult.SUCCEEDED else AddToBudgetResult.NOT_EXISTS
         }
 

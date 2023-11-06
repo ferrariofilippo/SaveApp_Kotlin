@@ -33,14 +33,6 @@
     <string name="cancel">Annulla</string>
     <string name="save">Salva</string>
     <string name="emptyString"> </string>
-    <string name="EUR">EUR</string>
-    <string name="AUD">AUD</string>
-    <string name="CHF">CHF</string>
-    <string name="USD">USD</string>
-    <string name="GBP">GBP</string>
-    <string name="CNY">CNY</string>
-    <string name="JPY">JPY</string>
-    <string name="CAD">CAD</string>
     <string name="WEEKLY">Settimanale</string>
     <string name="MONTHLY">Mensile</string>
     <string name="BIMONTHLY">Bimestrale</string>

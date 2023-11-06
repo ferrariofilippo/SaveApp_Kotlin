@@ -14,4 +14,4 @@ data class TaggedMovement(
     var tagName: String,
     var tagColor: Int,
     var budgetId: Int?
-);
+)

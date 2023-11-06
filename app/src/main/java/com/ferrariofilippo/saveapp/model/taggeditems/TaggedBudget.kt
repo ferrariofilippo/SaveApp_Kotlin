@@ -15,4 +15,4 @@ data class TaggedBudget(
     var tagId: Int,
     var tagName: String,
     var tagColor: Int,
-);
+)

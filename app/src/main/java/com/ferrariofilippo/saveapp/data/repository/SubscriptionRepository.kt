@@ -7,7 +7,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
 import kotlinx.coroutines.flow.Flow
 
 class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
-    val allTaggedSubscriptions: Flow<List<TaggedSubscription>> = subscriptionDao.getAllTagged();
+    val allTaggedSubscriptions: Flow<List<TaggedSubscription>> = subscriptionDao.getAllTagged()
 
     @WorkerThread
     suspend fun getAll(): List<Subscription> {
@@ -16,21 +16,21 @@ class SubscriptionRepository(private val subscriptionDao: SubscriptionDao) {
 
     @WorkerThread
     suspend fun getById(id: Int): Subscription? {
-        return subscriptionDao.getById(id);
+        return subscriptionDao.getById(id)
     }
 
     @WorkerThread
     suspend fun insert(subscription: Subscription) {
-        subscriptionDao.insert(subscription);
+        subscriptionDao.insert(subscription)
     }
 
     @WorkerThread
     suspend fun update(subscription: Subscription) {
-        subscriptionDao.update(subscription);
+        subscriptionDao.update(subscription)
     }
 
     @WorkerThread
     suspend fun delete(subscription: Subscription) {
-        subscriptionDao.delete(subscription);
+        subscriptionDao.delete(subscription)
     }
 }

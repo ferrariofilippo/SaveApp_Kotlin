@@ -16,11 +16,11 @@ import com.google.android.material.button.MaterialButton
 class HistoryAdapter(private val currency: Currencies) :
     ListAdapter<TaggedMovement, HistoryAdapter.MovementViewHolder>(MovementsComparator()) {
     override fun onBindViewHolder(holder: MovementViewHolder, position: Int) {
-        holder.bind(getItem(position));
+        holder.bind(getItem(position))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovementViewHolder {
-        return MovementViewHolder.create(parent, currency);
+        return MovementViewHolder.create(parent, currency)
     }
 
     fun getItemAt(position: Int): TaggedMovement {
@@ -59,11 +59,11 @@ class HistoryAdapter(private val currency: Currencies) :
 
     class MovementsComparator : DiffUtil.ItemCallback<TaggedMovement>() {
         override fun areContentsTheSame(oldItem: TaggedMovement, newItem: TaggedMovement): Boolean {
-            return oldItem.description == newItem.description && oldItem.amount == newItem.amount;
+            return oldItem.description == newItem.description && oldItem.amount == newItem.amount
         }
 
         override fun areItemsTheSame(oldItem: TaggedMovement, newItem: TaggedMovement): Boolean {
-            return oldItem.id == newItem.id;
+            return oldItem.id == newItem.id
         }
     }
 }

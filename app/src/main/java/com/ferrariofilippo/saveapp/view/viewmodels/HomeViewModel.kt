@@ -183,7 +183,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         for (i: Int in life.keys) {
-            life[i]!!.observeForever() {
+            life[i]!!.observeForever {
                 if (it > lifeHighestTagValue.value!!) {
                     _lifeHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _lifeHighestTagValue.value = it

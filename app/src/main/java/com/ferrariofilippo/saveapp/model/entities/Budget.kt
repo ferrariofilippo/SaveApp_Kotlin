@@ -16,4 +16,4 @@ data class Budget(
     var from: LocalDate,
     var to: LocalDate,
     var tagId: Int
-);
+)

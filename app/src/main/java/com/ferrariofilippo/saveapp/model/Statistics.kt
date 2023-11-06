@@ -9,4 +9,4 @@ data class Statistics(
     var expensesPerMonth: MutableList<Double>,
     var expensesPerYear: Map<Int, Double>,
     var incomePerYear: Map<Int, Double>
-);
+)

@@ -6,10 +6,10 @@ import java.time.format.DateTimeParseException
 object DateUtil {
     fun String.toLocalDateOrNull(): LocalDate? {
         try {
-            return LocalDate.parse(this);
+            return LocalDate.parse(this)
         } catch (e: DateTimeParseException) {
         }
 
-        return null;
+        return null
     }
 }

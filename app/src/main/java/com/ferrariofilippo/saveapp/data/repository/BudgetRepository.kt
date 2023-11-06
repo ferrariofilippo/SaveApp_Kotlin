@@ -7,7 +7,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import kotlinx.coroutines.flow.Flow
 
 class BudgetRepository(private val budgetDao: BudgetDao) {
-    val allBudgets: Flow<List<TaggedBudget>> = budgetDao.getAllTagged();
+    val allBudgets: Flow<List<TaggedBudget>> = budgetDao.getAllTagged()
 
     suspend fun getAll(): List<Budget> {
         return budgetDao.getAll()
@@ -20,16 +20,16 @@ class BudgetRepository(private val budgetDao: BudgetDao) {
 
     @WorkerThread
     suspend fun insert(budget: Budget) {
-        budgetDao.insert(budget);
+        budgetDao.insert(budget)
     }
 
     @WorkerThread
     suspend fun update(budget: Budget) {
-        budgetDao.update(budget);
+        budgetDao.update(budget)
     }
 
     @WorkerThread
     suspend fun delete(budget: Budget) {
-        budgetDao.delete(budget);
+        budgetDao.delete(budget)
     }
 }

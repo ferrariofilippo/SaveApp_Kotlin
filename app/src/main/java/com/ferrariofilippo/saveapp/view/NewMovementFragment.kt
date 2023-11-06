@@ -54,7 +54,7 @@ class NewMovementFragment : Fragment() {
         checkIfEditing()
         setupUI()
 
-        return binding.root;
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

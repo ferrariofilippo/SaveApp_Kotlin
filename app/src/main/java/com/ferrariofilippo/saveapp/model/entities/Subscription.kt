@@ -20,4 +20,4 @@ data class Subscription(
     @ColumnInfo(name = "next_renewal") var nextRenewal: LocalDate,
     var tagId: Int,
     var budgetId: Int?
-);
+)

@@ -12,7 +12,7 @@ enum class Currencies(val id: Int) {
 
     companion object {
         private val map = Currencies.values().associateBy { it.id }
-        fun from(id: Int) : Currencies = map[id] ?: EUR;
+        fun from(id: Int) : Currencies = map[id] ?: EUR
     }
 
     fun toSymbol() : String {
@@ -23,6 +23,6 @@ enum class Currencies(val id: Int) {
             JPY -> "¥"
             CNY -> "¥"
             else -> "$"
-        };
+        }
     }
 }

@@ -216,14 +216,14 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         val amount = _amount.replace(",", ".").toDoubleOrNull()
         if (amount != null && amount > 0.0 && _description.isNotBlank() && _tag != null) {
             val newAmount = updateToDefaultCurrency(amount)
-            var succeded = true
+            var succeeded = true
 
             if (_isSubscription)
                 insertSubscription(newAmount)
             else
-                succeded = tryInsertMovement(newAmount)
+                succeeded = tryInsertMovement(newAmount)
 
-            if (succeded) {
+            if (succeeded) {
                 val activity = saveAppApplication.getCurrentActivity() as MainActivity
                 activity.goBack()
                 Snackbar.make(

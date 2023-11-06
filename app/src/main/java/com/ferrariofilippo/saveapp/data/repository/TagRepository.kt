@@ -6,30 +6,30 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.flow.Flow
 
 class TagRepository(private val tagDao: TagDao) {
-    val allTags: Flow<List<Tag>> = tagDao.getAll();
+    val allTags: Flow<List<Tag>> = tagDao.getAll()
 
     @WorkerThread
     suspend fun getById(id: Int): Tag? {
-        return tagDao.getById(id);
+        return tagDao.getById(id)
     }
 
     @WorkerThread
     suspend fun insert(tag: Tag) {
-        tagDao.insert(tag);
+        tagDao.insert(tag)
     }
 
     @WorkerThread
     suspend fun update(tag: Tag) {
-        tagDao.update(tag);
+        tagDao.update(tag)
     }
 
     @WorkerThread
     suspend fun delete(tag: Tag) {
-        tagDao.delete(tag);
+        tagDao.delete(tag)
     }
 
     @WorkerThread
     suspend fun deleteAll() {
-        tagDao.deleteAll();
+        tagDao.deleteAll()
     }
 }

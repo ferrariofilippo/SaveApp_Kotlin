@@ -7,7 +7,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import kotlinx.coroutines.flow.Flow
 
 class MovementRepository(private val movementDao: MovementDao) {
-    val allTaggedMovements: Flow<List<TaggedMovement>> = movementDao.getAllTagged();
+    val allTaggedMovements: Flow<List<TaggedMovement>> = movementDao.getAllTagged()
 
     @WorkerThread
     suspend fun getAll(): List<Movement> {
@@ -26,7 +26,7 @@ class MovementRepository(private val movementDao: MovementDao) {
 
     @WorkerThread
     suspend fun getById(id: Int): Movement? {
-        return movementDao.getById(id);
+        return movementDao.getById(id)
     }
 
     @WorkerThread
@@ -36,16 +36,16 @@ class MovementRepository(private val movementDao: MovementDao) {
 
     @WorkerThread
     suspend fun insert(movement: Movement) {
-        movementDao.insert(movement);
+        movementDao.insert(movement)
     }
 
     @WorkerThread
     suspend fun update(movement: Movement) {
-        movementDao.update(movement);
+        movementDao.update(movement)
     }
 
     @WorkerThread
     suspend fun delete(movement: Movement) {
-        movementDao.delete(movement);
+        movementDao.delete(movement)
     }
 }
