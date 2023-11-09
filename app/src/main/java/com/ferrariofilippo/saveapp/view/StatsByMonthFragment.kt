@@ -16,12 +16,15 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.adapters.MonthsStatsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.StatsByMonthViewModel
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 class StatsByMonthFragment : Fragment() {
     private lateinit var viewModel: StatsByMonthViewModel
+
+    private val msDuration: Int = 500
 
     private var _binding: FragmentStatsByMonthBinding? = null
     private val binding get() = _binding!!
@@ -62,6 +65,8 @@ class StatsByMonthFragment : Fragment() {
         binding.monthsPieChart.description.text = ""
         binding.monthsPieChart.setUsePercentValues(true)
         binding.monthsPieChart.holeRadius = 60f
+        binding.monthsPieChart.legend.isEnabled = false
+        binding.monthsPieChart.setHoleColor(0x00FFFFFF)
     }
 
     private fun setupRecyclerView() {
@@ -97,6 +102,6 @@ class StatsByMonthFragment : Fragment() {
 
     private fun updateGraph() {
         binding.monthsPieChart.data = PieData(viewModel.dataSet)
-        binding.monthsPieChart.invalidate()
+        binding.monthsPieChart.animateXY(msDuration, msDuration, Easing.Linear)
     }
 }

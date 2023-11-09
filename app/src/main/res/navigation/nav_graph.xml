@@ -8,50 +8,79 @@
         android:id="@+id/homeFragment"
         android:name="com.ferrariofilippo.saveapp.view.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_subscriptionsFragment"
-            app:destination="@id/subscriptionsFragment" />
+            app:destination="@id/subscriptionsFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/fade" />
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_in_top_right"
+            app:exitAnim="@anim/fade" />
+        <action
+            android:id="@+id/action_homeFragment_to_newMovementFragment"
+            app:destination="@id/newMovementFragment"
+            app:enterAnim="@anim/slide_in_bottom_right"
+            app:exitAnim="@anim/fade" />
     </fragment>
     <fragment
         android:id="@+id/newMovementFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewMovementFragment"
-        android:label="@string/add_movement" >
+        android:label="@string/add_movement">
         <argument
             android:name="itemId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="isMovement"
-            app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.ferrariofilippo.saveapp.view.HistoryFragment"
-        android:label="HistoryFragment" />
+        android:label="HistoryFragment">
+        <action
+            android:id="@+id/action_historyFragment_to_newMovementFragment"
+            app:destination="@id/newMovementFragment"
+            app:enterAnim="@anim/slide_in_bottom_right"
+            app:exitAnim="@anim/fade" />
+    </fragment>
     <fragment
         android:id="@+id/budgetsFragment"
         android:name="com.ferrariofilippo.saveapp.view.BudgetsFragment"
-        android:label="BudgetsFragment" >
+        android:label="BudgetsFragment">
         <action
             android:id="@+id/action_budgetsFragment_to_newBudgetFragment"
-            app:destination="@id/newBudgetFragment" />
+            app:destination="@id/newBudgetFragment"
+            app:enterAnim="@anim/slide_in_top_right"
+            app:exitAnim="@anim/fade" />
+        <action
+            android:id="@+id/action_budgetsFragment_to_newMovementFragment"
+            app:destination="@id/newMovementFragment"
+            app:enterAnim="@anim/slide_in_bottom_right"
+            app:exitAnim="@anim/fade" />
     </fragment>
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.ferrariofilippo.saveapp.view.StatsFragment"
-        android:label="StatsFragment" />
+        android:label="StatsFragment">
+        <action
+            android:id="@+id/action_statsFragment_to_newMovementFragment"
+            app:destination="@id/newMovementFragment"
+            app:enterAnim="@anim/slide_in_bottom_right"
+            app:exitAnim="@anim/fade" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.ferrariofilippo.saveapp.view.SettingsFragment"
-        android:label="SettingsFragment" >
+        android:label="SettingsFragment">
         <action
             android:id="@+id/action_settingsFragment_to_manageTagsFragment"
-            app:destination="@id/manageTagsFragment" />
+            app:destination="@id/manageTagsFragment"
+            app:enterAnim="@anim/slide_in_up" />
     </fragment>
     <fragment
         android:id="@+id/subscriptionsFragment"
@@ -60,32 +89,34 @@
     <fragment
         android:id="@+id/newBudgetFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewBudgetFragment"
-        android:label="NewBudgetFragment" >
+        android:label="NewBudgetFragment">
         <argument
             android:name="itemId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/manageTagsFragment"
         android:name="com.ferrariofilippo.saveapp.view.ManageTagsFragment"
         android:label="fragment_manage_tags"
-        tools:layout="@layout/fragment_manage_tags" >
+        tools:layout="@layout/fragment_manage_tags">
         <action
             android:id="@+id/action_manageTagsFragment_to_newTagFragment"
-            app:destination="@id/newTagFragment" />
+            app:destination="@id/newTagFragment"
+            app:enterAnim="@anim/slide_in_top_right" />
     </fragment>
     <fragment
         android:id="@+id/newTagFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewTagFragment"
         android:label="fragment_new_tag"
-        tools:layout="@layout/fragment_new_tag" >
+        tools:layout="@layout/fragment_new_tag">
         <argument
             android:name="tagId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_newTagFragment_to_manageTagsFragment"
-            app:destination="@id/manageTagsFragment" />
+            app:destination="@id/manageTagsFragment"
+            app:exitAnim="@anim/slide_out_top_right" />
     </fragment>
 </navigation>

@@ -7,12 +7,12 @@
 
     <ImageView
         android:id="@+id/tag_pill"
-        android:contentDescription="@string/tag_color"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
+        android:contentDescription="@string/tag_color"
         app:srcCompat="@drawable/round_circle_16"
         app:tint="?attr/colorPrimary" />
 

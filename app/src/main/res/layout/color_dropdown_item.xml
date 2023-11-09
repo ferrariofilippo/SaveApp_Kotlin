@@ -2,11 +2,11 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/color_pill"
-    android:contentDescription="@string/tag_color"
     android:layout_width="48dp"
     android:layout_height="48dp"
-    android:layout_marginVertical="12dp"
     android:layout_alignParentStart="true"
     android:layout_centerVertical="true"
+    android:layout_marginVertical="12dp"
+    android:contentDescription="@string/tag_color"
     app:srcCompat="@drawable/round_circle_16"
     app:tint="?attr/colorPrimary" />

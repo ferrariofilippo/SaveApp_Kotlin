@@ -39,7 +39,8 @@ class TagsStatsAdapter(private val context: Context, private val currency: Curre
         fun bind(item: TagMovementsSum) {
             tagPillItemView.setColorFilter(ctx.getColor(item.color))
             tagNameItemView.text = item.name
-            sumItemView.text = String.format("%s %.2f", currency.toSymbol(), item.sum)
+            sumItemView.text =
+                String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)
         }
 
         companion object {

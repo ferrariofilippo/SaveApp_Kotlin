@@ -33,7 +33,8 @@ class MonthsStatsAdapter(private val currency: Currencies) :
         @SuppressLint("SetTextI18n")
         fun bind(item: MonthMovementsSum) {
             monthNameItemView.text = item.name
-            sumItemView.text = String.format("%s %.2f", currency.toSymbol(), item.sum)
+            sumItemView.text =
+                String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)
         }
 
         companion object {

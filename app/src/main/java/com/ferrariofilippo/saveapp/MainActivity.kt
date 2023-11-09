@@ -19,6 +19,7 @@ import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import java.io.FileInputStream
@@ -27,7 +28,12 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
     private var lastFragmentId: Int = R.id.homeFragment
 
+    private var navControllerInitialized = false
+
+    private lateinit var rootDestinations: Set<Int>
+
     private val _isUpdatingCurrencies: MutableLiveData<Boolean> = MutableLiveData(false)
+
     val isUpdatingCurrencies: LiveData<Boolean> = _isUpdatingCurrencies
 
     // IO Activities
@@ -136,6 +142,8 @@ class MainActivity : AppCompatActivity() {
 
     // Methods
     fun goBack() {
+        ensureNavControllerInitialized()
+        
         when (lastFragmentId) {
             R.id.homeFragment ->
                 findNavController(R.id.containerView).navigate(R.id.homeFragment)
@@ -152,23 +160,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToSettings() {
+        ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_settingsFragment)
     }
 
     fun goToSubscriptions() {
+        ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_subscriptionsFragment)
     }
 
     fun goToNewBudget() {
+        ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newBudgetFragment)
     }
 
     fun goToEditMovementOrSubscription(id: Int, isMovement: Boolean) {
+        ensureNavControllerInitialized()
+
         val bundle = bundleOf("itemId" to id, "isMovement" to isMovement)
         findNavController(R.id.containerView).navigate(R.id.newMovementFragment, bundle)
     }
 
     fun goToEditBudget(id: Int) {
+        ensureNavControllerInitialized()
+
         val bundle = bundleOf("itemId" to id)
         findNavController(R.id.containerView).navigate(
             R.id.action_budgetsFragment_to_newBudgetFragment,
@@ -177,10 +192,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToManageTags() {
+        ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_settingsFragment_to_manageTagsFragment)
     }
 
     fun gotToAddOrEditTag(id: Int) {
+        ensureNavControllerInitialized()
+
         val bundle = bundleOf("tagId" to id)
         findNavController(R.id.containerView).navigate(
             R.id.action_manageTagsFragment_to_newTagFragment,
@@ -189,6 +207,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goBackToManageTags() {
+        ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_newTagFragment_to_manageTagsFragment)
     }
 
@@ -218,11 +237,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun ensureNavControllerInitialized() {
+        if (navControllerInitialized)
+            return
+
+        rootDestinations =
+            setOf(R.id.homeFragment, R.id.historyFragment, R.id.budgetsFragment, R.id.statsFragment)
+
+        findNavController(R.id.containerView).addOnDestinationChangedListener { _, destination, _ ->
+            val fab = findViewById<ExtendedFloatingActionButton>(R.id.addMovementFAB)
+            if (rootDestinations.contains(destination.id))
+                fab.show()
+            else
+                fab.hide()
+        }
+
+        navControllerInitialized = true
+    }
+
     private fun onAddMovementClick() {
-        findNavController(R.id.containerView).navigate(R.id.newMovementFragment)
+        ensureNavControllerInitialized()
+
+        when (lastFragmentId) {
+            R.id.homeFragment ->
+                findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newMovementFragment)
+
+            R.id.historyFragment ->
+                findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newMovementFragment)
+
+            R.id.budgetsFragment ->
+                findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newMovementFragment)
+
+            R.id.statsFragment ->
+                findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newMovementFragment)
+        }
     }
 
     private fun onMenuItemClick(menuItem: MenuItem): Boolean {
+        ensureNavControllerInitialized()
+
         when (menuItem.itemId) {
             R.id.home -> {
                 findNavController(R.id.containerView).navigate(R.id.homeFragment)
@@ -240,14 +293,14 @@ class MainActivity : AppCompatActivity() {
 
             R.id.budget -> {
                 findNavController(R.id.containerView).navigate(R.id.budgetsFragment)
-                R.id.budgetsFragment
+                lastFragmentId = R.id.budgetsFragment
 
                 return true
             }
 
             R.id.stats -> {
                 findNavController(R.id.containerView).navigate(R.id.statsFragment)
-                R.id.statsFragment
+                lastFragmentId = R.id.statsFragment
 
                 return true
             }

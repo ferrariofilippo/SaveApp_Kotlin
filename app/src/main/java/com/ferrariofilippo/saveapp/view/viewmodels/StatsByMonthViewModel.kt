@@ -109,9 +109,10 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         val items: MutableList<MonthMovementsSum> = mutableListOf()
         for (i: Int in _monthSums.indices) {
             val sum = _monthSums[i]
-            items.add(MonthMovementsSum(monthsNames[i], sum))
+            val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
+            items.add(MonthMovementsSum(monthsNames[i], sum, percentage))
             if (sum != 0.0)
-                entries.add(PieEntry((sum * 100.0 / generalSum).toFloat(), monthsNames[i]))
+                entries.add(PieEntry(percentage.toFloat(), monthsNames[i]))
         }
 
         _monthSumItems.value = items.toList()

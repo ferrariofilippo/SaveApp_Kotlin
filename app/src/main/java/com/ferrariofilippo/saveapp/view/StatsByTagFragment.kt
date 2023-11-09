@@ -16,12 +16,15 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.adapters.TagsStatsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.StatsByTagViewModel
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 class StatsByTagFragment : Fragment() {
     private lateinit var viewModel: StatsByTagViewModel
+
+    private val msDuration: Int = 500
 
     private var _binding: FragmentStatsByTagBinding? = null
     private val binding get() = _binding!!
@@ -61,6 +64,8 @@ class StatsByTagFragment : Fragment() {
         binding.tagsPieChart.description.text = ""
         binding.tagsPieChart.setUsePercentValues(true)
         binding.tagsPieChart.holeRadius = 60f
+        binding.tagsPieChart.legend.isEnabled = false
+        binding.tagsPieChart.setHoleColor(0x00FFFFFF)
     }
 
     private fun setupRecyclerView() {
@@ -97,6 +102,6 @@ class StatsByTagFragment : Fragment() {
 
     private fun updateGraph() {
         binding.tagsPieChart.data = PieData(viewModel.dataSet)
-        binding.tagsPieChart.invalidate()
+        binding.tagsPieChart.animateXY(msDuration, msDuration, Easing.Linear)
     }
 }

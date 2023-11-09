@@ -7,12 +7,12 @@
 
     <ImageView
         android:id="@+id/list_tag_pill"
-        android:contentDescription="@string/tag_color"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
+        android:contentDescription="@string/tag_color"
         app:srcCompat="@drawable/round_circle_16"
         app:tint="?attr/colorPrimary" />
 
@@ -21,10 +21,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@id/list_tag_pill"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_centerVertical="true"
         android:text="@string/tag_hint"
         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
