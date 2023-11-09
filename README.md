@@ -1,5 +1,5 @@
 <div align="center">
-  <img  alt="SaveApp Logo" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/89f3bb98-7e02-481e-b370-13cf9d4e0e8c"  width="128px" />
+  <img alt="SaveApp Logo" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/36120a2c-1182-44a5-90da-532bca5dfe88"  width="128px" style="border-radius: 50%" />
 
   # SaveApp
 </div>
