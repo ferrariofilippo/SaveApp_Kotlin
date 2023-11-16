@@ -35,6 +35,6 @@ jobs:
       with:
         arguments: build
     - name: Run Kotlin Linter
-      run: ./gradlew ktlintStagingDebugCheck
+      run: ./gradlew lintAnalyzeDebug
     - name: Run Unit Tests
-      run: ./gradlew testStagingDebugUnitTest
+      run: ./gradlew test
