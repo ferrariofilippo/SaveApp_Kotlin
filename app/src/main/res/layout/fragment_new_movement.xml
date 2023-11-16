@@ -208,7 +208,7 @@
             <Button
                 android:id="@+id/cancelButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/renewalInput"
                 android:layout_toStartOf="@id/saveButton"
@@ -217,7 +217,7 @@
             <Button
                 android:id="@+id/saveButton"
                 style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/renewalInput"
                 android:layout_alignParentEnd="true"

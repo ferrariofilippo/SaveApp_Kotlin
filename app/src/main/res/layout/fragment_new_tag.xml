@@ -64,6 +64,7 @@
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/tag_color_picker"
                     android:ellipsize="end"
                     android:inputType="none"
                     android:maxLines="1"
@@ -74,7 +75,7 @@
             <Button
                 android:id="@+id/cancelButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/colorInput"
                 android:layout_marginTop="28dp"
@@ -84,7 +85,7 @@
             <Button
                 android:id="@+id/saveButton"
                 style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/colorInput"
                 android:layout_alignParentEnd="true"

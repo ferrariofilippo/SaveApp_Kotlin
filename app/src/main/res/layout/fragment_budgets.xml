@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel" />
@@ -41,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/new_budget_button"
                     android:text="@string/budget"
                     app:icon="@drawable/round_add_24" />
 
@@ -76,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/show_past_budgets"
                     app:collapsibleIcon="@{vm.pastSectionCollapsed}"
                     app:strokeWidth="0dp" />
             </RelativeLayout>

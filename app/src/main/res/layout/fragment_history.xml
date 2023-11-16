@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.HistoryViewModel" />
@@ -105,8 +107,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/no_data_available"
                 android:gravity="center_vertical|center_horizontal"
+                android:text="@string/no_data_available"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textColor="?attr/colorPrimary"
                 android:visibility="@{vm.showEmptyMessage ? View.VISIBLE : View.GONE}" />
@@ -195,6 +197,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
+                        android:contentDescription="@string/decrease_year_button"
                         app:icon="@drawable/baseline_remove_24"
                         app:strokeWidth="0dp" />
 
@@ -218,6 +221,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/increase_year_button"
                         app:icon="@drawable/round_add_24" />
                 </RelativeLayout>
             </FrameLayout>

@@ -9,7 +9,6 @@
             type="com.ferrariofilippo.saveapp.view.viewmodels.SubscriptionsViewModel" />
     </data>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +27,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
-                android:contentDescription="@string/subscriptions"
+                android:contentDescription="@string/subscriptions_icon"
                 app:srcCompat="@drawable/baseline_autorenew_48"
                 app:tint="?attr/colorPrimaryVariant" />
 

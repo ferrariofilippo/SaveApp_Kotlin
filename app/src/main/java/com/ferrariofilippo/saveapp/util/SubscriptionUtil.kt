@@ -28,7 +28,7 @@ object SubscriptionUtil {
         return Movement(
             0,
             s.amount,
-            String.format(description, s.description, s.nextRenewal.toString()),
+            String.format(description, s.description, s.lastPaid.toString()),
             s.lastPaid!!,
             s.tagId,
             s.budgetId

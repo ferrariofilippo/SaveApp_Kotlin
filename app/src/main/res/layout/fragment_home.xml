@@ -53,6 +53,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@id/month_chip_group"
+                            android:contentDescription="@string/month_summary"
                             android:text="@string/summary"
                             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -98,6 +99,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/month_expenses"
                                 android:text="@string/expenses"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -117,6 +119,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/month_incomes"
                                 android:text="@string/incomes"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -144,7 +147,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="4dp"
-                            android:contentDescription="@string/tag_color"
+                            android:contentDescription="@string/month_tag_color_pill"
                             app:dynamicTint="@{vm.monthHighestTag.color}"
                             app:srcCompat="@drawable/round_circle_16" />
 
@@ -154,6 +157,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@id/month_tag_value"
                             android:layout_toEndOf="@id/month_tag_color_pill"
+                            android:contentDescription="@string/month_highest_tag"
                             android:text="@{vm.monthHighestTag.name}"
                             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -193,6 +197,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@id/year_chip_group"
+                            android:contentDescription="@string/year_summary"
                             android:text="@string/summary"
                             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -238,6 +243,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/year_expenses"
                                 android:text="@string/expenses"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -257,6 +263,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/year_incomes"
                                 android:text="@string/incomes"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -284,7 +291,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="4dp"
-                            android:contentDescription="@string/tag_color"
+                            android:contentDescription="@string/year_tag_color_pill"
                             app:dynamicTint="@{vm.yearHighestTag.color}"
                             app:srcCompat="@drawable/round_circle_16" />
 
@@ -294,6 +301,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@id/year_tag_value"
                             android:layout_toEndOf="@id/year_tag_color_pill"
+                            android:contentDescription="@string/year_highest_tag"
                             android:text="@{vm.yearHighestTag.name}"
                             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -378,6 +386,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/life_expenses"
                                 android:text="@string/expenses"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -397,6 +406,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/life_incomes"
                                 android:text="@string/incomes"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -424,7 +434,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="4dp"
-                            android:contentDescription="@string/tag_color"
+                            android:contentDescription="@string/life_tag_color_pill"
                             app:dynamicTint="@{vm.lifeHighestTag.color}"
                             app:srcCompat="@drawable/round_circle_16" />
 
@@ -434,6 +444,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@id/life_tag_value"
                             android:layout_toEndOf="@id/life_tag_color_pill"
+                            android:contentDescription="@string/life_highest_tag"
                             android:text="@{vm.lifeHighestTag.name}"
                             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
@@ -449,11 +460,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.divider.MaterialDivider
-                android:layout_marginHorizontal="16dp"
                 android:id="@+id/cards_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/life_card"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp" />
 
             <Button

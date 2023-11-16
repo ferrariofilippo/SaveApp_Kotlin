@@ -185,7 +185,7 @@
             <Button
                 android:id="@+id/budgetCancelButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toDateInput"
                 android:layout_toStartOf="@id/budgetSaveButton"
@@ -194,7 +194,7 @@
             <Button
                 android:id="@+id/budgetSaveButton"
                 style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toDateInput"
                 android:layout_alignParentEnd="true"
