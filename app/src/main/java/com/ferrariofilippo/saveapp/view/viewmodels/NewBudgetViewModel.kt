@@ -53,6 +53,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     var onAmountChanged: () -> Unit = { }
     var onUsedChanged: () -> Unit = { }
     var onNameChanged: () -> Unit = { }
+    var onToDateChanged: () -> Unit = { }
 
     init {
         viewModelScope.launch {
@@ -139,6 +140,10 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
             return
 
         _fromDate = value
+        if (_fromDate.isAfter(_toDate)) {
+            setToDate(_fromDate.plusDays(1))
+        }
+
         notifyPropertyChanged(BR.fromDate)
     }
 
@@ -153,6 +158,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
 
         _toDate = value
         notifyPropertyChanged(BR.toDate)
+        onToDateChanged.invoke()
     }
 
     @Bindable
@@ -190,7 +196,8 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
             used != null &&
             used >= 0.0 &&
             amount >= used &&
-            _name.isNotBlank()
+            _name.isNotBlank() &&
+            _fromDate.isBefore(_toDate)
         ) {
             val updatedAmount = updateToDefaultCurrency(amount)
             val updatedUsed = updateToDefaultCurrency(used)
@@ -217,6 +224,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
             onAmountChanged.invoke()
             onUsedChanged.invoke()
             onNameChanged.invoke()
+            onToDateChanged.invoke()
         }
     }
 

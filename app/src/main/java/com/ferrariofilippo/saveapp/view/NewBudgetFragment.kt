@@ -108,6 +108,7 @@ class NewBudgetFragment : Fragment() {
         viewModel.onAmountChanged = { manageAmountError() }
         viewModel.onUsedChanged = { manageUsedError() }
         viewModel.onNameChanged = { manageNameError() }
+        viewModel.onToDateChanged = { manageToDateError() }
     }
 
     private fun setupPickers() {
@@ -173,6 +174,12 @@ class NewBudgetFragment : Fragment() {
         binding.budgetNameInput.error =
             if (viewModel.getName().isNotBlank()) null
             else context?.resources?.getString(R.string.name_error)
+    }
+
+    private fun manageToDateError() {
+        binding.toDateInput.error =
+            if (viewModel.getToDate().isAfter(viewModel.getFromDate())) null
+            else context?.resources?.getString(R.string.to_date_not_valid_error)
     }
 
     private fun showDatePicker(title: String, isFromDate: Boolean) {

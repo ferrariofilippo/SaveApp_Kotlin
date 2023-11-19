@@ -191,4 +191,5 @@
     <string name="increase_year_button">Incrementa year</string>
     <string name="decrease_year_button">Decrementa year</string>
     <string name="subscriptions_icon">Icona abbonamenti</string>
+    <string name="to_date_not_valid_error">La data precede quella di inizio</string>
 </resources>

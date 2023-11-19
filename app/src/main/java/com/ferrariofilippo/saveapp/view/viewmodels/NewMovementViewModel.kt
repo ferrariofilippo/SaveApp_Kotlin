@@ -154,7 +154,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             return
 
         _budget = value
+        _tag = tags.value?.first { t -> t.id == value?.tagId }
         notifyPropertyChanged(BR.budget)
+        notifyPropertyChanged(BR.tag)
     }
 
     @Bindable
