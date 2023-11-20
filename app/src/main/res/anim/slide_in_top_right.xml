@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Licensed under the MIT License. See the LICENSE. -->
+
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@integer/material_motion_duration_long_1"
     android:fromXDelta="100%p"

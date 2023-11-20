@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -14,8 +17,9 @@ object BudgetUtil {
     }
 
     suspend fun tryAddMovementToBudget(m: Movement, force: Boolean = false): AddToBudgetResult {
-        if (m.budgetId == null || m.budgetId == 0)
+        if (m.budgetId == null || m.budgetId == 0) {
             return AddToBudgetResult.SUCCEEDED
+        }
 
         val budget: Budget? = budgetsRepository.getById(m.budgetId!!)
         if (budget == null) {
@@ -24,11 +28,13 @@ object BudgetUtil {
         }
 
         if (!force) {
-            if (m.date.isBefore(budget.from) || m.date.isAfter(budget.to))
+            if (m.date.isBefore(budget.from) || m.date.isAfter(budget.to)) {
                 return AddToBudgetResult.DATE_OUT_OF_RANGE
+            }
 
-            if (budget.used >= budget.max)
+            if (budget.used >= budget.max) {
                 return AddToBudgetResult.BUDGET_EMPTY
+            }
         }
 
         budget.used += m.amount
@@ -38,8 +44,9 @@ object BudgetUtil {
     }
 
     suspend fun removeMovementFromBudget(m: Movement) {
-        if (m.budgetId == null || m.budgetId == 0)
+        if (m.budgetId == null || m.budgetId == 0) {
             return
+        }
 
         val budget: Budget? = budgetsRepository.getById(m.budgetId!!)
         budget ?: return

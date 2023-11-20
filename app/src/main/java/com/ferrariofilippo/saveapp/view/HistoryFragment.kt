@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.content.Context
@@ -98,8 +101,9 @@ class HistoryFragment : Fragment() {
 
         viewModel.searchQuery.observe(viewLifecycleOwner, Observer { query ->
             query?.let {
-                if (viewModel.movements.value != null)
+                if (viewModel.movements.value != null) {
                     setFilteredItems(adapter, viewModel.movements.value!!)
+                }
             }
         })
 
@@ -115,10 +119,11 @@ class HistoryFragment : Fragment() {
                 val adapter = binding.movementsRecyclerView.adapter as HistoryAdapter
                 val movement = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT)
+                if (direction == ItemTouchHelper.RIGHT) {
                     (activity as MainActivity).goToEditMovementOrSubscription(movement.id, true)
-                else if (direction == ItemTouchHelper.LEFT)
+                } else if (direction == ItemTouchHelper.LEFT) {
                     onRemoveMovementInvoked(movement)
+                }
             }
         }
 

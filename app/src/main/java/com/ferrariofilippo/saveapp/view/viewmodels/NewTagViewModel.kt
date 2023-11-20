@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
@@ -41,10 +44,11 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
     fun insert() = viewModelScope.launch {
         if (tagName.value != null && tagName.value!!.isNotBlank()) {
             val tag = Tag(oldTag?.id ?: 0, tagName.value!!, tagColor.value ?: R.color.emerald_700)
-            if (tag.id == 0)
+            if (tag.id == 0) {
                 saveAppApplication.tagRepository.insert(tag)
-            else
+            } else {
                 saveAppApplication.tagRepository.update(tag)
+            }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
             activity.goBackToManageTags()

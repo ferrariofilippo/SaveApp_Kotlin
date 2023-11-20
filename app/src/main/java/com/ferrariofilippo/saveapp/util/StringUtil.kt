@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.converters.Converters
@@ -10,8 +13,9 @@ import java.time.LocalDate
 object StringUtil {
     fun String.toMovementOrNull(): Movement? {
         val fields: List<String> = this.split(',')
-        if (fields.size != 6)
+        if (fields.size != 6) {
             return null
+        }
 
         val id: Int = fields[0].toIntOrNull() ?: return null
         val amount: Double = fields[1].toDoubleOrNull() ?: return null
@@ -27,8 +31,9 @@ object StringUtil {
 
     fun String.toSubscriptionOrNull(): Subscription? {
         val fields: List<String> = this.split(',')
-        if (fields.size != 9)
+        if (fields.size != 9) {
             return null
+        }
 
         val id: Int = fields[0].toIntOrNull() ?: return null
         val amount: Double = fields[1].toDoubleOrNull() ?: return null
@@ -55,8 +60,9 @@ object StringUtil {
 
     fun String.toBudgetOrNull(): Budget? {
         val fields: List<String> = this.split(',')
-        if (fields.size != 7)
+        if (fields.size != 7) {
             return null
+        }
 
         val id: Int = fields[0].toIntOrNull() ?: return null
         val max: Double = fields[1].toDoubleOrNull() ?: return null

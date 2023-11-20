@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -93,10 +96,11 @@ class ManageTagsFragment : Fragment() {
                 val adapter = binding.tagsRecyclerView.adapter as TagsAdapter
                 val tag = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT)
+                if (direction == ItemTouchHelper.RIGHT) {
                     (activity as MainActivity).gotToAddOrEditTag(tag.id)
-                else if (direction == ItemTouchHelper.LEFT)
+                } else if (direction == ItemTouchHelper.LEFT) {
                     onRemoveTagInvoked(tag, position)
+                }
             }
         }
         gestureCallback.editOnlyRow = 0
@@ -115,8 +119,9 @@ class ManageTagsFragment : Fragment() {
 
     private fun onRemoveTagInvoked(item: Tag, position: Int) {
         val app = requireActivity().application as SaveAppApplication
-        if (item.id == INCOME_ID)
+        if (item.id == INCOME_ID) {
             return
+        }
 
         val activity = requireActivity()
         lifecycleScope.launch {

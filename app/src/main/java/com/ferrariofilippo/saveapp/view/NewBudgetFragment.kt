@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -64,8 +67,9 @@ class NewBudgetFragment : Fragment() {
     // Methods
     private fun checkIfEditing() {
         val itemId = arguments?.getInt("itemId") ?: 0
-        if (itemId == 0)
+        if (itemId == 0) {
             return
+        }
 
         val application = requireActivity().application as SaveAppApplication
         val budget = runBlocking { application.budgetRepository.getById(itemId) } ?: return
@@ -205,9 +209,10 @@ class NewBudgetFragment : Fragment() {
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
 
-        if (isFromDate)
+        if (isFromDate) {
             viewModel.setFromDate(date)
-        else
+        } else {
             viewModel.setToDate(date)
+        }
     }
 }

@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.MainActivity
@@ -177,10 +180,11 @@ object ImportExportUtil {
                 if (it != null) {
                     val m = it.toMovementOrNull()
                     if (m != null) {
-                        if (m.id == 0)
+                        if (m.id == 0) {
                             addMovements.add(m)
-                        else
+                        } else {
                             updateMovements.add(m)
+                        }
                     }
                 }
             }
@@ -219,10 +223,11 @@ object ImportExportUtil {
                 if (it != null) {
                     val s = it.toSubscriptionOrNull()
                     if (s != null) {
-                        if (s.id == 0)
+                        if (s.id == 0) {
                             addSubscriptions.add(s)
-                        else
+                        } else {
                             updateSubscriptions.add(s)
+                        }
                     }
                 }
             }
@@ -247,10 +252,11 @@ object ImportExportUtil {
                 if (it != null) {
                     val b = it.toBudgetOrNull()
                     if (b != null) {
-                        if (b.id == 0)
+                        if (b.id == 0) {
                             addBudgets.add(b)
-                        else
+                        } else {
                             updateBudgets.add(b)
+                        }
                     }
                 }
             }

@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.adapters
 
 import android.content.Context
@@ -32,8 +35,9 @@ class ColorDropdownAdapter(private val context: Context, layoutId: Int, items: A
 
         if (viewHolder != null) {
             val color = getItem(position)
-            if (color != null)
+            if (color != null) {
                 viewHolder.setColorFilter(ContextCompat.getColor(context, color))
+            }
         }
 
         return view!!

@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -87,10 +90,11 @@ class SubscriptionsFragment : Fragment() {
                 val adapter = binding.subscriptionsRecyclerView.adapter as SubscriptionsAdapter
                 val sub = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT)
+                if (direction == ItemTouchHelper.RIGHT) {
                     (activity as MainActivity).goToEditMovementOrSubscription(sub.id, false)
-                else if (direction == ItemTouchHelper.LEFT)
+                } else if (direction == ItemTouchHelper.LEFT) {
                     onRemoveMovementInvoked(sub)
+                }
             }
         }
 

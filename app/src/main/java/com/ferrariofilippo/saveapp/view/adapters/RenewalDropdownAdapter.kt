@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.adapters
 
 import android.content.Context
@@ -41,8 +44,9 @@ class RenewalDropdownAdapter(
 
         if (viewHolder != null) {
             val renewal = getItem(position)
-            if (renewal != null)
+            if (renewal != null) {
                 viewHolder.name.text = getLocalizedName(renewal)
+            }
         }
 
         return view!!

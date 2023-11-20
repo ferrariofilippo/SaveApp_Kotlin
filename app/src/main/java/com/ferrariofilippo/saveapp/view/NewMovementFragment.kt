@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -70,8 +73,9 @@ class NewMovementFragment : Fragment() {
     // Methods
     private fun checkIfEditing() {
         val itemId = arguments?.getInt("itemId") ?: 0
-        if (itemId == 0)
+        if (itemId == 0) {
             return
+        }
 
         val application = requireActivity().application as SaveAppApplication
         val isMovement = arguments?.getBoolean("isMovement") ?: true

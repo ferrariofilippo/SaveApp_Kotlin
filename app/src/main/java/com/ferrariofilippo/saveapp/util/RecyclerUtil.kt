@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import android.content.Context
@@ -21,8 +24,9 @@ class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecor
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        if (!initiated)
+        if (!initiated) {
             init()
+        }
 
         if (parent.itemAnimator?.isRunning == true) {
             var lastViewComingDown: View? = null
@@ -34,10 +38,11 @@ class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecor
             val childCount = parent.layoutManager?.childCount ?: 0
             for (i: Int in 0 until childCount) {
                 val child = parent.layoutManager!!.getChildAt(i)
-                if (child!!.translationY < 0)
+                if (child!!.translationY < 0) {
                     lastViewComingDown = child
-                else if (child.translationY > 0 && firstViewComingUp == null)
+                } else if (child.translationY > 0 && firstViewComingUp == null) {
                     firstViewComingUp = child
+                }
             }
 
             if (lastViewComingDown != null && firstViewComingUp != null) {
@@ -95,11 +100,13 @@ abstract class RecyclerEditAndDeleteGestures(private val ctx: Context) :
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (viewHolder.adapterPosition == -1 || (dX < 0 && viewHolder.adapterPosition == editOnlyRow))
+        if (viewHolder.adapterPosition == -1 || (dX < 0 && viewHolder.adapterPosition == editOnlyRow)) {
             return
+        }
 
-        if (!initiated)
+        if (!initiated) {
             init()
+        }
 
         if (dX != 0f) {
             val background: Drawable

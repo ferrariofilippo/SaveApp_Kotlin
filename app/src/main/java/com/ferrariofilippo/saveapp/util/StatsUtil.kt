@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import android.content.Context
@@ -74,14 +77,17 @@ object StatsUtil {
                 application.tagRepository.allTags.collect {
                     val tags = it.filter { tag -> tag.id != INCOME_TAG_ID }
 
-                    if (monthTags.isEmpty() || monthTags.size != tags.size)
+                    if (monthTags.isEmpty() || monthTags.size != tags.size) {
                         monthTags = getMapFromTags(tags)
+                    }
 
-                    if (yearTags.isEmpty() || yearTags.size != tags.size)
+                    if (yearTags.isEmpty() || yearTags.size != tags.size) {
                         yearTags = getMapFromTags(tags)
+                    }
 
-                    if (lifeTags.isEmpty() || lifeTags.size != tags.size)
+                    if (lifeTags.isEmpty() || lifeTags.size != tags.size) {
                         lifeTags = getMapFromTags(tags)
+                    }
                 }
             }
         }
@@ -113,11 +119,13 @@ object StatsUtil {
         val handler = Handler(context.mainLooper)
         handler.post {
             if (mov.tagId == INCOME_TAG_ID) {
-                if (isSameMonth)
+                if (isSameMonth) {
                     _monthIncomes.value = _monthIncomes.value!! + mov.amount
+                }
 
-                if (isSameYear)
+                if (isSameYear) {
                     _yearIncomes.value = _yearIncomes.value!! + mov.amount
+                }
 
                 _lifeIncomes.value = _lifeIncomes.value!! + mov.amount
             } else {
@@ -217,8 +225,9 @@ object StatsUtil {
     }
 
     private fun checkForReset(): Boolean {
-        if (_lastUpdate == null)
+        if (_lastUpdate == null) {
             return false
+        }
 
         var updated = false
         if (_lastUpdate!!.monthValue != LocalDate.now().monthValue) {

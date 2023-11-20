@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.R
@@ -20,8 +23,9 @@ object SubscriptionUtil {
     }
 
     fun getMovementFromSub(s: Subscription, description: String): Movement? {
-        if (s.nextRenewal.isAfter(LocalDate.now()))
+        if (s.nextRenewal.isAfter(LocalDate.now())) {
             return null
+        }
 
         s.lastPaid = s.nextRenewal
         updateNextRenewal(s)

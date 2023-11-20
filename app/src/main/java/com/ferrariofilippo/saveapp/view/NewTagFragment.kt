@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -93,11 +96,12 @@ class NewTagFragment : Fragment() {
     private fun manageNameError() {
         val res = requireContext().resources
 
-        if (viewModel.tagName.value == null || viewModel.tagName.value!!.isBlank())
+        if (viewModel.tagName.value == null || viewModel.tagName.value!!.isBlank()) {
             binding.tagNameInput.error = res.getString(R.string.name_error)
-        else if (viewModel.tags.value?.indexOfFirst { it.name == viewModel.tagName.value } != -1)
+        } else if (viewModel.tags.value?.indexOfFirst { it.name == viewModel.tagName.value } != -1) {
             binding.tagNameInput.error = res.getString(R.string.name_already_used)
-        else
+        } else {
             binding.tagNameInput.error = null
+        }
     }
 }

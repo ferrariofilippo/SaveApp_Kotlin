@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
@@ -83,8 +86,9 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
                 _showEmptyMessage.value = _movements.isEmpty()
                 clearSums()
                 _movements.forEach {
-                    if (it.tagId != INCOME_ID)
+                    if (it.tagId != INCOME_ID) {
                         _monthSums[it.date.monthValue - 1] += it.amount
+                    }
                 }
                 updateEntries()
             }
@@ -97,8 +101,9 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun clearSums() {
-        for (i: Int in _monthSums.indices)
+        for (i: Int in _monthSums.indices) {
             _monthSums[i] = 0.0
+        }
     }
 
     private fun updateEntries() {
@@ -111,8 +116,9 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
             val sum = _monthSums[i]
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
             items.add(MonthMovementsSum(monthsNames[i], sum, percentage))
-            if (sum != 0.0)
+            if (sum != 0.0) {
                 entries.add(PieEntry(percentage.toFloat(), monthsNames[i]))
+            }
         }
 
         _monthSumItems.value = items.toList()
@@ -127,8 +133,9 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     private fun initYears() {
         val values = mutableStateListOf<String>()
         val currentYear = LocalDate.now().year
-        for (i: Int in 0 until 7)
+        for (i: Int in 0 until 7) {
             values.add((currentYear - i).toString())
+        }
 
         years = values.toList()
     }

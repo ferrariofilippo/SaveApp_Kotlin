@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp
 
 import android.os.Bundle
@@ -143,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     // Methods
     fun goBack() {
         ensureNavControllerInitialized()
-        
+
         when (lastFragmentId) {
             R.id.homeFragment ->
                 findNavController(R.id.containerView).navigate(R.id.homeFragment)
@@ -246,10 +249,11 @@ class MainActivity : AppCompatActivity() {
 
         findNavController(R.id.containerView).addOnDestinationChangedListener { _, destination, _ ->
             val fab = findViewById<ExtendedFloatingActionButton>(R.id.addMovementFAB)
-            if (rootDestinations.contains(destination.id))
+            if (rootDestinations.contains(destination.id)) {
                 fab.show()
-            else
+            } else {
                 fab.hide()
+            }
         }
 
         navControllerInitialized = true

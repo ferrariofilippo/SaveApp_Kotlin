@@ -1,3 +1,6 @@
+<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Licensed under the MIT License. See the LICENSE. -->
+
 <resources>
     <string name="app_name">SaveApp</string>
     <string name="budget">Budget</string>

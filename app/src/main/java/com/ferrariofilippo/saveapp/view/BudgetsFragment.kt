@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view
 
 import android.os.Bundle
@@ -104,10 +107,11 @@ class BudgetsFragment : Fragment() {
                 val adapter = recyclerView.adapter as BudgetsAdapter
                 val budget = adapter.getItemAt(position)
 
-                if (direction == ItemTouchHelper.RIGHT)
+                if (direction == ItemTouchHelper.RIGHT) {
                     (activity as MainActivity).goToEditBudget(budget.budgetId)
-                else if (direction == ItemTouchHelper.LEFT)
+                } else if (direction == ItemTouchHelper.LEFT) {
                     onRemoveMovementInvoked(budget)
+                }
             }
         }
 

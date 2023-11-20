@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
@@ -83,8 +86,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setAmount(value: String) {
-        if (value == _amount)
+        if (value == _amount) {
             return
+        }
 
         _amount = value.replace(',', '.')
         notifyPropertyChanged(BR.amount)
@@ -97,8 +101,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setCurrency(value: Currencies) {
-        if (value == _currency)
+        if (value == _currency) {
             return
+        }
 
         _currency = value
         notifyPropertyChanged(BR.currency)
@@ -110,8 +115,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setDescription(value: String) {
-        if (value == _description)
+        if (value == _description) {
             return
+        }
 
         _description = value
         notifyPropertyChanged(BR.description)
@@ -124,8 +130,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setDate(value: LocalDate) {
-        if (value == _date)
+        if (value == _date) {
             return
+        }
 
         _date = value
         notifyPropertyChanged(BR.date)
@@ -137,8 +144,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setTag(value: Tag?) {
-        if (value == _tag)
+        if (value == _tag) {
             return
+        }
 
         _tag = value
         notifyPropertyChanged(BR.tag)
@@ -150,8 +158,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setBudget(value: TaggedBudget?) {
-        if (value == _budget)
+        if (value == _budget) {
             return
+        }
 
         _budget = value
         _tag = tags.value?.first { t -> t.id == value?.tagId }
@@ -165,8 +174,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setIsSubscription(value: Boolean) {
-        if (value == _isSubscription)
+        if (value == _isSubscription) {
             return
+        }
 
         _isSubscription = value
         notifyPropertyChanged(BR.isSubscription)
@@ -178,8 +188,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setRenewalType(value: RenewalType) {
-        if (value == _renewalType)
+        if (value == _renewalType) {
             return
+        }
 
         _renewalType = value
 
@@ -192,8 +203,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun setIsSubscriptionSwitchEnabled(value: Boolean) {
-        if (value == _isSubscriptionSwitchEnabled)
+        if (value == _isSubscriptionSwitchEnabled) {
             return
+        }
 
         _isSubscriptionSwitchEnabled = value
 
@@ -220,10 +232,11 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             val newAmount = updateToDefaultCurrency(amount)
             var succeeded = true
 
-            if (_isSubscription)
+            if (_isSubscription) {
                 insertSubscription(newAmount)
-            else
+            } else {
                 succeeded = tryInsertMovement(newAmount)
+            }
 
             if (succeeded) {
                 val activity = saveAppApplication.getCurrentActivity() as MainActivity
@@ -256,8 +269,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun updateToDefaultCurrency(amount: Double): Double {
-        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size)
+        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size) {
             return amount
+        }
 
         return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
@@ -267,8 +281,9 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         val tagId = _budget?.tagId ?: _tag?.id ?: 0
         val movement = Movement(0, amount, _description, _date, tagId, budgetId)
 
-        if (editingMovement != null && editingMovement!!.budgetId != 0)
+        if (editingMovement != null && editingMovement!!.budgetId != 0) {
             BudgetUtil.removeMovementFromBudget(editingMovement!!)
+        }
 
         if (budgetId != 0) {
             val result = BudgetUtil.tryAddMovementToBudget(movement, editingMovement != null)
@@ -341,13 +356,14 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun getSaveSnackBarMessage(): Int {
-        return if (editingMovement != null)
+        return if (editingMovement != null) {
             R.string.movement_updated
-        else if (editingSubscription != null)
+        } else if (editingSubscription != null) {
             R.string.subscription_updated
-        else if (_isSubscription)
+        } else if (_isSubscription) {
             R.string.subscription_created
-        else
+        } else {
             R.string.movement_created
+        }
     }
 }

@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
@@ -82,8 +85,9 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun calculateSums() {
         _movements.forEach {
-            if (it.tagId != INCOME_ID)
+            if (it.tagId != INCOME_ID) {
                 _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
+            }
         }
     }
 
@@ -97,8 +101,9 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
-            if (it.id != INCOME_ID)
+            if (it.id != INCOME_ID) {
                 items.add(TagMovementsSum(it.id, it.name, it.color, sum, percentage))
+            }
 
             if (sum != 0.0) {
                 colors.add(_app.getColor(it.color))
@@ -118,8 +123,9 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     private fun initYears() {
         val values = mutableStateListOf<String>()
         val currentYear = LocalDate.now().year
-        for (i: Int in 0 until 7)
+        for (i: Int in 0 until 7) {
             values.add((currentYear - i).toString())
+        }
 
         years = values.toList()
     }

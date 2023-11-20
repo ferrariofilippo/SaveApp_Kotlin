@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.adapters
 
 import android.content.Context
@@ -31,7 +34,6 @@ class SubscriptionsAdapter(private val ctx: Context, private val currency: Curre
     fun getItemAt(position: Int): TaggedSubscription {
         return getItem(position)
     }
-
 
     // Inner classes
     class SubscriptionViewHolder(

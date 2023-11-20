@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Filippo Ferrario
+// Licensed under the MIT License. See the LICENSE.
+
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
@@ -68,8 +71,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setAmount(value: String) {
-        if (value == _amount)
+        if (value == _amount) {
             return
+        }
 
         _amount = value
         notifyPropertyChanged(BR.amount)
@@ -82,8 +86,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setUsed(value: String) {
-        if (value == _used)
+        if (value == _used) {
             return
+        }
 
         _used = value
         notifyPropertyChanged(BR.amount)
@@ -96,8 +101,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setCurrency(value: Currencies) {
-        if (value == _currency)
+        if (value == _currency) {
             return
+        }
 
         _currency = value
         notifyPropertyChanged(BR.currency)
@@ -109,8 +115,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setName(value: String) {
-        if (value == _name)
+        if (value == _name) {
             return
+        }
 
         _name = value
         notifyPropertyChanged(BR.description)
@@ -123,8 +130,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setTag(value: Tag?) {
-        if (value == _tag)
+        if (value == _tag) {
             return
+        }
 
         _tag = value
         notifyPropertyChanged(BR.tag)
@@ -136,8 +144,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setFromDate(value: LocalDate) {
-        if (value == _fromDate)
+        if (value == _fromDate) {
             return
+        }
 
         _fromDate = value
         if (_fromDate.isAfter(_toDate)) {
@@ -153,8 +162,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setToDate(value: LocalDate) {
-        if (value == _toDate)
+        if (value == _toDate) {
             return
+        }
 
         _toDate = value
         notifyPropertyChanged(BR.toDate)
@@ -167,8 +177,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setIsUsedInputVisible(value: Boolean) {
-        if (value == _isUsedInputVisible)
+        if (value == _isUsedInputVisible) {
             return
+        }
 
         _isUsedInputVisible = value
         notifyPropertyChanged(BR.toDate)
@@ -253,8 +264,9 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun updateToDefaultCurrency(value: Double): Double {
-        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size)
+        if (_currency.id == baseCurrency.id || CurrencyUtil.rates.size < currencies.value!!.size) {
             return value
+        }
 
         return value * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
