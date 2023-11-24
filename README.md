@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="SaveApp Logo" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/36120a2c-1182-44a5-90da-532bca5dfe88"  width="128px" style="border-radius: 50%" />
+  <img alt="SaveApp Logo" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/36120a2c-1182-44a5-90da-532bca5dfe88"  width="128px" />
 
   # SaveApp
 </div>
@@ -10,8 +10,8 @@ SaveApp is an open-source Android app that helps keep track of expenses.
 All data is saved locally on your phone.
 
 ## Screenshots
-![Screenshot_20230910-175243 (Piccola)](https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/573c9072-7486-42ed-997f-eefc189b6704)
-![Screenshot_20230910-175235 (Piccola)](https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/fe8e3fca-05df-444d-bf79-519a6df44faf)
+<img alt="home" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/d9ecbe6a-755f-43e9-9e9a-1475c2eb670c" width="448px">
+<img alt="statistics" src="https://github.com/ferrariofilippo/SaveApp_Kotlin/assets/102259289/e23dd5b8-1421-4b23-a192-2e9c4a977743" width="448px" >
 
 ## Contribute
 Feel free to open <a href="https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/">issues</a> to track bugs and/or feature requests.<br/>
