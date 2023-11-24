@@ -195,4 +195,6 @@
     <string name="decrease_year_button">Decrease year</string>
     <string name="subscriptions_icon">Subscriptions icon</string>
     <string name="to_date_not_valid_error">Date is before starting one</string>
+    <string name="subscriptions_list_label">Subscription list</string>
+    <string name="statistics_by_year_label">Statistics by year list</string>
 </resources>

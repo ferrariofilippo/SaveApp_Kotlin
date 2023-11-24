@@ -4,6 +4,7 @@
 package com.ferrariofilippo.saveapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
@@ -256,24 +257,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        lastFragmentId = R.id.homeFragment
         navControllerInitialized = true
     }
 
     private fun onAddMovementClick() {
         ensureNavControllerInitialized()
 
-        when (lastFragmentId) {
-            R.id.homeFragment ->
-                findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newMovementFragment)
+        try {
+            when (lastFragmentId) {
+                R.id.homeFragment ->
+                    findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newMovementFragment)
 
-            R.id.historyFragment ->
-                findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newMovementFragment)
+                R.id.historyFragment ->
+                    findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newMovementFragment)
 
-            R.id.budgetsFragment ->
-                findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newMovementFragment)
+                R.id.budgetsFragment ->
+                    findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newMovementFragment)
 
-            R.id.statsFragment ->
-                findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newMovementFragment)
+                R.id.statsFragment ->
+                    findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newMovementFragment)
+            }
+        } catch (e: Exception) {
+            Log.e("NAV_E", e.message.toString())
         }
     }
 

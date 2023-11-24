@@ -477,6 +477,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cards_divider"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
                 android:text="@string/subscriptions"
                 app:icon="@drawable/baseline_autorenew_24" />
         </RelativeLayout>

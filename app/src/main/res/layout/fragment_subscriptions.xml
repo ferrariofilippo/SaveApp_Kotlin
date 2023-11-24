@@ -157,6 +157,7 @@
                 android:id="@+id/subscriptionsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/subscriptions_list_label"
                 tools:listitem="@layout/subscription_item" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>

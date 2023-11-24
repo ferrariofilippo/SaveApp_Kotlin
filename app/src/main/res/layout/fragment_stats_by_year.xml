@@ -21,6 +21,7 @@
             android:id="@+id/yearsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/statistics_by_year_label"
             tools:listitem="@layout/year_stats_item" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
