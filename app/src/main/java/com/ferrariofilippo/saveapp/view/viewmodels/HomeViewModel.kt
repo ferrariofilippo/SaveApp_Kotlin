@@ -4,7 +4,6 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -123,7 +122,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         runBlocking {
             for (i: Int in months.keys) {
                 val value = months[i]!!.value!!
-                Log.i("HOME", "${i}: ${value.toString()}")
                 if (value > _monthHighestTagValue.value!!) {
                     _monthHighestTag.value = tagRepository.getById(i)
                     _monthHighestTagValue.value = value

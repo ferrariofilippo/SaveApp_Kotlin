@@ -48,15 +48,8 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private suspend fun populateDb(dao: TagDao) {
-            val tags = dao.getAll().first()
-            if (tags.isNotEmpty()) {
-                val incomeTag = dao.getById(1)
-                if (incomeTag != null) {
-                    incomeTag.isIncome = true
-                    dao.update(incomeTag)
-
-                    return;
-                }
+            if (dao.getAll().first().isNotEmpty()) {
+                return
             }
 
             dao.deleteAll()
@@ -107,6 +100,7 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_1_2 = object: Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE tags ADD COLUMN isIncome INTEGER DEFAULT 0 NOT NULL")
+                db.execSQL("UPDATE tags SET isIncome = 1 WHERE id = 1")
             }
         }
 
