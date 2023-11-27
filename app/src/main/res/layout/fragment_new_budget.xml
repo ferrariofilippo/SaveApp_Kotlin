@@ -70,6 +70,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:digits="0123456789.,"
                     android:inputType="numberDecimal"
                     android:text="@={vm.amount}"
                     android:textAlignment="textEnd" />
@@ -109,6 +110,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:digits="0123456789.,"
                     android:inputType="numberDecimal"
                     android:text="@={vm.used}"
                     android:textAlignment="textEnd" />

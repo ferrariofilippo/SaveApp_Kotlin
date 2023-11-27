@@ -90,7 +90,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             return
         }
 
-        _amount = value.replace(',', '.')
+        _amount = value
         notifyPropertyChanged(BR.amount)
         onAmountChanged.invoke()
     }
