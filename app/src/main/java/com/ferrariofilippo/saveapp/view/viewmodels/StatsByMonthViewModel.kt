@@ -13,6 +13,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.statsitems.MonthMovementsSum
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
@@ -20,10 +21,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class StatsByMonthViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        private const val INCOME_ID = 1
-    }
-
     private val _app = application as SaveAppApplication
 
     private var _movements: List<TaggedMovement> = listOf()
@@ -86,7 +83,7 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
                 _showEmptyMessage.value = _movements.isEmpty()
                 clearSums()
                 _movements.forEach {
-                    if (it.tagId != INCOME_ID) {
+                    if (!TagUtil.incomeTagIds.contains(it.tagId)) {
                         _monthSums[it.date.monthValue - 1] += it.amount
                     }
                 }

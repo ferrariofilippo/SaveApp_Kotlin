@@ -4,6 +4,7 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +30,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val years: Map<Int, MutableLiveData<Double>> = StatsUtil.yearTags
     private val life: Map<Int, MutableLiveData<Double>> = StatsUtil.lifeTags
 
-    private val defaultTag: Tag = Tag(0, "", R.color.emerald_500)
+    private val defaultTag: Tag = Tag(0, "", R.color.emerald_500, false)
 
     private val _symbol = MutableLiveData(Currencies.EUR.toSymbol())
     val symbol: LiveData<String> = _symbol
@@ -122,6 +123,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         runBlocking {
             for (i: Int in months.keys) {
                 val value = months[i]!!.value!!
+                Log.i("HOME", "${i}: ${value.toString()}")
                 if (value > _monthHighestTagValue.value!!) {
                     _monthHighestTag.value = tagRepository.getById(i)
                     _monthHighestTagValue.value = value

@@ -7,6 +7,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.data.dao.BudgetDao
@@ -19,9 +20,10 @@ import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@Database(entities = [Budget::class, Movement::class, Subscription::class, Tag::class], version = 1)
+@Database(entities = [Budget::class, Movement::class, Subscription::class, Tag::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
 
@@ -46,51 +48,68 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private suspend fun populateDb(dao: TagDao) {
+            val tags = dao.getAll().first()
+            if (tags.isNotEmpty()) {
+                val incomeTag = dao.getById(1)
+                if (incomeTag != null) {
+                    incomeTag.isIncome = true
+                    dao.update(incomeTag)
+
+                    return;
+                }
+            }
+
             dao.deleteAll()
 
             dao.insert(
-                Tag(0, cxt.getString(R.string.income), R.color.emerald_500)
+                Tag(0, cxt.getString(R.string.income), R.color.emerald_500, true)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.bets), R.color.purple_200)
+                Tag(0, cxt.getString(R.string.bets), R.color.purple_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.clothes), R.color.emerald_200)
+                Tag(0, cxt.getString(R.string.clothes), R.color.emerald_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.culture), R.color.red_200)
+                Tag(0, cxt.getString(R.string.culture), R.color.red_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.entertainment), R.color.green_200)
+                Tag(0, cxt.getString(R.string.entertainment), R.color.green_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.food), R.color.cyan_200)
+                Tag(0, cxt.getString(R.string.food), R.color.cyan_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.gifts), R.color.blue_200)
+                Tag(0, cxt.getString(R.string.gifts), R.color.blue_200, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.holidays), R.color.purple_800)
+                Tag(0, cxt.getString(R.string.holidays), R.color.purple_800, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.personal_care), R.color.emerald_800)
+                Tag(0, cxt.getString(R.string.personal_care), R.color.emerald_800, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.others), R.color.red_800)
+                Tag(0, cxt.getString(R.string.others), R.color.red_800, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.sport), R.color.green_800)
+                Tag(0, cxt.getString(R.string.sport), R.color.green_800, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.tech), R.color.cyan_800)
+                Tag(0, cxt.getString(R.string.tech), R.color.cyan_800, false)
             )
             dao.insert(
-                Tag(0, cxt.getString(R.string.transports), R.color.blue_800)
+                Tag(0, cxt.getString(R.string.transports), R.color.blue_800, false)
             )
         }
     }
 
     companion object {
+        private val MIGRATION_1_2 = object: Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE tags ADD COLUMN isIncome INTEGER DEFAULT 0 NOT NULL")
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -101,6 +120,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "saveapp_database"
                 )
+                    .addMigrations(MIGRATION_1_2)
                     .addCallback(AppDatabaseCallback(scope, context))
                     .build()
 

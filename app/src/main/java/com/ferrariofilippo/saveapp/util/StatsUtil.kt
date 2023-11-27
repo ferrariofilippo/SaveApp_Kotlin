@@ -19,8 +19,6 @@ import java.io.OutputStreamWriter
 import java.time.LocalDate
 
 object StatsUtil {
-    private const val INCOME_TAG_ID = 1
-
     private const val FILE_NAME = "stats.json"
 
     private const val LAST_UPDATE = "last_update"
@@ -75,7 +73,7 @@ object StatsUtil {
         } finally {
             application.applicationScope.launch {
                 application.tagRepository.allTags.collect {
-                    val tags = it.filter { tag -> tag.id != INCOME_TAG_ID }
+                    val tags = it.filter { tag -> !tag.isIncome  }
 
                     if (monthTags.isEmpty() || monthTags.size != tags.size) {
                         monthTags = getMapFromTags(tags)
@@ -118,7 +116,7 @@ object StatsUtil {
 
         val handler = Handler(context.mainLooper)
         handler.post {
-            if (mov.tagId == INCOME_TAG_ID) {
+            if (TagUtil.incomeTagIds.contains(mov.tagId)) {
                 if (isSameMonth) {
                     _monthIncomes.value = _monthIncomes.value!! + mov.amount
                 }

@@ -12,12 +12,9 @@ import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.statsitems.YearStats
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.util.TagUtil
 
 class StatsByYearViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        const val INCOME_ID = 1
-    }
-
     private val _app = application as SaveAppApplication
 
     private val _movements: LiveData<List<TaggedMovement>> =
@@ -46,7 +43,7 @@ class StatsByYearViewModel(application: Application) : AndroidViewModel(applicat
     private fun calculateSums(movements: List<TaggedMovement>) {
         movements.forEach {
             val year = it.date.year
-            val multipliers = if (it.tagId == INCOME_ID) listOf(0.0, 1.0) else listOf(1.0, 0.0)
+            val multipliers = if (TagUtil.incomeTagIds.contains(it.tagId)) listOf(0.0, 1.0) else listOf(1.0, 0.0)
 
             _expensesByYear[year] = (_expensesByYear[year] ?: 0.0) + (it.amount * multipliers[0])
             _incomesByYear[year] = (_incomesByYear[year] ?: 0.0) + (it.amount * multipliers[1])
