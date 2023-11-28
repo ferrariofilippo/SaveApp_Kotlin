@@ -200,6 +200,13 @@
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/import_movements_note"
+                        android:textColor="?android:attr/textColorSecondary" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -268,6 +275,13 @@
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/import_subscriptions_note"
+                        android:textColor="?android:attr/textColorSecondary" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -334,6 +348,13 @@
                         android:layout_marginVertical="8dp"
                         android:text="@string/manage_budgets"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/import_budgets_note"
                         android:textColor="?android:attr/textColorSecondary" />
 
                     <RelativeLayout

@@ -198,4 +198,7 @@
     <string name="subscriptions_list_label">Subscription list</string>
     <string name="statistics_by_year_label">Statistics by year list</string>
     <string name="is_income_tag">Is income?</string>
+    <string name="import_movements_note">Note: to import new movements, set their IDs to 0.</string>
+    <string name="import_budgets_note">Note: to import new budgets, set their IDs to 0.</string>
+    <string name="import_subscriptions_note">Note: to import new subscriptions, set their IDs to 0.</string>
 </resources>
