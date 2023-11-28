@@ -197,4 +197,8 @@
     <string name="to_date_not_valid_error">La data precede quella di inizio</string>
     <string name="subscriptions_list_label">Lista iscrizioni</string>
     <string name="statistics_by_year_label">Lista statistiche per anno</string>
+    <string name="is_income_tag">È un\'entrata?</string>
+    <string name="import_movements_note">Nota: per importare dei movimenti, imposta il loro ID a 0.</string>
+    <string name="import_budgets_note">Nota: per importare dei budget, imposta il loro ID a 0.</string>
+    <string name="import_subscriptions_note">Nota: per importare degli abbonamenti, imposta il loro ID a 0.</string>
 </resources>

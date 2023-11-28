@@ -22,6 +22,7 @@ import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -130,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         val saveApp = application as SaveAppApplication
         SettingsUtil.setStore(saveApp)
         CurrencyUtil.setStore(saveApp)
+        TagUtil.updateAll(saveApp)
         BudgetUtil.init(saveApp)
         StatsUtil.init(saveApp)
 

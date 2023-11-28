@@ -21,6 +21,7 @@ import com.ferrariofilippo.saveapp.databinding.FragmentManageTagsBinding
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.util.CustomRecyclerDecorator
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.ferrariofilippo.saveapp.view.adapters.TagsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageTagsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -137,6 +138,7 @@ class ManageTagsFragment : Fragment() {
                 ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
             } else {
                 app.tagRepository.delete(item)
+                TagUtil.incomeTagIds.remove(item.id)
 
                 Snackbar.make(
                     activity.findViewById(R.id.containerView),
@@ -146,6 +148,7 @@ class ManageTagsFragment : Fragment() {
                     .setAction(R.string.undo) {
                         lifecycleScope.launch {
                             app.tagRepository.insert(item)
+                            TagUtil.incomeTagIds.add(item.id)
                         }
                     }.setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
             }

@@ -15,6 +15,7 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.statsitems.TagMovementsSum
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
@@ -22,10 +23,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class StatsByTagViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        const val INCOME_ID = 1
-    }
-
     private val _app = application as SaveAppApplication
 
     private val _tags: LiveData<List<Tag>> = _app.tagRepository.allTags.asLiveData()
@@ -58,7 +55,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
             tags.let {
                 _tagSums.clear()
                 tags.forEach {
-                    if (it.id != INCOME_ID)
+                    if (!it.isIncome)
                         _tagSums[it.id] = 0.0
                 }
             }
@@ -85,7 +82,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun calculateSums() {
         _movements.forEach {
-            if (it.tagId != INCOME_ID) {
+            if (!TagUtil.incomeTagIds.contains(it.tagId)) {
                 _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
             }
         }
@@ -101,7 +98,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
-            if (it.id != INCOME_ID) {
+            if (!it.isIncome) {
                 items.add(TagMovementsSum(it.id, it.name, it.color, sum, percentage))
             }
 

@@ -10,5 +10,6 @@ import androidx.room.PrimaryKey
 data class Tag(
     @PrimaryKey(autoGenerate = true) var id: Int,
     var name: String,
-    var color: Int
+    var color: Int,
+    var isIncome: Boolean
 )

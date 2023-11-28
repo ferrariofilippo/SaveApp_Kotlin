@@ -11,6 +11,7 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -25,6 +26,10 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
     val tagName: MutableLiveData<String> = MutableLiveData("")
 
     val tagColor: MutableLiveData<Int> = MutableLiveData(R.color.emerald_700)
+
+    val isIncomeTag: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    val isIncomeTagSwitchEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
 
     val displayColor: MutableLiveData<Int> =
         MutableLiveData(application.getColor(R.color.emerald_700))
@@ -43,9 +48,16 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     fun insert() = viewModelScope.launch {
         if (tagName.value != null && tagName.value!!.isNotBlank()) {
-            val tag = Tag(oldTag?.id ?: 0, tagName.value!!, tagColor.value ?: R.color.emerald_700)
+            val tag = Tag(
+                oldTag?.id ?: 0,
+                tagName.value!!,
+                tagColor.value ?: R.color.emerald_700,
+                isIncomeTag.value!!
+            )
+
             if (tag.id == 0) {
                 saveAppApplication.tagRepository.insert(tag)
+                TagUtil.updateAll(saveAppApplication)
             } else {
                 saveAppApplication.tagRepository.update(tag)
             }

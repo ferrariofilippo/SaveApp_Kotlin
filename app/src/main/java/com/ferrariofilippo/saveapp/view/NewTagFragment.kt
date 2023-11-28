@@ -65,6 +65,8 @@ class NewTagFragment : Fragment() {
         viewModel.tagName.value = tag?.name
         viewModel.tagColor.value = tag?.color ?: R.color.emerald_700
         viewModel.displayColor.value = application.getColor(viewModel.tagColor.value!!)
+        viewModel.isIncomeTag.value = tag?.isIncome
+        viewModel.isIncomeTagSwitchEnabled.value = false
     }
 
     private fun setupUI() {

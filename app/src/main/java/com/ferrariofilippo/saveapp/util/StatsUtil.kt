@@ -19,8 +19,6 @@ import java.io.OutputStreamWriter
 import java.time.LocalDate
 
 object StatsUtil {
-    private const val INCOME_TAG_ID = 1
-
     private const val FILE_NAME = "stats.json"
 
     private const val LAST_UPDATE = "last_update"
@@ -75,18 +73,18 @@ object StatsUtil {
         } finally {
             application.applicationScope.launch {
                 application.tagRepository.allTags.collect {
-                    val tags = it.filter { tag -> tag.id != INCOME_TAG_ID }
+                    val tags = it.filter { tag -> !tag.isIncome }
 
                     if (monthTags.isEmpty() || monthTags.size != tags.size) {
-                        monthTags = getMapFromTags(tags)
+                        monthTags = getMapFromTags(monthTags, tags)
                     }
 
                     if (yearTags.isEmpty() || yearTags.size != tags.size) {
-                        yearTags = getMapFromTags(tags)
+                        yearTags = getMapFromTags(yearTags, tags)
                     }
 
                     if (lifeTags.isEmpty() || lifeTags.size != tags.size) {
-                        lifeTags = getMapFromTags(tags)
+                        lifeTags = getMapFromTags(lifeTags, tags)
                     }
                 }
             }
@@ -118,7 +116,7 @@ object StatsUtil {
 
         val handler = Handler(context.mainLooper)
         handler.post {
-            if (mov.tagId == INCOME_TAG_ID) {
+            if (TagUtil.incomeTagIds.contains(mov.tagId)) {
                 if (isSameMonth) {
                     _monthIncomes.value = _monthIncomes.value!! + mov.amount
                 }
@@ -215,10 +213,17 @@ object StatsUtil {
         writer.endObject()
     }
 
-    private fun getMapFromTags(tags: List<Tag>): Map<Int, MutableLiveData<Double>> {
+    private fun getMapFromTags(
+        oldMap: Map<Int, MutableLiveData<Double>>,
+        tags: List<Tag>
+    ): Map<Int, MutableLiveData<Double>> {
         val map = mutableMapOf<Int, MutableLiveData<Double>>()
         tags.map {
-            map[it.id] = MutableLiveData(0.0)
+            if (oldMap.containsKey(it.id)) {
+                map[it.id] = oldMap[it.id]!!
+            } else {
+                map[it.id] = MutableLiveData(0.0)
+            }
         }
 
         return map.toMap()

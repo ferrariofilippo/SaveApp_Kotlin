@@ -29,7 +29,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val years: Map<Int, MutableLiveData<Double>> = StatsUtil.yearTags
     private val life: Map<Int, MutableLiveData<Double>> = StatsUtil.lifeTags
 
-    private val defaultTag: Tag = Tag(0, "", R.color.emerald_500)
+    private val defaultTag: Tag = Tag(0, "", R.color.emerald_500, false)
 
     private val _symbol = MutableLiveData(Currencies.EUR.toSymbol())
     val symbol: LiveData<String> = _symbol

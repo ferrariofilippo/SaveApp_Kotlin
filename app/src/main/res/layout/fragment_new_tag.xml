@@ -75,12 +75,23 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/isIncomeSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagNameInput"
+                android:layout_marginTop="12dp"
+                android:checked="@={vm.isIncomeTag}"
+                android:enabled="@{vm.isIncomeTagSwitchEnabled}"
+                android:paddingHorizontal="16dp"
+                android:text="@string/is_income_tag" />
+
             <Button
                 android:id="@+id/cancelButton"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/colorInput"
+                android:layout_below="@id/isIncomeSwitch"
                 android:layout_marginTop="28dp"
                 android:layout_toStartOf="@id/saveButton"
                 android:text="@string/cancel" />
@@ -90,7 +101,7 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/colorInput"
+                android:layout_below="@id/isIncomeSwitch"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="28dp"
