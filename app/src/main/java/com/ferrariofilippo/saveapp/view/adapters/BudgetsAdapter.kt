@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 
 class BudgetsAdapter(
     private val currency: Currencies,
@@ -49,6 +50,7 @@ class BudgetsAdapter(
         private val tagItemView = itemView.findViewById<MaterialButton>(R.id.budgetTagButton)
         private val progressItemView =
             itemView.findViewById<LinearProgressIndicator>(R.id.budgetProgress)
+        private val usedItemView = itemView.findViewById<TextView>(R.id.budgetUsed)
         private val maxItemView = itemView.findViewById<TextView>(R.id.budgetMax)
 
         @SuppressLint("SetTextI18n")
@@ -59,7 +61,15 @@ class BudgetsAdapter(
             tagItemView.text = item.tagName
             tagItemView.setIconTintResource(item.tagColor)
             tagItemView.setStrokeColorResource(item.tagColor)
+            tagItemView.setOnClickListener {
+                Snackbar.make(
+                    itemView.rootView.findViewById(R.id.containerView),
+                    item.tagName,
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(itemView.rootView.findViewById(R.id.bottomAppBar)).show()
+            }
             progressItemView.progress = (item.used * 100.0 / item.max).toInt()
+            usedItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.used)}"
             maxItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.max)}"
         }
 

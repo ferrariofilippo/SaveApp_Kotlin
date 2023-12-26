@@ -15,6 +15,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 
 class HistoryAdapter(private val currency: Currencies) :
     ListAdapter<TaggedMovement, HistoryAdapter.MovementViewHolder>(MovementsComparator()) {
@@ -46,6 +47,13 @@ class HistoryAdapter(private val currency: Currencies) :
             tagButtonItemView.text = item.tagName
             tagButtonItemView.setIconTintResource(item.tagColor)
             tagButtonItemView.setStrokeColorResource(item.tagColor)
+            tagButtonItemView.setOnClickListener {
+                Snackbar.make(
+                    itemView.rootView.findViewById(R.id.containerView),
+                    item.tagName,
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(itemView.rootView.findViewById(R.id.bottomAppBar)).show()
+            }
         }
 
         companion object {

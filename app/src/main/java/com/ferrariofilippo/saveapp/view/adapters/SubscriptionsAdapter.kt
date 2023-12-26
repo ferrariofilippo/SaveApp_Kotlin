@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 
 class SubscriptionsAdapter(private val ctx: Context, private val currency: Currencies) :
     ListAdapter<TaggedSubscription, SubscriptionsAdapter.SubscriptionViewHolder>(
@@ -62,6 +63,13 @@ class SubscriptionsAdapter(private val ctx: Context, private val currency: Curre
             tagItemView.text = item.tagName
             tagItemView.setIconTintResource(item.tagColor)
             tagItemView.setStrokeColorResource(item.tagColor)
+            tagItemView.setOnClickListener {
+                Snackbar.make(
+                    itemView.rootView.findViewById(R.id.containerView),
+                    item.tagName,
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(itemView.rootView.findViewById(R.id.bottomAppBar)).show()
+            }
         }
 
         private fun getLocalizedRenewalType(type: RenewalType): String {

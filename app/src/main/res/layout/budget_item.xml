@@ -53,7 +53,6 @@
             app:icon="@drawable/round_circle_16" />
     </RelativeLayout>
 
-
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/budgetProgress"
         android:layout_width="match_parent"
@@ -64,6 +63,15 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:trackCornerRadius="4dp" />
+
+    <TextView
+        android:id="@+id/budgetUsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/budgetProgress"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <TextView
         android:id="@+id/budgetMax"
