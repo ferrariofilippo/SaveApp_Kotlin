@@ -63,6 +63,13 @@ class StatsByTagFragment : Fragment() {
     }
 
     private fun setupGraph() {
+        binding.byTagTypeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                viewModel.setType(checkedId == binding.byTagExpensesButton.id)
+            }
+        }
+        binding.byTagTypeToggle.check(binding.byTagExpensesButton.id)
+
         viewModel.onMovementsChangeCallback = { updateGraph() }
         binding.tagsPieChart.description.text = ""
         binding.tagsPieChart.setUsePercentValues(true)

@@ -64,6 +64,13 @@ class StatsByMonthFragment : Fragment() {
 
     // Methods
     private fun setupGraph() {
+        binding.byMonthTypeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                viewModel.setType(checkedId == binding.byMonthExpensesButton.id)
+            }
+        }
+        binding. byMonthTypeToggle.check(binding.byMonthExpensesButton.id)
+
         viewModel.onMovementsChangeCallback = { updateGraph() }
         binding.monthsPieChart.description.text = ""
         binding.monthsPieChart.setUsePercentValues(true)

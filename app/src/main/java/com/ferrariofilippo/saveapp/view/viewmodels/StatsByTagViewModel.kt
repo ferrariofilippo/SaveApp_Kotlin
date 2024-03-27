@@ -31,7 +31,9 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _tagSums: MutableMap<Int, Double> = mutableMapOf()
 
-    private val _setLabel: String = application.getString(R.string.expenses_by_tag)
+    private var _setLabel: String = application.getString(R.string.expenses_by_tag)
+
+    private val _isShowingExpenses: MutableLiveData<Boolean> = MutableLiveData(true)
 
     private val _tagSumItems: MutableLiveData<List<TagMovementsSum>> = MutableLiveData(listOf())
     val tagSumItems get(): LiveData<List<TagMovementsSum>> = _tagSumItems
@@ -55,12 +57,11 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
             tags.let {
                 _tagSums.clear()
                 tags.forEach {
-                    if (!it.isIncome)
+                    if (_isShowingExpenses.value!! xor it.isIncome)
                         _tagSums[it.id] = 0.0
                 }
             }
-            calculateSums()
-            updateEntries()
+            calculateSums(_isShowingExpenses.value!!)
         }
         _year.observeForever { value ->
             viewModelScope.launch {
@@ -69,8 +70,24 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
                 _tagSums.keys.forEach {
                     _tagSums[it] = 0.0
                 }
-                calculateSums()
-                updateEntries()
+                calculateSums(_isShowingExpenses.value!!)
+            }
+        }
+        _isShowingExpenses.observeForever { value ->
+            _setLabel = if (value)
+                application.getString(R.string.expenses_by_tag)
+            else
+                application.getString(R.string.incomes_by_tag)
+
+            viewModelScope.launch {
+                _movements = _app.movementRepository.getAllTaggedByYear(_year.value!!)
+                _showEmptyMessage.value = _movements.isEmpty()
+                _tagSums.clear()
+                _tags.value?.forEach {
+                    if (value xor it.isIncome)
+                        _tagSums[it.id] = 0.0
+                }
+                calculateSums(value)
             }
         }
     }
@@ -80,15 +97,20 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _year.value = value
     }
 
-    private fun calculateSums() {
+    fun setType(isExpenses: Boolean) {
+        _isShowingExpenses.value = isExpenses
+    }
+
+    private fun calculateSums(selectExpenses: Boolean) {
         _movements.forEach {
-            if (!TagUtil.incomeTagIds.contains(it.tagId)) {
+            if (selectExpenses xor TagUtil.incomeTagIds.contains(it.tagId)) {
                 _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
             }
         }
+        updateEntries(selectExpenses)
     }
 
-    private fun updateEntries() {
+    private fun updateEntries(selectExpenses: Boolean) {
         var generalSum = 0.0
         _tagSums.values.forEach { generalSum += it }
 
@@ -98,7 +120,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
-            if (!it.isIncome) {
+            if (selectExpenses xor it.isIncome) {
                 items.add(TagMovementsSum(it.id, it.name, it.color, sum, percentage))
             }
 

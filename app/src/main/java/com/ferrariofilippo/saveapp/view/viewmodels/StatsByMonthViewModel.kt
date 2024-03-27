@@ -28,7 +28,9 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     private val _monthSums: MutableList<Double> =
         mutableListOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
-    private val _setLabel: String = application.getString(R.string.expenses_by_month)
+    private var _setLabel: String = application.getString(R.string.expenses_by_month)
+
+    private val _isShowingExpenses: MutableLiveData<Boolean> = MutableLiveData(true)
 
     private val _colors: List<Int> = listOf(
         _app.getColor(R.color.purple_200),
@@ -79,15 +81,17 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         initYears()
         _year.observeForever { value ->
             viewModelScope.launch {
-                _movements = _app.movementRepository.getAllTaggedByYear(value)
-                _showEmptyMessage.value = _movements.isEmpty()
-                clearSums()
-                _movements.forEach {
-                    if (!TagUtil.incomeTagIds.contains(it.tagId)) {
-                        _monthSums[it.date.monthValue - 1] += it.amount
-                    }
-                }
-                updateEntries()
+                updateMovements(value)
+            }
+        }
+        _isShowingExpenses.observeForever { value ->
+            _setLabel = if (value)
+                application.getString(R.string.expenses_by_month)
+            else
+                application.getString(R.string.incomes_by_month)
+
+            viewModelScope.launch {
+                updateMovements(year.value!!)
             }
         }
     }
@@ -95,6 +99,22 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
     // Methods
     fun setYear(value: String) {
         _year.value = value
+    }
+
+    fun setType(isExpenses: Boolean) {
+        _isShowingExpenses.value = isExpenses
+    }
+
+    private suspend fun updateMovements(year: String) {
+        _movements = _app.movementRepository.getAllTaggedByYear(year)
+        _showEmptyMessage.value = _movements.isEmpty()
+        clearSums()
+        _movements.forEach {
+            if (_isShowingExpenses.value!! xor TagUtil.incomeTagIds.contains(it.tagId)) {
+                _monthSums[it.date.monthValue - 1] += it.amount
+            }
+        }
+        updateEntries()
     }
 
     private fun clearSums() {

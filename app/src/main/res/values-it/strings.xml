@@ -201,4 +201,6 @@
     <string name="import_movements_note">Nota: per importare dei movimenti, imposta il loro ID a 0.</string>
     <string name="import_budgets_note">Nota: per importare dei budget, imposta il loro ID a 0.</string>
     <string name="import_subscriptions_note">Nota: per importare degli abbonamenti, imposta il loro ID a 0.</string>
+    <string name="incomes_by_tag">Entrate per tag</string>
+    <string name="incomes_by_month">Entrate per mese</string>
 </resources>
