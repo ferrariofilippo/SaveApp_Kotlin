@@ -49,7 +49,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     val tags: MutableLiveData<Array<Tag>> = MutableLiveData<Array<Tag>>()
 
     val currencies: MutableLiveData<Array<Currencies>> =
-        MutableLiveData<Array<Currencies>>(Currencies.values())
+        MutableLiveData<Array<Currencies>>(Currencies.entries.toTypedArray())
 
     var editingBudget: Budget? = null
 

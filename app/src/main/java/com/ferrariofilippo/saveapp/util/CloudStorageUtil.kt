@@ -24,8 +24,6 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.Scope
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
-import java.io.File
-import kotlin.reflect.KType
 
 object CloudStorageUtil {
     private fun displayError(activity: Activity?, messageId: Int) {

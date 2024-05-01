@@ -60,10 +60,10 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     val budgets: MutableLiveData<Array<TaggedBudget>> = MutableLiveData<Array<TaggedBudget>>()
 
     val currencies: MutableLiveData<Array<Currencies>> =
-        MutableLiveData<Array<Currencies>>(Currencies.values())
+        MutableLiveData<Array<Currencies>>(Currencies.entries.toTypedArray())
 
     val renewalTypes: MutableLiveData<Array<RenewalType>> =
-        MutableLiveData<Array<RenewalType>>(RenewalType.values())
+        MutableLiveData<Array<RenewalType>>(RenewalType.entries.toTypedArray())
 
     var editingSubscription: Subscription? = null
     var editingMovement: Movement? = null

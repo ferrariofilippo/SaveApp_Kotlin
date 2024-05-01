@@ -14,7 +14,7 @@ enum class Currencies(val id: Int) {
     CNY(7);
 
     companion object {
-        private val map = Currencies.values().associateBy { it.id }
+        private val map = entries.associateBy { it.id }
         fun from(id: Int) : Currencies = map[id] ?: EUR
     }
 

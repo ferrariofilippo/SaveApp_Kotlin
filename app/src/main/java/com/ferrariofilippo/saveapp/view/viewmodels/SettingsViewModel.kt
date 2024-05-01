@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     val currencies: MutableLiveData<Array<Currencies>> =
-        MutableLiveData<Array<Currencies>>(Currencies.values())
+        MutableLiveData<Array<Currencies>>(Currencies.entries.toTypedArray())
 
     val defaultCurrencyId get() : Flow<Int> = SettingsUtil.getCurrency()
 

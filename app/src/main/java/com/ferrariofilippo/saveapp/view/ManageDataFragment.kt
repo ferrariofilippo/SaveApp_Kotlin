@@ -19,7 +19,6 @@ import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageDataViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 
 class ManageDataFragment : Fragment() {

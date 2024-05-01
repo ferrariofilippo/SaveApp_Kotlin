@@ -19,7 +19,7 @@ class StringUtilUnitTest {
     fun toMovementOrNull_isCorrect() {
         val date = LocalDate.now()
         val m = Movement(1, 12.9, "Test movement", date, 2, 3)
-        val movementStr = "${m.id},${m.amount},${m.description},${date},${m.tagId},${m.budgetId}";
+        val movementStr = "${m.id},${m.amount},${m.description},${date},${m.tagId},${m.budgetId}"
         val parsedMovement = movementStr.toMovementOrNull()
 
         assertNotNull(parsedMovement)

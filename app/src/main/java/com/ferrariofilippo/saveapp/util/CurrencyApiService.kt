@@ -66,7 +66,7 @@ object CurrencyUtil {
     }
 
     suspend fun init() {
-        keys = Currencies.values().map {
+        keys = Currencies.entries.map {
             doublePreferencesKey(it.name)
         }.toTypedArray()
 
@@ -75,7 +75,7 @@ object CurrencyUtil {
         if (oldDate == null || oldDate.isBefore(LocalDate.now())) {
             try {
                 val result = retrofitService.getRates()
-                rates = Currencies.values().map { result.rates[it.name] ?: 1.0 }.toTypedArray()
+                rates = Currencies.entries.map { result.rates[it.name] ?: 1.0 }.toTypedArray()
 
                 setDate(result.date)
                 setRates(rates)

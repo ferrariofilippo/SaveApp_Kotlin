@@ -9,7 +9,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import kotlinx.coroutines.flow.Flow

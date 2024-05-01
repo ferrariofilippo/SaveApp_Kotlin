@@ -1,5 +1,5 @@
 # THIRD-PARTY NOTICE
-SaveApp uses open-source, third-party libraries and assets that may be ditributed under different licenses. 
+SaveApp uses open-source, third-party libraries and assets that may be distributed under different licenses. 
 
 ## Material Icons
 **Source**: [https://fonts.google.com/icons?icon.set=Material+Icons]
