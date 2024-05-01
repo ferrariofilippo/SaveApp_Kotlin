@@ -5,6 +5,7 @@ package com.ferrariofilippo.saveapp.util
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 object SettingsUtil {
     private val DEFAULT_CURRENCY = intPreferencesKey("default_currency")
     private val LAST_BACKUP_TIME_STAMP = stringPreferencesKey("last_backup_time_stamp")
+    private val USE_COMPACT_MODE = booleanPreferencesKey("use_compact_mode")
 
     private var settingsStore: DataStore<Preferences>? = null
 
@@ -63,6 +65,22 @@ object SettingsUtil {
             }
             .map { preferences ->
                 preferences[LAST_BACKUP_TIME_STAMP] ?: ""
+            }
+    }
+
+    suspend fun setUseCompactMode(useCompactMode: Boolean) {
+        settingsStore!!.edit { pref ->
+            pref[USE_COMPACT_MODE] = useCompactMode
+        }
+    }
+
+    fun getUseCompactMode(): Flow<Boolean> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[USE_COMPACT_MODE] ?: false
             }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ferrariofilippo.saveapp.databinding.FragmentStatsByTagBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.view.adapters.TagsStatsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.StatsByTagViewModel
 import com.github.mikephil.charting.animation.Easing
@@ -81,7 +82,8 @@ class StatsByTagFragment : Fragment() {
     private fun setupRecyclerView() {
         val adapter = TagsStatsAdapter(
             requireContext(),
-            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
+            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) },
+            SpacingUtil.padding
         )
 
         binding.tagsRecyclerView.adapter = adapter

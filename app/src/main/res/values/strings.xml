@@ -154,7 +154,7 @@
     <string name="default_currency_updated">Default currency updated</string>
     <string name="tags">Tags</string>
     <string name="manage">Manage</string>
-    <string name="tag_card_description">Applying tags to movements is an easy way to organize data. To customize them, click on the button below.</string>
+    <string name="tag_card_description">Applying tags to movements is an easy way to organize data.</string>
     <string name="manage_tags">Manage tags</string>
     <string name="tag">Tag</string>
     <string name="add_tag">Add a tag</string>
@@ -216,4 +216,6 @@
     <string name="manage_your_data_icon">Manage your data icon</string>
     <string name="restore_backup">Restore backup</string>
     <string name="restore_backup_dialog_message">This will restore the app database to the last available backup on Google Drive (%s). This action is not reversible.</string>
+    <string name="appearance">Appearance</string>
+    <string name="use_compact_mode">Use compact mode</string>
 </resources>

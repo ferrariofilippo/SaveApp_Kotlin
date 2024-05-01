@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tagContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp">
 
     <ImageView
         android:id="@+id/list_tag_pill"
@@ -32,10 +34,11 @@
         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/tagsDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/list_tag_name"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:foreground="?attr/colorPrimary" />
 
 </RelativeLayout>

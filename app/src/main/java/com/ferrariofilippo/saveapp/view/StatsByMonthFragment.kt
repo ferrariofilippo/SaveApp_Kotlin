@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ferrariofilippo.saveapp.databinding.FragmentStatsByMonthBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.view.adapters.MonthsStatsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.StatsByMonthViewModel
 import com.github.mikephil.charting.animation.Easing
@@ -69,7 +70,7 @@ class StatsByMonthFragment : Fragment() {
                 viewModel.setType(checkedId == binding.byMonthExpensesButton.id)
             }
         }
-        binding. byMonthTypeToggle.check(binding.byMonthExpensesButton.id)
+        binding.byMonthTypeToggle.check(binding.byMonthExpensesButton.id)
 
         viewModel.onMovementsChangeCallback = { updateGraph() }
         binding.monthsPieChart.description.text = ""
@@ -81,7 +82,8 @@ class StatsByMonthFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val adapter = MonthsStatsAdapter(
-            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
+            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) },
+            SpacingUtil.padding
         )
 
         binding.monthsRecyclerView.adapter = adapter

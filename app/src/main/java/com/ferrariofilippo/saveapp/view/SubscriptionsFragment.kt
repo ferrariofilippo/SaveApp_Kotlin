@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -24,6 +24,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
 import com.ferrariofilippo.saveapp.util.CustomRecyclerDecorator
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.view.adapters.SubscriptionsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.SubscriptionsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -69,7 +70,7 @@ class SubscriptionsFragment : Fragment() {
 
     // Methods
     private fun setupRecyclerView(currency: Currencies) {
-        val adapter = SubscriptionsAdapter(requireContext(), currency)
+        val adapter = SubscriptionsAdapter(requireContext(), currency, SpacingUtil.padding)
 
         binding.subscriptionsRecyclerView.adapter = adapter
         binding.subscriptionsRecyclerView.layoutManager = LinearLayoutManager(context)

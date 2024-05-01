@@ -25,6 +25,7 @@ import com.ferrariofilippo.saveapp.util.CloudStorageUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
@@ -170,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         TagUtil.updateAll(saveApp)
         BudgetUtil.init(saveApp)
         StatsUtil.init(saveApp)
+        SpacingUtil.init(saveApp)
 
         _restartFunction = { restartApplication() }
         _checkpointFunction = { saveApp.utilRepository.checkpoint() }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ferrariofilippo.saveapp.databinding.FragmentStatsByYearBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.view.adapters.YearStatsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.StatsByYearViewModel
 import kotlinx.coroutines.flow.first
@@ -56,7 +57,8 @@ class StatsByYearFragment : Fragment() {
     // Methods
     private fun setupRecycler() {
         val adapter = YearStatsAdapter(
-            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
+            runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) },
+            SpacingUtil.padding
         )
 
         binding.yearsRecyclerView.adapter = adapter

@@ -15,13 +15,16 @@ import androidx.appcompat.R
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentSettingsBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class SettingsFragment : Fragment() {
@@ -57,6 +60,14 @@ class SettingsFragment : Fragment() {
     private fun setupUI() {
         setupCurrencyPicker()
         setupButtons()
+
+        binding.compactModeSwitch.isChecked =
+            runBlocking { SettingsUtil.getUseCompactMode().first() }
+        binding.compactModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                SettingsUtil.setUseCompactMode(isChecked)
+            }
+        }
     }
 
     private fun setupCurrencyPicker() {

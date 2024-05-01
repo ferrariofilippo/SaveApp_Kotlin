@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -21,6 +21,7 @@ import com.ferrariofilippo.saveapp.databinding.FragmentManageTagsBinding
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.util.CustomRecyclerDecorator
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
 import com.ferrariofilippo.saveapp.view.adapters.TagsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageTagsViewModel
@@ -75,7 +76,7 @@ class ManageTagsFragment : Fragment() {
     }
 
     private fun setupRecycler() {
-        val adapter = TagsAdapter(requireContext())
+        val adapter = TagsAdapter(requireContext(), SpacingUtil.padding)
 
         binding.tagsRecyclerView.adapter = adapter
         binding.tagsRecyclerView.layoutManager = LinearLayoutManager(context)

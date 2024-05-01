@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -24,6 +24,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.CustomRecyclerDecorator
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.view.adapters.BudgetsAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.BudgetsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -74,8 +75,8 @@ class BudgetsFragment : Fragment() {
         val from = getString(R.string.from_display)
         val to = getString(R.string.to_display)
 
-        val activeAdapter = BudgetsAdapter(currency, from, to)
-        val pastAdapter = BudgetsAdapter(currency, from, to)
+        val activeAdapter = BudgetsAdapter(currency, from, to, SpacingUtil.padding)
+        val pastAdapter = BudgetsAdapter(currency, from, to, SpacingUtil.padding)
 
         binding.activeBudgetsRecyclerView.adapter = activeAdapter
         binding.activeBudgetsRecyclerView.layoutManager = LinearLayoutManager(context)

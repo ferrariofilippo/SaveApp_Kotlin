@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tagStatsContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,9 +46,10 @@
     </RelativeLayout>
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/tagStatsDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/byTagSumTextView"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:foreground="?attr/colorPrimary" />
 </androidx.appcompat.widget.LinearLayoutCompat>

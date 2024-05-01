@@ -154,7 +154,7 @@
     <string name="default_currency_updated">Valuta predefinita aggiornata</string>
     <string name="tags">Tag</string>
     <string name="manage">Gestisci</string>
-    <string name="tag_card_description">Applicare dei tag ai movimenti permette di organizzare più facilmente i dati. Per personalizzare i tag clicca sul bottone qui sotto.</string>
+    <string name="tag_card_description">Applicare dei tag ai movimenti permette di organizzare più facilmente i dati.</string>
     <string name="manage_tags">Gestisci i tag</string>
     <string name="tag">Tag</string>
     <string name="add_tag">Aggiungi un tag</string>
@@ -216,4 +216,6 @@
     <string name="manage_your_data_icon">Icona gestisci i tuoi dati</string>
     <string name="restore_backup">Ripristina backup</string>
     <string name="restore_backup_dialog_message">Questa azione ripristinerà l\'ultimo backup disponibile su Google Drive (%s). Questa azione non è reversibile.</string>
+    <string name="appearance">Aspetto</string>
+    <string name="use_compact_mode">Usa modalità compatta</string>
 </resources>

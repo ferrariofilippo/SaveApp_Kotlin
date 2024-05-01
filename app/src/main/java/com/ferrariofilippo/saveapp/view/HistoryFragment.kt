@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -28,6 +28,7 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.view.adapters.HistoryAdapter
 import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
@@ -76,8 +77,10 @@ class HistoryFragment : Fragment() {
 
     // Methods
     private fun setupRecyclerView() {
-        val adapter =
-            HistoryAdapter(Currencies.from(runBlocking { SettingsUtil.getCurrency().first() }))
+        val adapter = HistoryAdapter(
+            Currencies.from(runBlocking { SettingsUtil.getCurrency().first() }),
+            SpacingUtil.padding
+        )
 
         binding.movementsRecyclerView.adapter = adapter
         binding.movementsRecyclerView.layoutManager = LinearLayoutManager(context)

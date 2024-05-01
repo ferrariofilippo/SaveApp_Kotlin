@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/movementContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/movementAmount"
@@ -49,10 +51,11 @@
         app:icon="@drawable/round_circle_16" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/historyDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/movementDescription"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:foreground="?attr/colorPrimary" />
 
 </RelativeLayout>
