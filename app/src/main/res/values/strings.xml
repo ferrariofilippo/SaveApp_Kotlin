@@ -203,4 +203,17 @@
     <string name="import_subscriptions_note">Note: to import new subscriptions, set their IDs to 0.</string>
     <string name="incomes_by_tag">Incomes by tag</string>
     <string name="incomes_by_month">Incomes by month</string>
+    <string name="saveapp_logo">SaveApp\'s logo</string>
+    <string name="create_backup">Create backup</string>
+    <string name="cloud">Cloud</string>
+    <string name="cloud_description">Avoid losing your data by creating a backup on the Cloud! (Currently the only service we support is Google Drive)</string>
+    <string name="backup_upload_failed">Error: backup upload failed</string>
+    <string name="backup_restore_failed">Error: backup restore failed</string>
+    <string name="manage_your_data">Manage your data</string>
+    <string name="data">Data</string>
+    <string name="last_backup">Last backup: %s</string>
+    <string name="restore">Restore</string>
+    <string name="manage_your_data_icon">Manage your data icon</string>
+    <string name="restore_backup">Restore backup</string>
+    <string name="restore_backup_dialog_message">This will restore the app database to the last available backup on Google Drive (%s). This action is not reversible.</string>
 </resources>

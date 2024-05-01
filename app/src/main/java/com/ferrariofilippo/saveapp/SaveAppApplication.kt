@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp
@@ -13,10 +13,15 @@ import com.ferrariofilippo.saveapp.data.repository.BudgetRepository
 import com.ferrariofilippo.saveapp.data.repository.MovementRepository
 import com.ferrariofilippo.saveapp.data.repository.SubscriptionRepository
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
+import com.ferrariofilippo.saveapp.data.repository.UtilRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 class SaveAppApplication : Application() {
+    companion object {
+        const val settingsFileName = "settings"
+    }
+
     val applicationScope = CoroutineScope(SupervisorJob())
 
     private val database by lazy { AppDatabase.getInstance(this, applicationScope) }
@@ -29,9 +34,11 @@ class SaveAppApplication : Application() {
 
     val tagRepository by lazy { TagRepository(database.tagDao()) }
 
+    val utilRepository by lazy { UtilRepository(database.utilDao()) }
+
     val ratesStore: DataStore<Preferences> by preferencesDataStore("currencies")
 
-    val settingsStore: DataStore<Preferences> by preferencesDataStore("settings")
+    val settingsStore: DataStore<Preferences> by preferencesDataStore(settingsFileName)
 
     private var currentActivity: Activity? = null
 

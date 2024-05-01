@@ -84,6 +84,9 @@
             android:id="@+id/action_settingsFragment_to_manageTagsFragment"
             app:destination="@id/manageTagsFragment"
             app:enterAnim="@anim/slide_in_up" />
+        <action
+            android:id="@+id/action_settingsFragment_to_manageDataFragment"
+            app:destination="@id/manageDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/subscriptionsFragment"
@@ -122,4 +125,8 @@
             app:destination="@id/manageTagsFragment"
             app:exitAnim="@anim/slide_out_top_right" />
     </fragment>
+    <fragment
+        android:id="@+id/manageDataFragment"
+        android:name="com.ferrariofilippo.saveapp.view.ManageDataFragment"
+        android:label="ManageDataFragment" />
 </navigation>

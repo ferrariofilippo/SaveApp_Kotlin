@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -19,7 +19,6 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentSettingsBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
-import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.first
@@ -98,14 +97,11 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupButtons() {
-        val act = (requireActivity().application as SaveAppApplication)
-            .getCurrentActivity()!! as MainActivity
-
-        setupMovementsButtons(act)
-        setupSubscriptionsButtons(act)
-        setupBudgetsButtons(act)
+        val app = requireActivity().application as SaveAppApplication
+        val act = app.getCurrentActivity()!! as MainActivity
 
         binding.manageTagsButton.setOnClickListener { act.goToManageTags() }
+        binding.manageDataButton.setOnClickListener { act.goToManageData() }
         binding.creditsButton.setOnClickListener {
             val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
@@ -113,42 +109,6 @@ class SettingsFragment : Fragment() {
         binding.reportBugButton.setOnClickListener {
             val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/new")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
-        }
-    }
-
-    private fun setupMovementsButtons(act: MainActivity) {
-        binding.templateMovementsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE, act)
-        }
-        binding.importMovementsButton.setOnClickListener {
-            ImportExportUtil.getFromFile(ImportExportUtil.OPEN_MOVEMENTS_FILE, act)
-        }
-        binding.exportMovementsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_MOVEMENTS_FILE, act)
-        }
-    }
-
-    private fun setupSubscriptionsButtons(act: MainActivity) {
-        binding.templateSubscriptionsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_SUBSCRIPTIONS_TEMPLATE, act)
-        }
-        binding.importSubscriptionsButton.setOnClickListener {
-            ImportExportUtil.getFromFile(ImportExportUtil.OPEN_SUBSCRIPTIONS_FILE, act)
-        }
-        binding.exportSubscriptionsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_SUBSCRIPTIONS_FILE, act)
-        }
-    }
-
-    private fun setupBudgetsButtons(act: MainActivity) {
-        binding.templateBudgetsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_BUDGETS_TEMPLATE, act)
-        }
-        binding.importBudgetsButton.setOnClickListener {
-            ImportExportUtil.getFromFile(ImportExportUtil.OPEN_BUDGETS_FILE, act)
-        }
-        binding.exportBudgetsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_BUDGETS_FILE, act)
         }
     }
 }

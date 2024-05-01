@@ -1,0 +1,47 @@
+<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Licensed under the MIT License. See the LICENSE. -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <group android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:translateX="-51.16"
+        android:translateY="-51.16">
+        <path
+            android:pathData="M0,0h512v512h-512z"
+            android:fillColor="#00ffffff"/>
+        <path
+            android:pathData="M330,128H357C371.91,128 384,140.09 384,155V168.5C384,175.96 377.96,182 370.5,182H299L330,128Z"
+            android:fillColor="#0C9571"/>
+        <path
+            android:pathData="M160,174.29C160,148.72 180.72,128 206.29,128H330L299,182H167.71C163.45,182 160,178.55 160,174.29V174.29Z"
+            android:fillColor="#047857"/>
+        <path
+            android:pathData="M213,330H344.29C348.55,330 352,333.45 352,337.71V337.71C352,363.28 331.28,384 305.71,384H182L213,330Z"
+            android:fillColor="#0C9571"/>
+        <path
+            android:pathData="M128,343.5C128,336.04 134.04,330 141.5,330H213L182,384H155C140.09,384 128,371.91 128,357V343.5Z"
+            android:fillColor="#047857"/>
+        <path
+            android:pathData="M270,231H312.3V281H241L269.9,231.1Z"
+            android:fillColor="#0C9571"/>
+        <path
+            android:pathData="M201,231H270.1L241.1,281H200.7V231Z"
+            android:fillColor="#047857"/>
+        <path
+            android:pathData="M160,205.5C160,198.04 166.04,192 173.5,192H187.5C194.96,192 201,198.04 201,205.5V281C178.36,281 160,262.64 160,240V205.5Z"
+            android:fillColor="#047857"/>
+        <path
+            android:pathData="M312,231C334.09,231 352,248.91 352,271V306.5C352,313.96 345.96,320 338.5,320H325.5C318.04,320 312,313.96 312,306.5V231Z"
+            android:fillColor="#0C9571"/>
+        <path
+            android:pathData="M207,231C203.69,231 201,227.42 200.7,223V231.3H207Z"
+            android:fillColor="#047857"/>
+        <path
+            android:pathData="M306,281C309.31,281 312.2,284.58 312.2,289V280.7H306Z"
+            android:fillColor="#0C9571"/>
+    </group>
+</vector>

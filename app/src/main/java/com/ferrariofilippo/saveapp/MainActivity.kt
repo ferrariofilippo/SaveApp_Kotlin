@@ -1,12 +1,15 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.appcompat.app.AppCompatActivity
@@ -15,14 +18,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
+import com.ferrariofilippo.saveapp.data.AppDatabase
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.BudgetUtil
+import com.ferrariofilippo.saveapp.util.CloudStorageUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
+import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveDownloadWorker
+import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveUploadWorker
+import com.google.android.gms.auth.api.identity.AuthorizationResult
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -31,6 +44,20 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private var _restartFunction: () -> Unit = { }
+
+        private var _checkpointFunction: () -> Unit = { }
+
+        fun requireRestart() {
+            _restartFunction()
+        }
+
+        fun requireCheckpoint() {
+            _checkpointFunction()
+        }
+    }
+
     private var lastFragmentId: Int = R.id.homeFragment
 
     private var navControllerInitialized = false
@@ -126,6 +153,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    val uploadBackupToDrive =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+            val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
+                .getAuthorizationResultFromIntent(result.data)
+
+            CloudStorageUtil.enqueueUpload(application as SaveAppApplication, authResult)
+        }
+
+    val downloadBackupFromDrive =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+            val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
+                .getAuthorizationResultFromIntent(result.data)
+
+            CloudStorageUtil.enqueueDownload(application as SaveAppApplication, authResult)
+        }
+
     // Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         val saveApp = application as SaveAppApplication
@@ -134,6 +177,9 @@ class MainActivity : AppCompatActivity() {
         TagUtil.updateAll(saveApp)
         BudgetUtil.init(saveApp)
         StatsUtil.init(saveApp)
+
+        _restartFunction = { restartApplication() }
+        _checkpointFunction = { saveApp.utilRepository.checkpoint() }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -144,6 +190,11 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        WorkManager.getInstance(this).cancelAllWork()
     }
 
     // Methods
@@ -200,6 +251,11 @@ class MainActivity : AppCompatActivity() {
     fun goToManageTags() {
         ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_settingsFragment_to_manageTagsFragment)
+    }
+
+    fun goToManageData() {
+        ensureNavControllerInitialized()
+        findNavController(R.id.containerView).navigate(R.id.action_settingsFragment_to_manageDataFragment)
     }
 
     fun gotToAddOrEditTag(id: Int) {
@@ -319,5 +375,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    private fun restartApplication() {
+        val intent = packageManager.getLaunchIntentForPackage(packageName) ?: return
+        val startIntent = Intent.makeRestartActivityTask(intent.component)
+        startIntent.`package` = packageName
+        startActivity(startIntent)
+        Runtime.getRuntime().exit(0)
     }
 }

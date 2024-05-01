@@ -16,5 +16,6 @@
         <item name="colorOnPrimaryContainer">@color/emerald_200</item>
         <item name="colorSecondaryContainer">@color/emerald_900</item>
         <item name="colorSurfaceContainerHighest">@color/emerald_100</item>
+        <item name="colorOnPrimaryFixedVariant">@color/gray_300</item>
     </style>
 </resources>

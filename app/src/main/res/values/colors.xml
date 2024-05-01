@@ -69,6 +69,9 @@
     <color name="cyan_800">#004C63</color>
     <color name="cyan_900">#00364B</color>
 
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_700">#616161</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>

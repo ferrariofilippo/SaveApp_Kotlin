@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.data
@@ -14,6 +14,7 @@ import com.ferrariofilippo.saveapp.data.dao.BudgetDao
 import com.ferrariofilippo.saveapp.data.dao.MovementDao
 import com.ferrariofilippo.saveapp.data.dao.SubscriptionDao
 import com.ferrariofilippo.saveapp.data.dao.TagDao
+import com.ferrariofilippo.saveapp.data.dao.UtilDao
 import com.ferrariofilippo.saveapp.model.entities.Budget
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.entities.Subscription
@@ -32,6 +33,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun subscriptionDao(): SubscriptionDao
 
     abstract fun tagDao(): TagDao
+
+    abstract fun utilDao(): UtilDao
 
     private class AppDatabaseCallback(
         private val scope: CoroutineScope,
@@ -107,12 +110,14 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        const val DB_NAME = "saveapp_database"
+
         fun getInstance(context: Context, scope: CoroutineScope): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "saveapp_database"
+                    DB_NAME
                 )
                     .addMigrations(MIGRATION_1_2)
                     .addCallback(AppDatabaseCallback(scope, context))

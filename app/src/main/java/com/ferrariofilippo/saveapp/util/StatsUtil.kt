@@ -19,7 +19,7 @@ import java.io.OutputStreamWriter
 import java.time.LocalDate
 
 object StatsUtil {
-    private const val FILE_NAME = "stats.json"
+    const val FILE_NAME = "stats.json"
 
     private const val LAST_UPDATE = "last_update"
     private const val MONTH_EXPENSES = "month_expenses"

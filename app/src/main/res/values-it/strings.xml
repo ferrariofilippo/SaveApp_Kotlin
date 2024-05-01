@@ -203,4 +203,17 @@
     <string name="import_subscriptions_note">Nota: per importare degli abbonamenti, imposta il loro ID a 0.</string>
     <string name="incomes_by_tag">Entrate per tag</string>
     <string name="incomes_by_month">Entrate per mese</string>
+    <string name="saveapp_logo">Logo SaveApp</string>
+    <string name="create_backup">Esegui backup</string>
+    <string name="cloud">Cloud</string>
+    <string name="cloud_description">Evita di perdere tutti i tuoi dati creandone una copia sul Cloud! (Al momento l\'unico servizio supportato è Google Drive)</string>
+    <string name="backup_upload_failed">Errore: caricamento del backup fallito</string>
+    <string name="backup_restore_failed">Errore: ripristino del backup fallito</string>
+    <string name="manage_your_data">Gestisci i tuoi dati</string>
+    <string name="data">Dati</string>
+    <string name="last_backup">Ultimo backup: %s</string>
+    <string name="restore">Ripristina</string>
+    <string name="manage_your_data_icon">Icona gestisci i tuoi dati</string>
+    <string name="restore_backup">Ripristina backup</string>
+    <string name="restore_backup_dialog_message">Questa azione ripristinerà l\'ultimo backup disponibile su Google Drive (%s). Questa azione non è reversibile.</string>
 </resources>
