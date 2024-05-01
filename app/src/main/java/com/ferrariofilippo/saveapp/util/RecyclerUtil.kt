@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
+import kotlin.math.absoluteValue
 
 class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecoration() {
     private lateinit var background: Drawable
@@ -70,7 +71,7 @@ abstract class RecyclerEditAndDeleteGestures(private val ctx: Context) :
     private lateinit var deleteIcon: Drawable
     private lateinit var editBackground: Drawable
     private lateinit var editIcon: Drawable
-    private val iconMargin: Int = 16
+    private var iconMargin: Int = (16.0f * ctx.resources.displayMetrics.density + 0.5f).toInt()
     private var initiated: Boolean = false
 
     var editOnlyRow = -1
@@ -140,11 +141,12 @@ abstract class RecyclerEditAndDeleteGestures(private val ctx: Context) :
             )
             background.draw(c)
 
-            val height = viewHolder.itemView.bottom - viewHolder.itemView.top
-            val iconTop = viewHolder.itemView.top + (height - icon.intrinsicHeight) / 2
-
-            icon.setBounds(iconLeft, iconTop, iconRight, iconTop + icon.intrinsicHeight)
-            icon.draw(c)
+            if (dX.absoluteValue > iconMargin + icon.intrinsicWidth) {
+                val height = viewHolder.itemView.bottom - viewHolder.itemView.top
+                val iconTop = viewHolder.itemView.top + (height - icon.intrinsicHeight) / 2
+                icon.setBounds(iconLeft, iconTop, iconRight, iconTop + icon.intrinsicHeight)
+                icon.draw(c)
+            }
         }
 
         super.onChildDraw(
