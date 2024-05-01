@@ -63,7 +63,7 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
-            activity.goBackToManageTags()
+            activity.popLastView()
             Snackbar.make(
                 activity.findViewById(R.id.containerView),
                 if (tag.id == 0) R.string.tag_created else R.string.tag_updated,

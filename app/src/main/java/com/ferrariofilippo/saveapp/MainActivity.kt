@@ -18,11 +18,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
-import androidx.work.workDataOf
-import com.ferrariofilippo.saveapp.data.AppDatabase
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
@@ -32,8 +28,6 @@ import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
-import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveDownloadWorker
-import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveUploadWorker
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -160,7 +154,6 @@ class MainActivity : AppCompatActivity() {
 
             CloudStorageUtil.enqueueUpload(application as SaveAppApplication, authResult)
         }
-
     val downloadBackupFromDrive =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
             val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
@@ -198,24 +191,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Methods
-    fun goBack() {
-        ensureNavControllerInitialized()
-
-        when (lastFragmentId) {
-            R.id.homeFragment ->
-                findNavController(R.id.containerView).navigate(R.id.homeFragment)
-
-            R.id.historyFragment ->
-                findNavController(R.id.containerView).navigate(R.id.historyFragment)
-
-            R.id.budgetsFragment ->
-                findNavController(R.id.containerView).navigate(R.id.budgetsFragment)
-
-            R.id.statsFragment ->
-                findNavController(R.id.containerView).navigate(R.id.statsFragment)
-        }
-    }
-
     fun goToSettings() {
         ensureNavControllerInitialized()
         findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_settingsFragment)
@@ -268,9 +243,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun goBackToManageTags() {
+    fun popLastView() {
         ensureNavControllerInitialized()
-        findNavController(R.id.containerView).navigate(R.id.action_newTagFragment_to_manageTagsFragment)
+        findNavController(R.id.containerView).popBackStack()
     }
 
     fun updateAllToNewCurrency(value: Currencies) {

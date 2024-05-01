@@ -71,7 +71,7 @@ class NewTagFragment : Fragment() {
 
     private fun setupUI() {
         binding.saveButton.setOnClickListener { viewModel.insert() }
-        binding.cancelButton.setOnClickListener { (activity as MainActivity).goBackToManageTags() }
+        binding.cancelButton.setOnClickListener { (activity as MainActivity).popLastView() }
 
         setupColorPicker()
 

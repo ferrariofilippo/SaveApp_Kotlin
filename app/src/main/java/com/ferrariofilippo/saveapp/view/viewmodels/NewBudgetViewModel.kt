@@ -225,7 +225,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
-            activity.goBack()
+            activity.popLastView()
             Snackbar.make(
                 activity.findViewById(R.id.containerView),
                 if (editingBudget != null) R.string.budget_updated else R.string.budget_created,

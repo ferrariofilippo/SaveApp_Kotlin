@@ -240,7 +240,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
 
             if (succeeded) {
                 val activity = saveAppApplication.getCurrentActivity() as MainActivity
-                activity.goBack()
+                activity.popLastView()
                 Snackbar.make(
                     activity.findViewById(R.id.containerView),
                     getSaveSnackBarMessage(),

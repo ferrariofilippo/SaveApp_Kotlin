@@ -92,7 +92,7 @@ class NewBudgetFragment : Fragment() {
         }
 
         binding.budgetSaveButton.setOnClickListener { viewModel.insert() }
-        binding.budgetCancelButton.setOnClickListener { (activity as MainActivity).goBack() }
+        binding.budgetCancelButton.setOnClickListener { (activity as MainActivity).popLastView() }
 
         binding.fromDateInput.editText?.setOnClickListener {
             showDatePicker(

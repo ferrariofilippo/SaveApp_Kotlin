@@ -107,7 +107,7 @@ class NewMovementFragment : Fragment() {
         }
 
         binding.saveButton.setOnClickListener { viewModel.insert() }
-        binding.cancelButton.setOnClickListener { (activity as MainActivity).goBack() }
+        binding.cancelButton.setOnClickListener { (activity as MainActivity).popLastView() }
         binding.dateInput.editText?.setOnClickListener { showDatePicker() }
         binding.clearBudgetButton.setOnClickListener {
             binding.budgetInput.editText?.text = null
