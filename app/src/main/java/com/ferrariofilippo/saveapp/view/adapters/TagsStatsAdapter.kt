@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.statsitems.TagMovementsSum
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.divider.MaterialDivider
 
 class TagsStatsAdapter(
@@ -54,7 +55,7 @@ class TagsStatsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TagMovementsSum) {
-            tagPillItemView.setColorFilter(ctx.getColor(item.color))
+            tagPillItemView.setColorFilter(ColorUtil.getColorOrDefault(ctx, item.color))
             tagNameItemView.text = item.name
             sumItemView.text =
                 String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)

@@ -10,6 +10,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.SaveAppApplication
+import com.ferrariofilippo.saveapp.util.LogUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageDataViewModel
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
@@ -59,6 +60,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
                 }
             }
         } catch (e: GoogleJsonResponseException) {
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "deleteOldBackup")
             return false
         }
 
@@ -82,6 +84,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
             credentials = GoogleCredentials.create(token)
         } catch (e: Exception) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "doWork")
             return Result.failure()
         }
 
@@ -122,6 +125,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
             }
         } catch (e: GoogleJsonResponseException) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "doWork")
             return Result.failure()
         }
 

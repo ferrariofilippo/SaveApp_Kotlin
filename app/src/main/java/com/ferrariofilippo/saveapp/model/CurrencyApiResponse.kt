@@ -1,11 +1,13 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.model
 
+import com.squareup.moshi.Json
+
 data class CurrencyApiResponse(
-    val amount: Int,
-    val base: String,
-    val date: String,
-    val rates: Map<String, Double>
+    @Json(name="amount") val amount: Int,
+    @Json(name="base") val base: String,
+    @Json(name="date") val date: String,
+    @Json(name="rates") val rates: Map<String, Double>
 )

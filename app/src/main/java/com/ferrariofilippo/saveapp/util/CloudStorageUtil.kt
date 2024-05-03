@@ -53,6 +53,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
+                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "authorizeDownload")
             }
         } else {
             enqueueDownload(app, result)
@@ -75,6 +76,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
+                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "authorizeUpload")
             }
         } else {
             enqueueUpload(app, result)
@@ -141,6 +143,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
+                LogUtil.logException(it, javaClass.kotlin.simpleName ?: "", "addOnFailureListener")
             }
     }
 }

@@ -20,9 +20,11 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentSettingsBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import com.ferrariofilippo.saveapp.util.LogUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -119,6 +121,21 @@ class SettingsFragment : Fragment() {
         }
         binding.reportBugButton.setOnClickListener {
             val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/new")
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+        binding.clearLogsButton.setOnClickListener {
+            LogUtil.clearLogs()
+            Snackbar.make(
+                act.findViewById(com.ferrariofilippo.saveapp.R.id.containerView),
+                com.ferrariofilippo.saveapp.R.string.logs_cleared,
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(act.findViewById(com.ferrariofilippo.saveapp.R.id.bottomAppBar)).show()
+        }
+        binding.exportLogsButton.setOnClickListener {
+            act.exportLogFile.launch("saveapp.log")
+        }
+        binding.privacyButton.setOnClickListener {
+            val uri = Uri.parse("https://saveapp.vercel.app/privacy")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
     }

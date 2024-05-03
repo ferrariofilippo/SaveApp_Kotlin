@@ -83,7 +83,7 @@
     <string name="name_error">Name is empty</string>
     <string name="initial_date">Initial date</string>
     <string name="ending_date">Ending date</string>
-    <string name="report_bug">Report a bug</string>
+    <string name="report">Report</string>
     <string name="credits">Credits</string>
     <string name="export_data">Export</string>
     <string name="import_data">Import</string>
@@ -218,4 +218,10 @@
     <string name="restore_backup_dialog_message">This will restore the app database to the last available backup on Google Drive (%s). This action is not reversible.</string>
     <string name="appearance">Appearance</string>
     <string name="use_compact_mode">Use compact mode</string>
+    <string name="clear_logs">Clear</string>
+    <string name="logs">Logs</string>
+    <string name="advanced">Advanced</string>
+    <string name="logs_cleared">Logs cleared</string>
+    <string name="privacy">Privacy</string>
+    <string name="bugs">Bugs</string>
 </resources>

@@ -83,7 +83,7 @@
     <string name="name_error">Il nome è vuoto</string>
     <string name="initial_date">Data di inizio</string>
     <string name="ending_date">Data di fine</string>
-    <string name="report_bug">Segnala un bug</string>
+    <string name="report">Segnala</string>
     <string name="credits">Crediti</string>
     <string name="export_data">Esporta</string>
     <string name="import_data">Importa</string>
@@ -218,4 +218,10 @@
     <string name="restore_backup_dialog_message">Questa azione ripristinerà l\'ultimo backup disponibile su Google Drive (%s). Questa azione non è reversibile.</string>
     <string name="appearance">Aspetto</string>
     <string name="use_compact_mode">Usa modalità compatta</string>
+    <string name="clear_logs">Cancella</string>
+    <string name="logs">Log</string>
+    <string name="advanced">Avanzate</string>
+    <string name="logs_cleared">Log cancellati</string>
+    <string name="privacy">Privacy</string>
+    <string name="bugs">Bug</string>
 </resources>

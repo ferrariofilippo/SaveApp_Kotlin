@@ -15,6 +15,7 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.statsitems.TagMovementsSum
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -125,7 +126,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
             }
 
             if (sum != 0.0) {
-                colors.add(_app.getColor(it.color))
+                colors.add(ColorUtil.getColorOrDefault(_app, it.color))
                 entries.add(PieEntry(percentage.toFloat(), it.name))
             }
         }

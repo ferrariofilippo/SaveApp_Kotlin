@@ -14,6 +14,7 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentNewTagBinding
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.view.adapters.ColorDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewTagViewModel
 import kotlinx.coroutines.runBlocking
@@ -64,7 +65,8 @@ class NewTagFragment : Fragment() {
         viewModel.oldTag = tag
         viewModel.tagName.value = tag?.name
         viewModel.tagColor.value = tag?.color ?: R.color.emerald_700
-        viewModel.displayColor.value = application.getColor(viewModel.tagColor.value!!)
+        viewModel.displayColor.value =
+            ColorUtil.getColorOrDefault(application, viewModel.tagColor.value!!)
         viewModel.isIncomeTag.value = tag?.isIncome
         viewModel.isIncomeTagSwitchEnabled.value = false
     }
@@ -91,7 +93,7 @@ class NewTagFragment : Fragment() {
         colorAutoComplete.setOnItemClickListener { parent, _, position, _ ->
             val selection = parent.adapter.getItem(position) as Int
             viewModel.tagColor.value = selection
-            viewModel.displayColor.value = requireActivity().getColor(selection)
+            viewModel.displayColor.value = ColorUtil.getColorOrDefault(requireContext(), selection)
         }
     }
 

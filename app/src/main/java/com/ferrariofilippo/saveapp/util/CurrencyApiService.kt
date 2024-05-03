@@ -1,10 +1,9 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.doublePreferencesKey
@@ -80,7 +79,7 @@ object CurrencyUtil {
                 setDate(result.date)
                 setRates(rates)
             } catch (e: Exception) {
-                Log.e("API", e.message ?: "")
+                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "init")
                 rates = getRates()
             }
         } else {

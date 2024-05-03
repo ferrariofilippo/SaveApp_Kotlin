@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -12,9 +12,9 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
+import com.ferrariofilippo.saveapp.util.ColorUtil
 
 class BudgetsDropdownAdapter(
     context: Context,
@@ -52,7 +52,12 @@ class BudgetsDropdownAdapter(
             if (budget != null) {
                 viewHolder.name.text = budget.name
                 viewHolder.endDate.text = budget.to.toString()
-                viewHolder.pill.setColorFilter(ContextCompat.getColor(context, budget.tagColor))
+                viewHolder.pill.setColorFilter(
+                    ColorUtil.getColorOrDefault(
+                        context,
+                        budget.tagColor
+                    )
+                )
             }
         }
 

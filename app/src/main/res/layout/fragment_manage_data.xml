@@ -329,7 +329,9 @@
                                 android:layout_marginStart="8dp"
                                 android:layout_toEndOf="@id/lastUpdateTextView"
                                 android:indeterminate="true"
-                                android:visibility="@{vm.areBackupButtonsEnabled ? View.GONE : View.VISIBLE}" />
+                                android:visibility="@{vm.areBackupButtonsEnabled ? View.GONE : View.VISIBLE}"
+                                app:indicatorColor="?attr/colorPrimary"
+                                app:trackColor="?attr/colorPrimaryContainer" />
                         </RelativeLayout>
 
                         <Button

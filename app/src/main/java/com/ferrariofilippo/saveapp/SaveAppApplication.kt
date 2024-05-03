@@ -14,6 +14,7 @@ import com.ferrariofilippo.saveapp.data.repository.MovementRepository
 import com.ferrariofilippo.saveapp.data.repository.SubscriptionRepository
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
 import com.ferrariofilippo.saveapp.data.repository.UtilRepository
+import com.ferrariofilippo.saveapp.util.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -48,5 +49,18 @@ class SaveAppApplication : Application() {
 
     fun setCurrentActivity(activity: Activity?) {
         currentActivity = activity
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        LogUtil.setLogFilePath(filesDir.absolutePath)
+        Thread.setDefaultUncaughtExceptionHandler { _, e ->
+            LogUtil.logException(
+                e,
+                javaClass.kotlin.simpleName ?: "",
+                "defaultUncaughtExceptionHandler"
+            )
+            Runtime.getRuntime().exit(1)
+        }
     }
 }

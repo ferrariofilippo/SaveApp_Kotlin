@@ -210,7 +210,8 @@ object ImportExportUtil {
                     StatsUtil.addMovementToStat(app, it)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importMovements")
         }
     }
 
@@ -239,7 +240,8 @@ object ImportExportUtil {
                     app.subscriptionRepository.update(it)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importSubscriptions")
         }
     }
 
@@ -268,7 +270,8 @@ object ImportExportUtil {
                     app.budgetRepository.update(it)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importBudgets")
         }
     }
 }

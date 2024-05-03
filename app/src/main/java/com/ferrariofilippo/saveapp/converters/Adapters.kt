@@ -1,13 +1,13 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.converters
 
 import android.view.View
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.button.MaterialButton
 
 @BindingAdapter("dynamicIcon")
@@ -34,7 +34,7 @@ fun View.setCollapsibleIcon(isCollapsed: Boolean) {
 fun View.setDynamicTint(value: Int?) {
     value.let {
         (this as ImageView).setColorFilter(
-            ContextCompat.getColor(
+            ColorUtil.getColorOrDefault(
                 context,
                 if (value == null || value == 0) R.color.emerald_500 else value
             )

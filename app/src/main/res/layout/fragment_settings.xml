@@ -243,10 +243,95 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/advancedCard"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/dataCard"
+                android:layout_margin="4dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/advanced"
+                        android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/clearLogsButton"
+                            android:text="@string/logs"
+                            android:textAppearance="?attr/textAppearanceListItem" />
+
+                        <Button
+                            android:id="@+id/clearLogsButton"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@id/exportLogsButton"
+                            android:text="@string/clear_logs"
+                            app:icon="@drawable/baseline_delete_24" />
+
+                        <Button
+                            android:id="@+id/exportLogsButton"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/export_data"
+                            app:icon="@drawable/baseline_download_24" />
+                    </RelativeLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/reportBugButton"
+                            android:text="@string/bugs"
+                            android:textAppearance="?attr/textAppearanceListItem" />
+
+                        <Button
+                            android:id="@+id/reportBugButton"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/report"
+                            app:icon="@drawable/baseline_bug_report_24" />
+                    </RelativeLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/advancedCard"
                 android:layout_margin="4dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -279,19 +364,19 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/reportBugButton"
+                            android:layout_toStartOf="@id/privacyButton"
                             android:text="@string/credits"
                             app:icon="@drawable/baseline_person_pin_circle_24" />
 
                         <Button
-                            android:id="@+id/reportBugButton"
+                            android:id="@+id/privacyButton"
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginStart="4dp"
-                            android:text="@string/report_bug"
-                            app:icon="@drawable/baseline_bug_report_24" />
+                            android:text="@string/privacy"
+                            app:icon="@drawable/baseline_fingerprint_24" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>

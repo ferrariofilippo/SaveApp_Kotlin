@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -12,9 +12,9 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import com.ferrariofilippo.saveapp.util.ColorUtil
 
 class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Array<Tag>) :
     ArrayAdapter<Tag>(context, layoutId, items), Filterable {
@@ -46,7 +46,7 @@ class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Ar
             val tag = getItem(position)
             if (tag != null) {
                 viewHolder.name.text = tag.name
-                viewHolder.pill.setColorFilter(ContextCompat.getColor(context, tag.color))
+                viewHolder.pill.setColorFilter(ColorUtil.getColorOrDefault(context, tag.color))
             }
         }
 

@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.divider.MaterialDivider
 
 class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
@@ -51,7 +51,7 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
 
         fun bind(item: Tag) {
             tagNameItemView.text = item.name
-            tagPillItemView.setColorFilter(ContextCompat.getColor(ctx, item.color))
+            tagPillItemView.setColorFilter(ColorUtil.getColorOrDefault(ctx, item.color))
         }
 
         companion object {

@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import com.ferrariofilippo.saveapp.R
+import com.ferrariofilippo.saveapp.util.ColorUtil
 
 class ColorDropdownAdapter(private val context: Context, layoutId: Int, items: Array<Int>) :
     ArrayAdapter<Int>(context, layoutId, items) {
@@ -36,7 +36,7 @@ class ColorDropdownAdapter(private val context: Context, layoutId: Int, items: A
         if (viewHolder != null) {
             val color = getItem(position)
             if (color != null) {
-                viewHolder.setColorFilter(ContextCompat.getColor(context, color))
+                viewHolder.setColorFilter(ColorUtil.getColorOrDefault(context, color))
             }
         }
 

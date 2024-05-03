@@ -5,7 +5,6 @@ package com.ferrariofilippo.saveapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import androidx.activity.result.ActivityResult
@@ -24,6 +23,7 @@ import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
+import com.ferrariofilippo.saveapp.util.LogUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
@@ -150,18 +150,35 @@ class MainActivity : AppCompatActivity() {
 
     val uploadBackupToDrive =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
-            val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
-                .getAuthorizationResultFromIntent(result.data)
-
-            CloudStorageUtil.enqueueUpload(application as SaveAppApplication, authResult)
+            try {
+                val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
+                    .getAuthorizationResultFromIntent(result.data)
+                CloudStorageUtil.enqueueUpload(application as SaveAppApplication, authResult)
+            } catch (e: Exception) {
+                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "uploadBackupToDrive")
+            }
         }
     val downloadBackupFromDrive =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
-            val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
-                .getAuthorizationResultFromIntent(result.data)
+            try {
+                val authResult: AuthorizationResult = Identity.getAuthorizationClient(this)
+                    .getAuthorizationResultFromIntent(result.data)
 
-            CloudStorageUtil.enqueueDownload(application as SaveAppApplication, authResult)
+                CloudStorageUtil.enqueueDownload(application as SaveAppApplication, authResult)
+            } catch (e: Exception) {
+                LogUtil.logException(
+                    e,
+                    javaClass.kotlin.simpleName ?: "",
+                    "downloadBackupFromDrive"
+                )
+            }
         }
+
+    val exportLogFile = registerForActivityResult(CreateDocument("text/plain")) { uri ->
+        if (uri != null) {
+            LogUtil.exportLogTo(contentResolver?.openOutputStream(uri) as FileOutputStream)
+        }
+    }
 
     // Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -314,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newMovementFragment)
             }
         } catch (e: Exception) {
-            Log.e("NAV_E", e.message.toString())
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "onAddMovementClick")
         }
     }
 
