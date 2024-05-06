@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -224,4 +224,14 @@
     <string name="logs_cleared">Log cancellati</string>
     <string name="privacy">Privacy</string>
     <string name="bugs">Bug</string>
+    <string name="by_name">Per nome</string>
+    <string name="result_not_found">Nessun movimento trovato per questa ricerca</string>
+    <string name="average_transaction_value">Valore medio del movimento</string>
+    <string name="current_week_sum">Somma di questa settimana</string>
+    <string name="current_month_sum">Somma di questo mese</string>
+    <string name="current_month_frequency">Frequenza di questo mese</string>
+    <string name="average_monthly_sum">Somma media mensile</string>
+    <string name="average_monthly_frequency">Frequenza media mensile</string>
+    <string name="frequencies">Frequenze</string>
+    <string name="sums">Somme</string>
 </resources>

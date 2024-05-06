@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -224,4 +224,14 @@
     <string name="logs_cleared">Logs cleared</string>
     <string name="privacy">Privacy</string>
     <string name="bugs">Bugs</string>
+    <string name="by_name">By name</string>
+    <string name="result_not_found">No transaction found for this query</string>
+    <string name="average_transaction_value">Average transaction value</string>
+    <string name="current_week_sum">This week\'s sum</string>
+    <string name="current_month_sum">This month\'s sum</string>
+    <string name="current_month_frequency">This month\'s frequency</string>
+    <string name="average_monthly_sum">Average monthly sum</string>
+    <string name="average_monthly_frequency">Average monthly frequency</string>
+    <string name="frequencies">Frequencies</string>
+    <string name="sums">Sums</string>
 </resources>

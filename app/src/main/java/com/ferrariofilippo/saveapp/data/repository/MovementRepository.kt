@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.data.repository
@@ -8,6 +8,7 @@ import com.ferrariofilippo.saveapp.data.dao.MovementDao
 import com.ferrariofilippo.saveapp.model.entities.Movement
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 class MovementRepository(private val movementDao: MovementDao) {
     val allTaggedMovements: Flow<List<TaggedMovement>> = movementDao.getAllTagged()
@@ -25,6 +26,16 @@ class MovementRepository(private val movementDao: MovementDao) {
     @WorkerThread
     suspend fun getAllTaggedByYearSorted(year: String): List<TaggedMovement> {
         return movementDao.getAllTaggedByYearSorted(year)
+    }
+
+    @WorkerThread
+    suspend fun getByDescriptionWithinOneYear(d: String): List<Movement> {
+        val today = LocalDate.now()
+        return movementDao.getByDescriptionWithinOneYear(
+            "%${d.lowercase()}%",
+            today.minusYears(1).toString(),
+            today.toString()
+        )
     }
 
     @WorkerThread

@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.data.dao
@@ -39,13 +39,19 @@ interface MovementDao {
     )
     suspend fun getAllTaggedByYearSorted(year: String): List<TaggedMovement>
 
+    @Query(
+        "SELECT id, amount, description, date, tagId, budgetId FROM movements " +
+                "WHERE LOWER(description) LIKE :d AND (date BETWEEN :minDate AND :maxDate)"
+    )
+    suspend fun getByDescriptionWithinOneYear(d: String, minDate: String, maxDate: String): List<Movement>
+
     @Query("SELECT * FROM movements WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Movement?
 
     @Query(
         "SELECT * FROM movements WHERE tagId = :id LIMIT 1"
     )
-    suspend fun getFirstWithTag(id: Int) : Movement?
+    suspend fun getFirstWithTag(id: Int): Movement?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(movement: Movement)
