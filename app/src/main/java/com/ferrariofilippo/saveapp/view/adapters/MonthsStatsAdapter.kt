@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
-import com.ferrariofilippo.saveapp.model.statsitems.MonthMovementsSum
+import com.ferrariofilippo.saveapp.model.statsitems.MonthTransactionsSum
 import com.google.android.material.divider.MaterialDivider
 
 class MonthsStatsAdapter(private val currency: Currencies, private val padding: Array<Int>) :
-    ListAdapter<MonthMovementsSum, MonthsStatsAdapter.MonthsStatsViewHolder>(MonthsStatsComparator()) {
+    ListAdapter<MonthTransactionsSum, MonthsStatsAdapter.MonthsStatsViewHolder>(MonthsStatsComparator()) {
     override fun onBindViewHolder(holder: MonthsStatsViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -45,7 +45,7 @@ class MonthsStatsAdapter(private val currency: Currencies, private val padding: 
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: MonthMovementsSum) {
+        fun bind(item: MonthTransactionsSum) {
             monthNameItemView.text = item.name
             sumItemView.text =
                 String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)
@@ -65,17 +65,17 @@ class MonthsStatsAdapter(private val currency: Currencies, private val padding: 
         }
     }
 
-    class MonthsStatsComparator : DiffUtil.ItemCallback<MonthMovementsSum>() {
+    class MonthsStatsComparator : DiffUtil.ItemCallback<MonthTransactionsSum>() {
         override fun areContentsTheSame(
-            oldItem: MonthMovementsSum,
-            newItem: MonthMovementsSum
+            oldItem: MonthTransactionsSum,
+            newItem: MonthTransactionsSum
         ): Boolean {
             return oldItem.name == newItem.name && oldItem.sum == newItem.sum
         }
 
         override fun areItemsTheSame(
-            oldItem: MonthMovementsSum,
-            newItem: MonthMovementsSum
+            oldItem: MonthTransactionsSum,
+            newItem: MonthTransactionsSum
         ): Boolean {
             return oldItem.name == newItem.name
         }

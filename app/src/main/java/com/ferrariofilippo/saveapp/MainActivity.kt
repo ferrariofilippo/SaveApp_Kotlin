@@ -64,10 +64,10 @@ class MainActivity : AppCompatActivity() {
     val isUpdatingCurrencies: LiveData<Boolean> = _isUpdatingCurrencies
 
     // IO Activities
-    val exportMovements = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+    val exportTransactions = registerForActivityResult(CreateDocument("text/csv")) { uri ->
         if (uri != null) {
             ImportExportUtil.export(
-                ImportExportUtil.CREATE_MOVEMENTS_FILE,
+                ImportExportUtil.CREATE_TRANSACTIONS_FILE,
                 contentResolver?.openOutputStream(uri) as FileOutputStream,
                 application as SaveAppApplication
             )
@@ -92,10 +92,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val importMovements = registerForActivityResult(GetContent()) { uri ->
+    val importTransactions = registerForActivityResult(GetContent()) { uri ->
         if (uri != null) {
             ImportExportUtil.import(
-                ImportExportUtil.OPEN_MOVEMENTS_FILE,
+                ImportExportUtil.OPEN_TRANSACTIONS_FILE,
                 contentResolver.openInputStream(uri) as FileInputStream,
                 application as SaveAppApplication
             )
@@ -120,10 +120,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    val createMovementsTemplate = registerForActivityResult(CreateDocument("text/csv")) { uri ->
+    val createTransactionsTemplate = registerForActivityResult(CreateDocument("text/csv")) { uri ->
         if (uri != null) {
             ImportExportUtil.writeTemplate(
-                ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE,
+                ImportExportUtil.CREATE_TRANSACTIONS_TEMPLATE,
                 contentResolver?.openOutputStream(uri) as FileOutputStream,
                 application as SaveAppApplication
             )
@@ -225,11 +225,11 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newBudgetFragment)
     }
 
-    fun goToEditMovementOrSubscription(id: Int, isMovement: Boolean) {
+    fun goToEditTransactionOrSubscription(id: Int, isTransaction: Boolean) {
         ensureNavControllerInitialized()
 
-        val bundle = bundleOf("itemId" to id, "isMovement" to isMovement)
-        findNavController(R.id.containerView).navigate(R.id.newMovementFragment, bundle)
+        val bundle = bundleOf("itemId" to id, "isTransaction" to isTransaction)
+        findNavController(R.id.containerView).navigate(R.id.newTransactionFragment, bundle)
     }
 
     fun goToEditBudget(id: Int) {
@@ -282,9 +282,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        val addMovementButton: Button = findViewById(R.id.addMovementFAB)
-        addMovementButton.setOnClickListener {
-            onAddMovementClick()
+        val addTransactionButton: Button = findViewById(R.id.addTransactionFAB)
+        addTransactionButton.setOnClickListener {
+            onAddTransactionClick()
         }
 
         val appBar: BottomAppBar = findViewById(R.id.bottomAppBar)
@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.homeFragment, R.id.historyFragment, R.id.budgetsFragment, R.id.statsFragment)
 
         findNavController(R.id.containerView).addOnDestinationChangedListener { _, destination, _ ->
-            val fab = findViewById<ExtendedFloatingActionButton>(R.id.addMovementFAB)
+            val fab = findViewById<ExtendedFloatingActionButton>(R.id.addTransactionFAB)
             if (rootDestinations.contains(destination.id)) {
                 fab.show()
             } else {
@@ -313,25 +313,25 @@ class MainActivity : AppCompatActivity() {
         navControllerInitialized = true
     }
 
-    private fun onAddMovementClick() {
+    private fun onAddTransactionClick() {
         ensureNavControllerInitialized()
 
         try {
             when (lastFragmentId) {
                 R.id.homeFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newMovementFragment)
+                    findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newTransactionFragment)
 
                 R.id.historyFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newMovementFragment)
+                    findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newTransactionFragment)
 
                 R.id.budgetsFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newMovementFragment)
+                    findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newTransactionFragment)
 
                 R.id.statsFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newMovementFragment)
+                    findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newTransactionFragment)
             }
         } catch (e: Exception) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "onAddMovementClick")
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "onAddTransactionClick")
         }
     }
 

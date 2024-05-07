@@ -99,13 +99,13 @@
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/movementsRecyclerView"
+                android:id="@+id/transactionsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="@{vm.showEmptyMessage ? View.GONE : View.VISIBLE}"
                 app:layout_anchor="@+id/relativeLayout"
                 app:layout_anchorGravity="start|center"
-                tools:listitem="@layout/movement_item" />
+                tools:listitem="@layout/transaction_item" />
 
             <TextView
                 android:layout_width="match_parent"

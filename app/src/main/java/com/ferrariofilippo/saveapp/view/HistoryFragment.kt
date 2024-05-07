@@ -21,10 +21,10 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentHistoryBinding
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
-import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.RecyclerEditAndDeleteGestures
 import com.ferrariofilippo.saveapp.util.SettingsUtil
@@ -82,11 +82,11 @@ class HistoryFragment : Fragment() {
             SpacingUtil.padding
         )
 
-        binding.movementsRecyclerView.adapter = adapter
-        binding.movementsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.transactionsRecyclerView.adapter = adapter
+        binding.transactionsRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        viewModel.movements.observe(viewLifecycleOwner, Observer { movements ->
-            movements?.let {
+        viewModel.transactions.observe(viewLifecycleOwner, Observer { transactions ->
+            transactions?.let {
                 setFilteredItems(adapter, it)
             }
         })
@@ -104,13 +104,13 @@ class HistoryFragment : Fragment() {
 
         viewModel.searchQuery.observe(viewLifecycleOwner, Observer { query ->
             query?.let {
-                if (viewModel.movements.value != null) {
-                    setFilteredItems(adapter, viewModel.movements.value!!)
+                if (viewModel.transactions.value != null) {
+                    setFilteredItems(adapter, viewModel.transactions.value!!)
                 }
             }
         })
 
-        binding.movementsRecyclerView.setOnTouchListener { _, _ -> onRecyclerClick() }
+        binding.transactionsRecyclerView.setOnTouchListener { _, _ -> onRecyclerClick() }
 
         setupRecyclerGestures()
     }
@@ -119,19 +119,19 @@ class HistoryFragment : Fragment() {
         val gestureCallback = object : RecyclerEditAndDeleteGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val adapter = binding.movementsRecyclerView.adapter as HistoryAdapter
-                val movement = adapter.getItemAt(position)
+                val adapter = binding.transactionsRecyclerView.adapter as HistoryAdapter
+                val transaction = adapter.getItemAt(position)
 
                 if (direction == ItemTouchHelper.RIGHT) {
-                    (activity as MainActivity).goToEditMovementOrSubscription(movement.id, true)
+                    (activity as MainActivity).goToEditTransactionOrSubscription(transaction.id, true)
                 } else if (direction == ItemTouchHelper.LEFT) {
-                    onRemoveMovementInvoked(movement)
+                    onRemoveTransactionInvoked(transaction)
                 }
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(gestureCallback)
-        itemTouchHelper.attachToRecyclerView(binding.movementsRecyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.transactionsRecyclerView)
     }
 
     private fun setupBottomSheet() {
@@ -176,8 +176,8 @@ class HistoryFragment : Fragment() {
                     val selection = parent.adapter.getItem(position) as Tag
                     viewModel.tagId.value = selection.id
                     setFilteredItems(
-                        binding.movementsRecyclerView.adapter as HistoryAdapter,
-                        viewModel.movements.value!!
+                        binding.transactionsRecyclerView.adapter as HistoryAdapter,
+                        viewModel.transactions.value!!
                     )
                 }
             }
@@ -188,31 +188,31 @@ class HistoryFragment : Fragment() {
             tagAutoComplete.clearFocus()
             viewModel.tagId.value = 0
             setFilteredItems(
-                binding.movementsRecyclerView.adapter as HistoryAdapter,
-                viewModel.movements.value!!
+                binding.transactionsRecyclerView.adapter as HistoryAdapter,
+                viewModel.transactions.value!!
             )
         }
     }
 
-    private fun setFilteredItems(adapter: HistoryAdapter, movements: List<TaggedMovement>) {
+    private fun setFilteredItems(adapter: HistoryAdapter, transactions: List<TaggedTransaction>) {
         val isFilteringByTag = viewModel.tagId.value != 0
 
         val values = if (viewModel.searchQuery.value!!.isNotBlank() && isFilteringByTag) {
             val query = viewModel.searchQuery.value!!.lowercase()
-            movements.filter {
+            transactions.filter {
                 it.description.lowercase().contains(query) && it.tagId == viewModel.tagId.value
             }
         } else if (isFilteringByTag) {
-            movements.filter {
+            transactions.filter {
                 it.tagId == viewModel.tagId.value
             }
         } else if (viewModel.searchQuery.value!!.isNotBlank()) {
             val query = viewModel.searchQuery.value!!.lowercase()
-            movements.filter {
+            transactions.filter {
                 it.description.lowercase().contains(query)
             }
         } else {
-            movements
+            transactions
         }
 
         adapter.submitList(if (viewModel.sortAscending.value!!) values.reversed() else values)
@@ -226,32 +226,32 @@ class HistoryFragment : Fragment() {
         return false
     }
 
-    private fun onRemoveMovementInvoked(taggedMovement: TaggedMovement) {
+    private fun onRemoveTransactionInvoked(taggedTransaction: TaggedTransaction) {
         val app = requireActivity().application as SaveAppApplication
-        val movement = Movement(
-            taggedMovement.id,
-            taggedMovement.amount,
-            taggedMovement.description,
-            taggedMovement.date,
-            taggedMovement.tagId,
-            taggedMovement.budgetId
+        val transaction = Transaction(
+            taggedTransaction.id,
+            taggedTransaction.amount,
+            taggedTransaction.description,
+            taggedTransaction.date,
+            taggedTransaction.tagId,
+            taggedTransaction.budgetId
         )
         lifecycleScope.launch {
-            app.movementRepository.delete(movement)
-            BudgetUtil.removeMovementFromBudget(movement)
-            viewModel.updateMovements()
-            movement.amount *= -1
-            StatsUtil.addMovementToStat(app, movement)
+            app.transactionRepository.delete(transaction)
+            BudgetUtil.removeTransactionFromBudget(transaction)
+            viewModel.updateTransactions()
+            transaction.amount *= -1
+            StatsUtil.addTransactionToStat(app, transaction)
         }
 
-        Snackbar.make(binding.coordinatorLayout, R.string.movement_deleted, Snackbar.LENGTH_SHORT)
+        Snackbar.make(binding.coordinatorLayout, R.string.transaction_deleted, Snackbar.LENGTH_SHORT)
             .setAction(R.string.undo) {
                 lifecycleScope.launch {
-                    movement.amount *= -1
-                    BudgetUtil.tryAddMovementToBudget(movement)
-                    app.movementRepository.insert(movement)
-                    viewModel.updateMovements()
-                    StatsUtil.addMovementToStat(app, movement)
+                    transaction.amount *= -1
+                    BudgetUtil.tryAddTransactionToBudget(transaction)
+                    app.transactionRepository.insert(transaction)
+                    viewModel.updateTransactions()
+                    StatsUtil.addTransactionToStat(app, transaction)
                 }
             }.show()
     }

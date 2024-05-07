@@ -149,7 +149,7 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         val stats = ByNameStatsData()
-        val transactions = _app.movementRepository.getByDescriptionWithinOneYear(q)
+        val transactions = _app.transactionRepository.getByDescriptionWithinOneYear(q)
         clearValues()
 
         if (transactions.isEmpty()) {

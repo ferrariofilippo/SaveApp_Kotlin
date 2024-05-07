@@ -67,20 +67,20 @@ class ManageDataFragment : Fragment() {
             }
         }
 
-        setupMovementsButtons(act)
+        setupTransactionsButtons(act)
         setupSubscriptionsButtons(act)
         setupBudgetsButtons(act)
     }
 
-    private fun setupMovementsButtons(act: MainActivity) {
-        binding.templateMovementsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_MOVEMENTS_TEMPLATE, act)
+    private fun setupTransactionsButtons(act: MainActivity) {
+        binding.templateTransactionsButton.setOnClickListener {
+            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_TRANSACTIONS_TEMPLATE, act)
         }
-        binding.importMovementsButton.setOnClickListener {
-            ImportExportUtil.getFromFile(ImportExportUtil.OPEN_MOVEMENTS_FILE, act)
+        binding.importTransactionsButton.setOnClickListener {
+            ImportExportUtil.getFromFile(ImportExportUtil.OPEN_TRANSACTIONS_FILE, act)
         }
-        binding.exportMovementsButton.setOnClickListener {
-            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_MOVEMENTS_FILE, act)
+        binding.exportTransactionsButton.setOnClickListener {
+            ImportExportUtil.createExportFile(ImportExportUtil.CREATE_TRANSACTIONS_FILE, act)
         }
     }
 

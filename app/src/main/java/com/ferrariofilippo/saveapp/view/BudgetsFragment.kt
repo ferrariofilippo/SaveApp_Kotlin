@@ -111,7 +111,7 @@ class BudgetsFragment : Fragment() {
                 if (direction == ItemTouchHelper.RIGHT) {
                     (activity as MainActivity).goToEditBudget(budget.budgetId)
                 } else if (direction == ItemTouchHelper.LEFT) {
-                    onRemoveMovementInvoked(budget)
+                    onRemoveBudgetInvoked(budget)
                 }
             }
         }
@@ -138,7 +138,7 @@ class BudgetsFragment : Fragment() {
         }
     }
 
-    private fun onRemoveMovementInvoked(taggedBudget: TaggedBudget) {
+    private fun onRemoveBudgetInvoked(taggedBudget: TaggedBudget) {
         val app = requireActivity().application as SaveAppApplication
         val budget = Budget(
             taggedBudget.budgetId,

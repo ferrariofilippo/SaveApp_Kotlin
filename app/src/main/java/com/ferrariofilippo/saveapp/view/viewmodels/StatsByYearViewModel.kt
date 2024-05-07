@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -11,14 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.statsitems.YearStats
-import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import com.ferrariofilippo.saveapp.util.TagUtil
 
 class StatsByYearViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
-    private val _movements: LiveData<List<TaggedMovement>> =
-        _app.movementRepository.allTaggedMovements.asLiveData()
+    private val _transactions: LiveData<List<TaggedTransaction>> =
+        _app.transactionRepository.allTaggedTransactions.asLiveData()
 
     private val _expensesByYear: MutableMap<Int, Double> = mutableMapOf()
     private val _incomesByYear: MutableMap<Int, Double> = mutableMapOf()
@@ -27,21 +27,21 @@ class StatsByYearViewModel(application: Application) : AndroidViewModel(applicat
     val yearStatsItems get(): LiveData<List<YearStats>> = _yearStatsItems
 
     init {
-        _movements.observeForever(Observer { movements ->
+        _transactions.observeForever(Observer { transactions ->
             _expensesByYear.keys.forEach {
                 _expensesByYear[it] = 0.0
                 _incomesByYear[it] = 0.0
             }
-            movements?.let {
-                calculateSums(movements)
+            transactions?.let {
+                calculateSums(transactions)
             }
             updateEntries()
         })
     }
 
     // Methods
-    private fun calculateSums(movements: List<TaggedMovement>) {
-        movements.forEach {
+    private fun calculateSums(transactions: List<TaggedTransaction>) {
+        transactions.forEach {
             val year = it.date.year
             val multipliers = if (TagUtil.incomeTagIds.contains(it.tagId)) listOf(0.0, 1.0) else listOf(1.0, 0.0)
 

@@ -71,7 +71,7 @@ class StatsByTagFragment : Fragment() {
         }
         binding.byTagTypeToggle.check(binding.byTagExpensesButton.id)
 
-        viewModel.onMovementsChangeCallback = { updateGraph() }
+        viewModel.onTransactionsChangeCallback = { updateGraph() }
         binding.tagsPieChart.description.text = ""
         binding.tagsPieChart.setUsePercentValues(true)
         binding.tagsPieChart.holeRadius = 60f

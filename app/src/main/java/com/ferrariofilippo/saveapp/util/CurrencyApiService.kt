@@ -11,7 +11,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.repository.BudgetRepository
-import com.ferrariofilippo.saveapp.data.repository.MovementRepository
+import com.ferrariofilippo.saveapp.data.repository.TransactionRepository
 import com.ferrariofilippo.saveapp.data.repository.SubscriptionRepository
 import com.ferrariofilippo.saveapp.model.CurrencyApiResponse
 import com.ferrariofilippo.saveapp.model.enums.Currencies
@@ -45,7 +45,7 @@ object CurrencyUtil {
         retrofit.create(CurrencyApiServer::class.java)
     }
 
-    private lateinit var movementRepository: MovementRepository
+    private lateinit var transactionRepository: TransactionRepository
     private lateinit var subscriptionRepository: SubscriptionRepository
     private lateinit var budgetRepository: BudgetRepository
 
@@ -59,7 +59,7 @@ object CurrencyUtil {
 
     fun setStore(application: SaveAppApplication) {
         ratesStore = application.ratesStore
-        movementRepository = application.movementRepository
+        transactionRepository = application.transactionRepository
         subscriptionRepository = application.subscriptionRepository
         budgetRepository = application.budgetRepository
     }
@@ -93,9 +93,9 @@ object CurrencyUtil {
             val rate = rates[newCurrency.id] / rates[oldCurrency]
             SettingsUtil.setCurrency(newCurrency)
 
-            movementRepository.getAll().forEach {
+            transactionRepository.getAll().forEach {
                 it.amount *= rate
-                movementRepository.update(it)
+                transactionRepository.update(it)
             }
             subscriptionRepository.getAll().forEach {
                 it.amount *= rate

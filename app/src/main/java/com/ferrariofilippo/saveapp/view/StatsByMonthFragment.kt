@@ -72,7 +72,7 @@ class StatsByMonthFragment : Fragment() {
         }
         binding.byMonthTypeToggle.check(binding.byMonthExpensesButton.id)
 
-        viewModel.onMovementsChangeCallback = { updateGraph() }
+        viewModel.onTransactionsChangeCallback = { updateGraph() }
         binding.monthsPieChart.description.text = ""
         binding.monthsPieChart.setUsePercentValues(true)
         binding.monthsPieChart.holeRadius = 60f

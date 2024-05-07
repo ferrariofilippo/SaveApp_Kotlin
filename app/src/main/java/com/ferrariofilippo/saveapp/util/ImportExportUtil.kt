@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
@@ -7,11 +7,11 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Budget
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.util.StringUtil.toBudgetOrNull
-import com.ferrariofilippo.saveapp.util.StringUtil.toMovementOrNull
 import com.ferrariofilippo.saveapp.util.StringUtil.toSubscriptionOrNull
+import com.ferrariofilippo.saveapp.util.StringUtil.toTransactionOrNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,9 +22,9 @@ import java.io.FileOutputStream
 import java.time.LocalDate
 
 object ImportExportUtil {
-    const val CREATE_MOVEMENTS_FILE: Int = 2
-    const val OPEN_MOVEMENTS_FILE: Int = 3
-    const val CREATE_MOVEMENTS_TEMPLATE = 5
+    const val CREATE_TRANSACTIONS_FILE: Int = 2
+    const val OPEN_TRANSACTIONS_FILE: Int = 3
+    const val CREATE_TRANSACTIONS_TEMPLATE = 5
 
     const val CREATE_SUBSCRIPTIONS_FILE: Int = 7
     const val OPEN_SUBSCRIPTIONS_FILE: Int = 11
@@ -37,10 +37,10 @@ object ImportExportUtil {
     fun createExportFile(dataType: Int, activity: MainActivity) {
         val today = LocalDate.now().toString()
         when (dataType) {
-            CREATE_MOVEMENTS_FILE -> {
-                activity.exportMovements.launch(
+            CREATE_TRANSACTIONS_FILE -> {
+                activity.exportTransactions.launch(
                     String.format(
-                        activity.getString(R.string.movements_file_name),
+                        activity.getString(R.string.transactions_file_name),
                         today
                     )
                 )
@@ -64,9 +64,9 @@ object ImportExportUtil {
                 )
             }
 
-            CREATE_MOVEMENTS_TEMPLATE -> {
-                activity.createMovementsTemplate.launch(
-                    activity.getString(R.string.movements_template)
+            CREATE_TRANSACTIONS_TEMPLATE -> {
+                activity.createTransactionsTemplate.launch(
+                    activity.getString(R.string.transactions_template)
                 )
             }
 
@@ -87,7 +87,7 @@ object ImportExportUtil {
     fun export(type: Int, outputStream: FileOutputStream, app: SaveAppApplication) {
         val writer = outputStream.bufferedWriter()
         when (type) {
-            CREATE_MOVEMENTS_FILE -> exportMovements(writer, app)
+            CREATE_TRANSACTIONS_FILE -> exportTransactions(writer, app)
             CREATE_SUBSCRIPTIONS_FILE -> exportSubscriptions(writer, app)
             CREATE_BUDGETS_FILE -> exportBudgets(writer, app)
         }
@@ -99,7 +99,7 @@ object ImportExportUtil {
 
     fun writeTemplate(type: Int, outputStream: FileOutputStream, app: SaveAppApplication) {
         val header = when (type) {
-            CREATE_MOVEMENTS_TEMPLATE -> app.getString(R.string.movements_export_header)
+            CREATE_TRANSACTIONS_TEMPLATE -> app.getString(R.string.transactions_export_header)
             CREATE_SUBSCRIPTIONS_TEMPLATE -> app.getString(R.string.subscriptions_export_header)
             else -> app.getString(R.string.budgets_export_header)
         }
@@ -113,7 +113,7 @@ object ImportExportUtil {
     fun getFromFile(dataType: Int, activity: MainActivity) {
         val filter = "text/comma-separated-values"
         when (dataType) {
-            OPEN_MOVEMENTS_FILE -> activity.importMovements.launch(filter)
+            OPEN_TRANSACTIONS_FILE -> activity.importTransactions.launch(filter)
             OPEN_SUBSCRIPTIONS_FILE -> activity.importSubscriptions.launch(filter)
             OPEN_BUDGETS_FILE -> activity.importBudgets.launch(filter)
         }
@@ -125,7 +125,7 @@ object ImportExportUtil {
         // Skip header line
         reader.readLine()
         when (type) {
-            OPEN_MOVEMENTS_FILE -> importMovements(reader, app)
+            OPEN_TRANSACTIONS_FILE -> importTransactions(reader, app)
             OPEN_SUBSCRIPTIONS_FILE -> importSubscriptions(reader, app)
             OPEN_BUDGETS_FILE -> importBudgets(reader, app)
         }
@@ -134,12 +134,12 @@ object ImportExportUtil {
         inputStream.close()
     }
 
-    private fun exportMovements(writer: BufferedWriter, app: SaveAppApplication) {
-        val movements = runBlocking { app.movementRepository.allTaggedMovements.first() }
+    private fun exportTransactions(writer: BufferedWriter, app: SaveAppApplication) {
+        val transactions = runBlocking { app.transactionRepository.allTaggedTransactions.first() }
 
-        writer.write(app.getString(R.string.movements_export_header))
+        writer.write(app.getString(R.string.transactions_export_header))
         writer.newLine()
-        for (m in movements) {
+        for (m in transactions) {
             writer.write("${m.id},${m.amount},${m.description},${m.date},${m.tagId},${m.budgetId}")
             writer.newLine()
         }
@@ -171,47 +171,47 @@ object ImportExportUtil {
         }
     }
 
-    private fun importMovements(reader: BufferedReader, app: SaveAppApplication) {
-        val addMovements: MutableList<Movement> = mutableListOf()
-        val updateMovements: MutableList<Movement> = mutableListOf()
+    private fun importTransactions(reader: BufferedReader, app: SaveAppApplication) {
+        val addTransactions: MutableList<Transaction> = mutableListOf()
+        val updateTransactions: MutableList<Transaction> = mutableListOf()
 
         try {
             reader.lines().forEach {
                 if (it != null) {
-                    val m = it.toMovementOrNull()
+                    val m = it.toTransactionOrNull()
                     if (m != null) {
                         if (m.id == 0) {
-                            addMovements.add(m)
+                            addTransactions.add(m)
                         } else {
-                            updateMovements.add(m)
+                            updateTransactions.add(m)
                         }
                     }
                 }
             }
             app.applicationScope.launch {
-                addMovements.forEach {
-                    BudgetUtil.tryAddMovementToBudget(it)
-                    app.movementRepository.insert(it)
-                    StatsUtil.addMovementToStat(app, it)
+                addTransactions.forEach {
+                    BudgetUtil.tryAddTransactionToBudget(it)
+                    app.transactionRepository.insert(it)
+                    StatsUtil.addTransactionToStat(app, it)
                 }
-                updateMovements.forEach {
-                    val oldMovement = app.movementRepository.getById(it.id)
-                    if (oldMovement != null) {
+                updateTransactions.forEach {
+                    val oldTransaction = app.transactionRepository.getById(it.id)
+                    if (oldTransaction != null) {
                         if (it.budgetId != 0) {
-                            BudgetUtil.removeMovementFromBudget(oldMovement)
-                            BudgetUtil.tryAddMovementToBudget(it)
+                            BudgetUtil.removeTransactionFromBudget(oldTransaction)
+                            BudgetUtil.tryAddTransactionToBudget(it)
                         }
 
-                        oldMovement.amount *= -1
-                        StatsUtil.addMovementToStat(app, oldMovement)
+                        oldTransaction.amount *= -1
+                        StatsUtil.addTransactionToStat(app, oldTransaction)
                     }
 
-                    app.movementRepository.update(it)
-                    StatsUtil.addMovementToStat(app, it)
+                    app.transactionRepository.update(it)
+                    StatsUtil.addTransactionToStat(app, it)
                 }
             }
         } catch (e: Exception) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importMovements")
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importTransactions")
         }
     }
 

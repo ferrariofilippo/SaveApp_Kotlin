@@ -1,11 +1,11 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import java.time.LocalDate
@@ -22,14 +22,14 @@ object SubscriptionUtil {
         }
     }
 
-    fun getMovementFromSub(s: Subscription, description: String): Movement? {
+    fun getTransactionFromSub(s: Subscription, description: String): Transaction? {
         if (s.nextRenewal.isAfter(LocalDate.now())) {
             return null
         }
 
         s.lastPaid = s.nextRenewal
         updateNextRenewal(s)
-        return Movement(
+        return Transaction(
             0,
             s.amount,
             String.format(description, s.description, s.lastPaid.toString()),
@@ -44,12 +44,12 @@ object SubscriptionUtil {
         val description = application.getString(R.string.payment_of)
 
         for (subscription in subscriptions) {
-            var movement = getMovementFromSub(subscription, description)
-            while (movement != null) {
-                BudgetUtil.tryAddMovementToBudget(movement)
-                application.movementRepository.insert(movement)
-                StatsUtil.addMovementToStat(application, movement)
-                movement = getMovementFromSub(subscription, description)
+            var transaction = getTransactionFromSub(subscription, description)
+            while (transaction != null) {
+                BudgetUtil.tryAddTransactionToBudget(transaction)
+                application.transactionRepository.insert(transaction)
+                StatsUtil.addTransactionToStat(application, transaction)
+                transaction = getTransactionFromSub(subscription, description)
             }
             application.subscriptionRepository.update(subscription)
         }

@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ferrariofilippo.saveapp.data.AppDatabase
 import com.ferrariofilippo.saveapp.data.repository.BudgetRepository
-import com.ferrariofilippo.saveapp.data.repository.MovementRepository
+import com.ferrariofilippo.saveapp.data.repository.TransactionRepository
 import com.ferrariofilippo.saveapp.data.repository.SubscriptionRepository
 import com.ferrariofilippo.saveapp.data.repository.TagRepository
 import com.ferrariofilippo.saveapp.data.repository.UtilRepository
@@ -20,14 +20,14 @@ import kotlinx.coroutines.SupervisorJob
 
 class SaveAppApplication : Application() {
     companion object {
-        const val settingsFileName = "settings"
+        const val SETTINGS_FILE_NAME = "settings"
     }
 
     val applicationScope = CoroutineScope(SupervisorJob())
 
     private val database by lazy { AppDatabase.getInstance(this, applicationScope) }
 
-    val movementRepository by lazy { MovementRepository(database.movementDao()) }
+    val transactionRepository by lazy { TransactionRepository(database.transactionDao()) }
 
     val budgetRepository by lazy { BudgetRepository(database.budgetDao()) }
 
@@ -39,7 +39,7 @@ class SaveAppApplication : Application() {
 
     val ratesStore: DataStore<Preferences> by preferencesDataStore("currencies")
 
-    val settingsStore: DataStore<Preferences> by preferencesDataStore(settingsFileName)
+    val settingsStore: DataStore<Preferences> by preferencesDataStore(SETTINGS_FILE_NAME)
 
     private var currentActivity: Activity? = null
 

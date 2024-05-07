@@ -1,50 +1,50 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util_tests
 
 import com.ferrariofilippo.saveapp.model.entities.Budget
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.util.StringUtil.toBudgetOrNull
-import com.ferrariofilippo.saveapp.util.StringUtil.toMovementOrNull
 import com.ferrariofilippo.saveapp.util.StringUtil.toSubscriptionOrNull
+import com.ferrariofilippo.saveapp.util.StringUtil.toTransactionOrNull
 import org.junit.Test
 import org.junit.Assert.*
 import java.time.LocalDate
 
 class StringUtilUnitTest {
     @Test
-    fun toMovementOrNull_isCorrect() {
+    fun toTransactionOrNull_isCorrect() {
         val date = LocalDate.now()
-        val m = Movement(1, 12.9, "Test movement", date, 2, 3)
-        val movementStr = "${m.id},${m.amount},${m.description},${date},${m.tagId},${m.budgetId}"
-        val parsedMovement = movementStr.toMovementOrNull()
+        val t = Transaction(1, 12.9, "Test transaction", date, 2, 3)
+        val transactionStr = "${t.id},${t.amount},${t.description},${date},${t.tagId},${t.budgetId}"
+        val parsedTransaction = transactionStr.toTransactionOrNull()
 
-        assertNotNull(parsedMovement)
-        assertEquals(parsedMovement!!.id, m.id)
-        assertEquals(parsedMovement.amount, m.amount, Double.MIN_VALUE)
-        assertEquals(parsedMovement.description, m.description)
-        assertEquals(parsedMovement.date, m.date)
-        assertEquals(parsedMovement.tagId, m.tagId)
-        assertEquals(parsedMovement.budgetId, m.budgetId)
+        assertNotNull(parsedTransaction)
+        assertEquals(parsedTransaction!!.id, t.id)
+        assertEquals(parsedTransaction.amount, t.amount, Double.MIN_VALUE)
+        assertEquals(parsedTransaction.description, t.description)
+        assertEquals(parsedTransaction.date, t.date)
+        assertEquals(parsedTransaction.tagId, t.tagId)
+        assertEquals(parsedTransaction.budgetId, t.budgetId)
 
         // Default values
-        assertNotNull("1,${10.0},description,${date},NOT_AN_INT,3".toMovementOrNull())
-        assertNotNull("1,${10.0},description,${date},2,NOT_AN_INT".toMovementOrNull())
+        assertNotNull("1,${10.0},description,${date},NOT_AN_INT,3".toTransactionOrNull())
+        assertNotNull("1,${10.0},description,${date},2,NOT_AN_INT".toTransactionOrNull())
     }
 
     @Test
-    fun toMovementOrNull_null_isCorrect() {
+    fun toTransactionOrNull_null_isCorrect() {
         val d = LocalDate.now()
 
-        assertNull("".toMovementOrNull())
-        assertNull(",,,,,".toMovementOrNull())
-        assertNull("NOT_AN_INT,${10.0},description,${d},2,3".toMovementOrNull())
-        assertNull("${1.1},${10.0},description,${d},2,3".toMovementOrNull())
-        assertNull("1,NOT_A_DOUBLE,description,${d},2,3".toMovementOrNull())
-        assertNull("1,${10.0},description,NOT_A_DATE,2,3".toMovementOrNull())
+        assertNull("".toTransactionOrNull())
+        assertNull(",,,,,".toTransactionOrNull())
+        assertNull("NOT_AN_INT,${10.0},description,${d},2,3".toTransactionOrNull())
+        assertNull("${1.1},${10.0},description,${d},2,3".toTransactionOrNull())
+        assertNull("1,NOT_A_DOUBLE,description,${d},2,3".toTransactionOrNull())
+        assertNull("1,${10.0},description,NOT_A_DATE,2,3".toTransactionOrNull())
     }
 
     @Test

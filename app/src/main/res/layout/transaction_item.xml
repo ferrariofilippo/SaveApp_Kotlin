@@ -4,41 +4,41 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/movementContainer"
+    android:id="@+id/transactionContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="16dp"
     android:paddingTop="12dp">
 
     <TextView
-        android:id="@+id/movementAmount"
+        android:id="@+id/transactionAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@id/movementTagButton"
+        android:layout_toStartOf="@id/transactionTagButton"
         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     <TextView
-        android:id="@+id/movementDate"
+        android:id="@+id/transactionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/movementAmount"
+        android:layout_below="@id/transactionAmount"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@id/movementTagButton"
+        android:layout_toStartOf="@id/transactionTagButton"
         android:textAppearance="?attr/textAppearanceCaption" />
 
     <TextView
-        android:id="@+id/movementDescription"
+        android:id="@+id/transactionDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/movementDate"
-        android:layout_toStartOf="@id/movementTagButton"
+        android:layout_below="@id/transactionDate"
+        android:layout_toStartOf="@id/transactionTagButton"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBodyMedium" />
 
     <Button
-        android:id="@+id/movementTagButton"
+        android:id="@+id/transactionTagButton"
         style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="100dp"
         android:layout_height="40dp"
@@ -54,7 +54,7 @@
         android:id="@+id/historyDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/movementDescription"
+        android:layout_below="@id/transactionDescription"
         android:layout_marginTop="12dp"
         android:foreground="?attr/colorPrimary" />
 

@@ -92,9 +92,9 @@ class SubscriptionsFragment : Fragment() {
                 val sub = adapter.getItemAt(position)
 
                 if (direction == ItemTouchHelper.RIGHT) {
-                    (activity as MainActivity).goToEditMovementOrSubscription(sub.id, false)
+                    (activity as MainActivity).goToEditTransactionOrSubscription(sub.id, false)
                 } else if (direction == ItemTouchHelper.LEFT) {
-                    onRemoveMovementInvoked(sub)
+                    onRemoveSubscriptionInvoked(sub)
                 }
             }
         }
@@ -111,7 +111,7 @@ class SubscriptionsFragment : Fragment() {
         )
     }
 
-    private fun onRemoveMovementInvoked(taggedSubscription: TaggedSubscription) {
+    private fun onRemoveSubscriptionInvoked(taggedSubscription: TaggedSubscription) {
         val app = requireActivity().application as SaveAppApplication
         val subscription = Subscription(
             taggedSubscription.id,

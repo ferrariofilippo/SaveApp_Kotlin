@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util_tests
@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 class SubscriptionUtilUnitTest {
     @Test
-    fun getMovementFromSubscription_isCorrect() {
+    fun getTransactionFromSubscription_isCorrect() {
         var date = LocalDate.now()
         val renewal = RenewalType.WEEKLY
         val str = "Payment of {0} - {1}"
@@ -28,18 +28,18 @@ class SubscriptionUtilUnitTest {
             3
         )
 
-        val movement = SubscriptionUtil.getMovementFromSub(subscription, str)
+        val transaction = SubscriptionUtil.getTransactionFromSub(subscription, str)
         val description =
             String.format(str, subscription.description, subscription.lastPaid.toString())
 
-        assertNotNull(movement)
+        assertNotNull(transaction)
         assertNotNull(subscription.lastPaid)
-        assertEquals(movement!!.id, 0)
-        assertEquals(subscription.amount, movement.amount, Double.MIN_VALUE)
-        assertEquals(description, movement.description)
-        assertEquals(subscription.lastPaid, movement.date)
-        assertEquals(subscription.budgetId, movement.budgetId)
-        assertEquals(subscription.tagId, movement.tagId)
+        assertEquals(transaction!!.id, 0)
+        assertEquals(subscription.amount, transaction.amount, Double.MIN_VALUE)
+        assertEquals(description, transaction.description)
+        assertEquals(subscription.lastPaid, transaction.date)
+        assertEquals(subscription.budgetId, transaction.budgetId)
+        assertEquals(subscription.tagId, transaction.tagId)
 
         date = when (renewal) {
             RenewalType.WEEKLY -> date.plusDays(7)
@@ -54,7 +54,7 @@ class SubscriptionUtilUnitTest {
     }
 
     @Test
-    fun getMovementFromSubscription_null_isCorrect() {
+    fun getTransactionFromSubscription_null_isCorrect() {
         val str = "Test payment"
         val nextRenewal = LocalDate.now().plusDays(1)
         val subscription = Subscription(
@@ -69,8 +69,8 @@ class SubscriptionUtilUnitTest {
             3
         )
 
-        val movement = SubscriptionUtil.getMovementFromSub(subscription, str)
-        assertNull(movement)
+        val transaction = SubscriptionUtil.getTransactionFromSub(subscription, str)
+        assertNull(transaction)
         assertNull(subscription.lastPaid)
         assertEquals(subscription.nextRenewal, nextRenewal)
     }

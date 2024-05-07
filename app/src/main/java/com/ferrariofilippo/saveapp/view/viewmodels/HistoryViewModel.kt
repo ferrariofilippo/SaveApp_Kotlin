@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
-import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -19,7 +19,7 @@ import java.time.LocalDate
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
     private val saveAppApplication = application as SaveAppApplication
 
-    private val movementRepo = saveAppApplication.movementRepository
+    private val transactionRepo = saveAppApplication.transactionRepository
 
     val sortAscending: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -34,8 +34,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     val year: MutableLiveData<Int> = MutableLiveData(LocalDate.now().year)
 
-    private val _movements: MutableLiveData<List<TaggedMovement>> = MutableLiveData(listOf())
-    val movements: LiveData<List<TaggedMovement>> = _movements
+    private val _transactions: MutableLiveData<List<TaggedTransaction>> = MutableLiveData(listOf())
+    val transactions: LiveData<List<TaggedTransaction>> = _transactions
 
     val tags: MutableLiveData<Array<Tag>> = MutableLiveData<Array<Tag>>()
 
@@ -43,20 +43,20 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         viewModelScope.launch {
-            _movements.value = movementRepo.getAllTaggedByYearSorted(year.value!!.toString())
-            showEmptyMessage.value = _movements.value?.size == 0
+            _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
+            showEmptyMessage.value = _transactions.value?.size == 0
             tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
         }
 
         year.observeForever {
             viewModelScope.launch {
-                updateMovements()
+                updateTransactions()
             }
         }
     }
 
-    suspend fun updateMovements() {
-        _movements.value = movementRepo.getAllTaggedByYearSorted(year.value!!.toString())
-        showEmptyMessage.value = _movements.value?.size == 0
+    suspend fun updateTransactions() {
+        _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
+        showEmptyMessage.value = _transactions.value?.size == 0
     }
 }

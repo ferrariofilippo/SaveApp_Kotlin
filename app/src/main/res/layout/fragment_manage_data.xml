@@ -54,7 +54,7 @@
             </RelativeLayout>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/movementsCard"
+                android:id="@+id/transactionsCard"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,14 +71,14 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/movements"
+                        android:text="@string/transactions"
                         android:textAppearance="?attr/textAppearanceHeadline5" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="8dp"
-                        android:text="@string/manage_movements"
+                        android:text="@string/manage_transactions"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
 
@@ -86,7 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:switchTextAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/import_movements_note"
+                        android:text="@string/import_transactions_note"
                         android:textColor="?android:attr/textColorSecondary" />
 
                     <RelativeLayout
@@ -95,32 +95,32 @@
                         android:layout_marginTop="8dp">
 
                         <Button
-                            android:id="@+id/templateMovementsButton"
+                            android:id="@+id/templateTransactionsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/importMovementsButton"
-                            android:contentDescription="@string/download_movements_template"
+                            android:layout_toStartOf="@id/importTransactionsButton"
+                            android:contentDescription="@string/download_transactions_template"
                             android:text="@string/template" />
 
                         <Button
-                            android:id="@+id/importMovementsButton"
+                            android:id="@+id/importTransactionsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="4dp"
-                            android:layout_toStartOf="@id/exportMovementsButton"
-                            android:contentDescription="@string/import_movements"
+                            android:layout_toStartOf="@id/exportTransactionsButton"
+                            android:contentDescription="@string/import_transactions"
                             android:text="@string/import_data"
                             app:icon="@drawable/baseline_upload_file_24" />
 
                         <Button
-                            android:id="@+id/exportMovementsButton"
+                            android:id="@+id/exportTransactionsButton"
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:contentDescription="@string/export_movements"
+                            android:contentDescription="@string/export_transactions"
                             android:text="@string/export_data"
                             app:icon="@drawable/baseline_download_24" />
                     </RelativeLayout>
@@ -132,7 +132,7 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/movementsCard"
+                android:layout_below="@id/transactionsCard"
                 android:layout_margin="4dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat

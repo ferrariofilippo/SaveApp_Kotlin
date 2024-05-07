@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
-import com.ferrariofilippo.saveapp.databinding.FragmentNewMovementBinding
+import com.ferrariofilippo.saveapp.databinding.FragmentNewTransactionBinding
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
@@ -23,21 +23,21 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.view.adapters.BudgetsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.adapters.RenewalDropdownAdapter
 import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
-import com.ferrariofilippo.saveapp.view.viewmodels.NewMovementViewModel
+import com.ferrariofilippo.saveapp.view.viewmodels.NewTransactionViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
-class NewMovementFragment : Fragment() {
+class NewTransactionFragment : Fragment() {
     companion object {
         const val MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
     }
 
-    private lateinit var viewModel: NewMovementViewModel
+    private lateinit var viewModel: NewTransactionViewModel
 
-    private var _binding: FragmentNewMovementBinding? = null
+    private var _binding: FragmentNewTransactionBinding? = null
 
     private val binding get() = _binding!!
 
@@ -47,7 +47,7 @@ class NewMovementFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewMovementBinding
+        _binding = FragmentNewTransactionBinding
             .inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = viewLifecycleOwner
@@ -62,7 +62,7 @@ class NewMovementFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[NewMovementViewModel::class.java]
+        viewModel = ViewModelProvider(this)[NewTransactionViewModel::class.java]
     }
 
     override fun onDestroyView() {
@@ -78,18 +78,18 @@ class NewMovementFragment : Fragment() {
         }
 
         val application = requireActivity().application as SaveAppApplication
-        val isMovement = arguments?.getBoolean("isMovement") ?: true
+        val isTransaction = arguments?.getBoolean("isTransaction") ?: true
 
-        viewModel.setIsSubscription(!isMovement)
+        viewModel.setIsSubscription(!isTransaction)
         viewModel.setIsSubscriptionSwitchEnabled(false)
 
-        if (isMovement) {
-            val movement = runBlocking { application.movementRepository.getById(itemId) } ?: return
+        if (isTransaction) {
+            val transaction = runBlocking { application.transactionRepository.getById(itemId) } ?: return
 
-            viewModel.editingMovement = movement
-            viewModel.setAmount(String.format("%.2f", movement.amount))
-            viewModel.setDescription(movement.description)
-            viewModel.setDate(movement.date)
+            viewModel.editingTransaction = transaction
+            viewModel.setAmount(String.format("%.2f", transaction.amount))
+            viewModel.setDescription(transaction.description)
+            viewModel.setDate(transaction.date)
         } else {
             val sub = runBlocking { application.subscriptionRepository.getById(itemId) } ?: return
 
@@ -142,7 +142,7 @@ class NewMovementFragment : Fragment() {
                 }
 
                 val tagId =
-                    if (viewModel.editingMovement != null) viewModel.editingMovement!!.tagId
+                    if (viewModel.editingTransaction != null) viewModel.editingTransaction!!.tagId
                     else if (viewModel.editingSubscription != null) viewModel.editingSubscription!!.tagId
                     else 0
 
@@ -175,7 +175,7 @@ class NewMovementFragment : Fragment() {
                 }
 
                 val budgetId =
-                    if (viewModel.editingMovement != null) viewModel.editingMovement!!.budgetId
+                    if (viewModel.editingTransaction != null) viewModel.editingTransaction!!.budgetId
                     else if (viewModel.editingSubscription != null) viewModel.editingSubscription!!.budgetId
                     else 0
 
@@ -260,7 +260,7 @@ class NewMovementFragment : Fragment() {
             .build()
 
         datePicker.addOnPositiveButtonClickListener { setSelectedDate(datePicker) }
-        datePicker.show(childFragmentManager, "movement_date_picker")
+        datePicker.show(childFragmentManager, "transaction_date_picker")
     }
 
     private fun setSelectedDate(datePicker: MaterialDatePicker<Long>) {

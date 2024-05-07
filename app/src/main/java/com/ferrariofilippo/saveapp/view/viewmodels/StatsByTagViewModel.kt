@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -13,8 +13,8 @@ import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
-import com.ferrariofilippo.saveapp.model.statsitems.TagMovementsSum
-import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.model.statsitems.TagTransactionsSum
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
 import com.github.mikephil.charting.data.PieDataSet
@@ -28,7 +28,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _tags: LiveData<List<Tag>> = _app.tagRepository.allTags.asLiveData()
 
-    private var _movements: List<TaggedMovement> = listOf()
+    private var _transactions: List<TaggedTransaction> = listOf()
 
     private val _tagSums: MutableMap<Int, Double> = mutableMapOf()
 
@@ -36,8 +36,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _isShowingExpenses: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    private val _tagSumItems: MutableLiveData<List<TagMovementsSum>> = MutableLiveData(listOf())
-    val tagSumItems get(): LiveData<List<TagMovementsSum>> = _tagSumItems
+    private val _tagSumItems: MutableLiveData<List<TagTransactionsSum>> = MutableLiveData(listOf())
+    val tagSumItems get(): LiveData<List<TagTransactionsSum>> = _tagSumItems
 
     private val _year: MutableLiveData<String> = MutableLiveData(LocalDate.now().year.toString())
     val year: LiveData<String> = _year
@@ -49,7 +49,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
 
     var dataSet: PieDataSet = PieDataSet(listOf(), _setLabel)
 
-    var onMovementsChangeCallback: () -> Unit = { }
+    var onTransactionsChangeCallback: () -> Unit = { }
 
     init {
         initYears()
@@ -66,8 +66,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         }
         _year.observeForever { value ->
             viewModelScope.launch {
-                _movements = _app.movementRepository.getAllTaggedByYear(value)
-                _showEmptyMessage.value = _movements.isEmpty()
+                _transactions = _app.transactionRepository.getAllTaggedByYear(value)
+                _showEmptyMessage.value = _transactions.isEmpty()
                 _tagSums.keys.forEach {
                     _tagSums[it] = 0.0
                 }
@@ -81,8 +81,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
                 application.getString(R.string.incomes_by_tag)
 
             viewModelScope.launch {
-                _movements = _app.movementRepository.getAllTaggedByYear(_year.value!!)
-                _showEmptyMessage.value = _movements.isEmpty()
+                _transactions = _app.transactionRepository.getAllTaggedByYear(_year.value!!)
+                _showEmptyMessage.value = _transactions.isEmpty()
                 _tagSums.clear()
                 _tags.value?.forEach {
                     if (value xor it.isIncome)
@@ -103,7 +103,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun calculateSums(selectExpenses: Boolean) {
-        _movements.forEach {
+        _transactions.forEach {
             if (selectExpenses xor TagUtil.incomeTagIds.contains(it.tagId)) {
                 _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
             }
@@ -116,13 +116,13 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _tagSums.values.forEach { generalSum += it }
 
         val entries: MutableList<PieEntry> = mutableListOf()
-        val items: MutableList<TagMovementsSum> = mutableListOf()
+        val items: MutableList<TagTransactionsSum> = mutableListOf()
         val colors: MutableList<Int> = mutableListOf()
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
             if (selectExpenses xor it.isIncome) {
-                items.add(TagMovementsSum(it.id, it.name, it.color, sum, percentage))
+                items.add(TagTransactionsSum(it.id, it.name, it.color, sum, percentage))
             }
 
             if (sum != 0.0) {
@@ -137,7 +137,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         dataSet.colors = colors
         dataSet.valueFormatter = PercentFormatter()
 
-        onMovementsChangeCallback()
+        onTransactionsChangeCallback()
     }
 
     private fun initYears() {

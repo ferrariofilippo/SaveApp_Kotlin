@@ -94,7 +94,7 @@ object CloudStorageUtil {
                         "DB_PATH" to app.getDatabasePath(AppDatabase.DB_NAME).absolutePath,
                         "WAL_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-wal").absolutePath,
                         "SHM_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-shm").absolutePath,
-                        "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.settingsFileName}.preferences_pb",
+                        "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.SETTINGS_FILE_NAME}.preferences_pb",
                         "STATS_PATH" to "$filesDirPath/${StatsUtil.FILE_NAME}"
                     )
                 )
@@ -114,7 +114,7 @@ object CloudStorageUtil {
                         "DB_PATH" to app.getDatabasePath(AppDatabase.DB_NAME).absolutePath,
                         "WAL_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-wal").absolutePath,
                         "SHM_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-shm").absolutePath,
-                        "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.settingsFileName}.preferences_pb",
+                        "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.SETTINGS_FILE_NAME}.preferences_pb",
                         "STATS_PATH" to "$filesDirPath/${StatsUtil.FILE_NAME}"
                     )
                 )

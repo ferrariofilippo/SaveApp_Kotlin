@@ -11,12 +11,12 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.data.dao.BudgetDao
-import com.ferrariofilippo.saveapp.data.dao.MovementDao
 import com.ferrariofilippo.saveapp.data.dao.SubscriptionDao
 import com.ferrariofilippo.saveapp.data.dao.TagDao
+import com.ferrariofilippo.saveapp.data.dao.TransactionDao
 import com.ferrariofilippo.saveapp.data.dao.UtilDao
 import com.ferrariofilippo.saveapp.model.entities.Budget
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.CoroutineScope
@@ -24,11 +24,11 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@Database(entities = [Budget::class, Movement::class, Subscription::class, Tag::class], version = 2)
+@Database(entities = [Budget::class, Transaction::class, Subscription::class, Tag::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
 
-    abstract fun movementDao(): MovementDao
+    abstract fun transactionDao(): TransactionDao
 
     abstract fun subscriptionDao(): SubscriptionDao
 
@@ -107,6 +107,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object: Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE movements RENAME TO transactions")
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -119,7 +125,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     DB_NAME
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .addCallback(AppDatabaseCallback(scope, context))
                     .build()
 

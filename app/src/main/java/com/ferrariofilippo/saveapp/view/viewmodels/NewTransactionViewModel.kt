@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -15,7 +15,7 @@ import com.ferrariofilippo.saveapp.BR
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.AddToBudgetResult
@@ -33,10 +33,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
-class NewMovementViewModel(application: Application) : AndroidViewModel(application), Observable {
+class NewTransactionViewModel(application: Application) : AndroidViewModel(application), Observable {
     private val saveAppApplication = application as SaveAppApplication
 
-    private val movementRepository = saveAppApplication.movementRepository
+    private val transactionRepository = saveAppApplication.transactionRepository
     private val subscriptionRepository = saveAppApplication.subscriptionRepository
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
@@ -66,7 +66,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         MutableLiveData<Array<RenewalType>>(RenewalType.entries.toTypedArray())
 
     var editingSubscription: Subscription? = null
-    var editingMovement: Movement? = null
+    var editingTransaction: Transaction? = null
 
     var onAmountChanged: () -> Unit = { }
     var onDescriptionChanged: () -> Unit = { }
@@ -235,7 +235,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             if (_isSubscription) {
                 insertSubscription(newAmount)
             } else {
-                succeeded = tryInsertMovement(newAmount)
+                succeeded = tryInsertTransaction(newAmount)
             }
 
             if (succeeded) {
@@ -276,34 +276,34 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
         return amount * CurrencyUtil.rates[baseCurrency.id] / CurrencyUtil.rates[_currency.id]
     }
 
-    private suspend fun tryInsertMovement(amount: Double): Boolean {
+    private suspend fun tryInsertTransaction(amount: Double): Boolean {
         val budgetId = _budget?.budgetId ?: 0
         val tagId = _budget?.tagId ?: _tag?.id ?: 0
-        val movement = Movement(0, amount, _description, _date, tagId, budgetId)
+        val transaction = Transaction(0, amount, _description, _date, tagId, budgetId)
 
-        if (editingMovement != null && editingMovement!!.budgetId != 0) {
-            BudgetUtil.removeMovementFromBudget(editingMovement!!)
+        if (editingTransaction != null && editingTransaction!!.budgetId != 0) {
+            BudgetUtil.removeTransactionFromBudget(editingTransaction!!)
         }
 
         if (budgetId != 0) {
-            val result = BudgetUtil.tryAddMovementToBudget(movement, editingMovement != null)
+            val result = BudgetUtil.tryAddTransactionToBudget(transaction, editingTransaction != null)
             if (result != AddToBudgetResult.SUCCEEDED) {
                 handleAddBudgetResult(result)
                 return false
             }
         }
 
-        if (editingMovement != null) {
-            editingMovement!!.amount *= -1
-            StatsUtil.addMovementToStat(saveAppApplication, editingMovement!!)
+        if (editingTransaction != null) {
+            editingTransaction!!.amount *= -1
+            StatsUtil.addTransactionToStat(saveAppApplication, editingTransaction!!)
 
-            movement.id = editingMovement!!.id
-            movementRepository.update(movement)
+            transaction.id = editingTransaction!!.id
+            transactionRepository.update(transaction)
         } else {
-            movementRepository.insert(movement)
+            transactionRepository.insert(transaction)
         }
 
-        StatsUtil.addMovementToStat(saveAppApplication, movement)
+        StatsUtil.addTransactionToStat(saveAppApplication, transaction)
 
         return true
     }
@@ -321,7 +321,7 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             tagId,
             _budget?.budgetId ?: 0
         )
-        val movement = SubscriptionUtil.getMovementFromSub(
+        val transaction = SubscriptionUtil.getTransactionFromSub(
             subscription, saveAppApplication.resources.getString(
                 R.string.payment_of
             )
@@ -334,12 +334,12 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
             subscriptionRepository.insert(subscription)
         }
 
-        if (movement != null) {
-            if (movement.budgetId != 0 && BudgetUtil.tryAddMovementToBudget(movement) != AddToBudgetResult.SUCCEEDED)
-                movement.budgetId = 0
+        if (transaction != null) {
+            if (transaction.budgetId != 0 && BudgetUtil.tryAddTransactionToBudget(transaction) != AddToBudgetResult.SUCCEEDED)
+                transaction.budgetId = 0
 
-            movementRepository.insert(movement)
-            StatsUtil.addMovementToStat(saveAppApplication, movement)
+            transactionRepository.insert(transaction)
+            StatsUtil.addTransactionToStat(saveAppApplication, transaction)
         }
     }
 
@@ -356,14 +356,14 @@ class NewMovementViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun getSaveSnackBarMessage(): Int {
-        return if (editingMovement != null) {
-            R.string.movement_updated
+        return if (editingTransaction != null) {
+            R.string.transaction_updated
         } else if (editingSubscription != null) {
             R.string.subscription_updated
         } else if (_isSubscription) {
             R.string.subscription_created
         } else {
-            R.string.movement_created
+            R.string.transaction_created
         }
     }
 }

@@ -198,7 +198,7 @@ class NewBudgetFragment : Fragment() {
             .build()
 
         datePicker.addOnPositiveButtonClickListener { setSelectedDate(datePicker, isFromDate) }
-        datePicker.show(childFragmentManager, "movement_date_picker")
+        datePicker.show(childFragmentManager, "budget_date_picker")
     }
 
     private fun setSelectedDate(datePicker: MaterialDatePicker<Long>, isFromDate: Boolean) {

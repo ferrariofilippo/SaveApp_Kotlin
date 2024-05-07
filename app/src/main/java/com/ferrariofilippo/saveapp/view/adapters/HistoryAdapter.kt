@@ -14,37 +14,37 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
-import com.ferrariofilippo.saveapp.model.taggeditems.TaggedMovement
+import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
 
 class HistoryAdapter(private val currency: Currencies, private val padding: Array<Int>) :
-    ListAdapter<TaggedMovement, HistoryAdapter.MovementViewHolder>(MovementsComparator()) {
-    override fun onBindViewHolder(holder: MovementViewHolder, position: Int) {
+    ListAdapter<TaggedTransaction, HistoryAdapter.TransactionViewHolder>(TransactionsComparator()) {
+    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovementViewHolder {
-        return MovementViewHolder.create(parent, currency, padding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
+        return TransactionViewHolder.create(parent, currency, padding)
     }
 
-    fun getItemAt(position: Int): TaggedMovement {
+    fun getItemAt(position: Int): TaggedTransaction {
         return getItem(position)
     }
 
-    class MovementViewHolder(
+    class TransactionViewHolder(
         itemView: View,
         private val currency: Currencies,
         padding: Array<Int>
     ) : RecyclerView.ViewHolder(itemView) {
-        private val container = itemView.findViewById<RelativeLayout>(R.id.movementContainer)
+        private val container = itemView.findViewById<RelativeLayout>(R.id.transactionContainer)
         private val divider = itemView.findViewById<MaterialDivider>(R.id.historyDivider)
-        private val amountItemView = itemView.findViewById<TextView>(R.id.movementAmount)
-        private val descriptionItemView = itemView.findViewById<TextView>(R.id.movementDescription)
-        private val dateItemView = itemView.findViewById<TextView>(R.id.movementDate)
+        private val amountItemView = itemView.findViewById<TextView>(R.id.transactionAmount)
+        private val descriptionItemView = itemView.findViewById<TextView>(R.id.transactionDescription)
+        private val dateItemView = itemView.findViewById<TextView>(R.id.transactionDate)
         private val tagButtonItemView =
-            itemView.findViewById<MaterialButton>(R.id.movementTagButton)
+            itemView.findViewById<MaterialButton>(R.id.transactionTagButton)
 
         init {
             val dividerParams = divider.layoutParams as ViewGroup.MarginLayoutParams
@@ -54,7 +54,7 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: TaggedMovement) {
+        fun bind(item: TaggedTransaction) {
             amountItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.amount)}"
             descriptionItemView.text = item.description
             dateItemView.text = item.date.toString()
@@ -75,23 +75,23 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
                 parent: ViewGroup,
                 currency: Currencies,
                 padding: Array<Int>
-            ): MovementViewHolder {
+            ): TransactionViewHolder {
                 val view: View =
                     LayoutInflater
                         .from(parent.context)
-                        .inflate(R.layout.movement_item, parent, false)
+                        .inflate(R.layout.transaction_item, parent, false)
 
-                return MovementViewHolder(view, currency, padding)
+                return TransactionViewHolder(view, currency, padding)
             }
         }
     }
 
-    class MovementsComparator : DiffUtil.ItemCallback<TaggedMovement>() {
-        override fun areContentsTheSame(oldItem: TaggedMovement, newItem: TaggedMovement): Boolean {
+    class TransactionsComparator : DiffUtil.ItemCallback<TaggedTransaction>() {
+        override fun areContentsTheSame(oldItem: TaggedTransaction, newItem: TaggedTransaction): Boolean {
             return oldItem.description == newItem.description && oldItem.amount == newItem.amount
         }
 
-        override fun areItemsTheSame(oldItem: TaggedMovement, newItem: TaggedMovement): Boolean {
+        override fun areItemsTheSame(oldItem: TaggedTransaction, newItem: TaggedTransaction): Boolean {
             return oldItem.id == newItem.id
         }
     }

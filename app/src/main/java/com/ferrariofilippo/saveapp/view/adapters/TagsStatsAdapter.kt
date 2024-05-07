@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
-import com.ferrariofilippo.saveapp.model.statsitems.TagMovementsSum
+import com.ferrariofilippo.saveapp.model.statsitems.TagTransactionsSum
 import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.divider.MaterialDivider
 
@@ -24,7 +24,7 @@ class TagsStatsAdapter(
     private val context: Context,
     private val currency: Currencies,
     private val padding: Array<Int>
-) : ListAdapter<TagMovementsSum, TagsStatsAdapter.TagsStatsViewHolder>(TagsStatsComparator()) {
+) : ListAdapter<TagTransactionsSum, TagsStatsAdapter.TagsStatsViewHolder>(TagsStatsComparator()) {
 
     override fun onBindViewHolder(holder: TagsStatsViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -54,7 +54,7 @@ class TagsStatsAdapter(
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: TagMovementsSum) {
+        fun bind(item: TagTransactionsSum) {
             tagPillItemView.setColorFilter(ColorUtil.getColorOrDefault(ctx, item.color))
             tagNameItemView.text = item.name
             sumItemView.text =
@@ -76,15 +76,15 @@ class TagsStatsAdapter(
         }
     }
 
-    class TagsStatsComparator : DiffUtil.ItemCallback<TagMovementsSum>() {
+    class TagsStatsComparator : DiffUtil.ItemCallback<TagTransactionsSum>() {
         override fun areContentsTheSame(
-            oldItem: TagMovementsSum,
-            newItem: TagMovementsSum
+            oldItem: TagTransactionsSum,
+            newItem: TagTransactionsSum
         ): Boolean {
             return oldItem.name == newItem.name && oldItem.sum == newItem.sum
         }
 
-        override fun areItemsTheSame(oldItem: TagMovementsSum, newItem: TagMovementsSum): Boolean {
+        override fun areItemsTheSame(oldItem: TagTransactionsSum, newItem: TagTransactionsSum): Boolean {
             return oldItem.tagId == newItem.tagId
         }
     }

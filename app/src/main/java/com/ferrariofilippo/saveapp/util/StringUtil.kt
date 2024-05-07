@@ -1,17 +1,17 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.converters.Converters
 import com.ferrariofilippo.saveapp.model.entities.Budget
-import com.ferrariofilippo.saveapp.model.entities.Movement
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.util.DateUtil.toLocalDateOrNull
 import java.time.LocalDate
 
 object StringUtil {
-    fun String.toMovementOrNull(): Movement? {
+    fun String.toTransactionOrNull(): Transaction? {
         val fields: List<String> = this.split(',')
         if (fields.size != 6) {
             return null
@@ -24,7 +24,7 @@ object StringUtil {
         val tagId = fields[4].toIntOrNull() ?: 9
         val budgetId: Int = fields[5].toIntOrNull() ?: 0
 
-        return Movement(
+        return Transaction(
             id, amount, description, date, tagId, budgetId
         )
     }

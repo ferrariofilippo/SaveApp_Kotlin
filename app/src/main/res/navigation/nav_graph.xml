@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,21 +23,21 @@
             app:enterAnim="@anim/slide_in_top_right"
             app:exitAnim="@anim/fade" />
         <action
-            android:id="@+id/action_homeFragment_to_newMovementFragment"
-            app:destination="@id/newMovementFragment"
+            android:id="@+id/action_homeFragment_to_newTransactionFragment"
+            app:destination="@id/newTransactionFragment"
             app:enterAnim="@anim/slide_in_bottom_right"
             app:exitAnim="@anim/fade" />
     </fragment>
     <fragment
-        android:id="@+id/newMovementFragment"
-        android:name="com.ferrariofilippo.saveapp.view.NewMovementFragment"
-        android:label="@string/add_movement">
+        android:id="@+id/newTransactionFragment"
+        android:name="com.ferrariofilippo.saveapp.view.NewTransactionFragment"
+        android:label="@string/add_transaction">
         <argument
             android:name="itemId"
             android:defaultValue="0"
             app:argType="integer" />
         <argument
-            android:name="isMovement"
+            android:name="isTransaction"
             android:defaultValue="true"
             app:argType="boolean" />
     </fragment>
@@ -46,8 +46,8 @@
         android:name="com.ferrariofilippo.saveapp.view.HistoryFragment"
         android:label="HistoryFragment">
         <action
-            android:id="@+id/action_historyFragment_to_newMovementFragment"
-            app:destination="@id/newMovementFragment"
+            android:id="@+id/action_historyFragment_to_newTransactionFragment"
+            app:destination="@id/newTransactionFragment"
             app:enterAnim="@anim/slide_in_bottom_right"
             app:exitAnim="@anim/fade" />
     </fragment>
@@ -61,8 +61,8 @@
             app:enterAnim="@anim/slide_in_top_right"
             app:exitAnim="@anim/fade" />
         <action
-            android:id="@+id/action_budgetsFragment_to_newMovementFragment"
-            app:destination="@id/newMovementFragment"
+            android:id="@+id/action_budgetsFragment_to_newTransactionFragment"
+            app:destination="@id/newTransactionFragment"
             app:enterAnim="@anim/slide_in_bottom_right"
             app:exitAnim="@anim/fade" />
     </fragment>
@@ -71,8 +71,8 @@
         android:name="com.ferrariofilippo.saveapp.view.StatsFragment"
         android:label="StatsFragment">
         <action
-            android:id="@+id/action_statsFragment_to_newMovementFragment"
-            app:destination="@id/newMovementFragment"
+            android:id="@+id/action_statsFragment_to_newTransactionFragment"
+            app:destination="@id/newTransactionFragment"
             app:enterAnim="@anim/slide_in_bottom_right"
             app:exitAnim="@anim/fade" />
     </fragment>
