@@ -117,7 +117,8 @@ class SubscriptionsAdapter(
         ): Boolean {
             return oldItem.description == newItem.description &&
                     oldItem.amount == newItem.amount &&
-                    oldItem.renewalType == newItem.renewalType
+                    oldItem.renewalType == newItem.renewalType &&
+                    oldItem.tagId == newItem.tagId
         }
 
         override fun areItemsTheSame(

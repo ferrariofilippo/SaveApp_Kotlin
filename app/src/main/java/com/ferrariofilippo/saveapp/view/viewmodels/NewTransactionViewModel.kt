@@ -240,6 +240,10 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
 
             if (succeeded) {
                 val activity = saveAppApplication.getCurrentActivity() as MainActivity
+                if (editingTransaction != null) {
+                    HistoryViewModel.forceUpdate()
+                }
+
                 activity.popLastView()
                 Snackbar.make(
                     activity.findViewById(R.id.containerView),

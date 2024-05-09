@@ -41,7 +41,8 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
         private val container = itemView.findViewById<RelativeLayout>(R.id.transactionContainer)
         private val divider = itemView.findViewById<MaterialDivider>(R.id.historyDivider)
         private val amountItemView = itemView.findViewById<TextView>(R.id.transactionAmount)
-        private val descriptionItemView = itemView.findViewById<TextView>(R.id.transactionDescription)
+        private val descriptionItemView =
+            itemView.findViewById<TextView>(R.id.transactionDescription)
         private val dateItemView = itemView.findViewById<TextView>(R.id.transactionDate)
         private val tagButtonItemView =
             itemView.findViewById<MaterialButton>(R.id.transactionTagButton)
@@ -87,11 +88,20 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
     }
 
     class TransactionsComparator : DiffUtil.ItemCallback<TaggedTransaction>() {
-        override fun areContentsTheSame(oldItem: TaggedTransaction, newItem: TaggedTransaction): Boolean {
-            return oldItem.description == newItem.description && oldItem.amount == newItem.amount
+        override fun areContentsTheSame(
+            oldItem: TaggedTransaction,
+            newItem: TaggedTransaction
+        ): Boolean {
+            return oldItem.description == newItem.description &&
+                    oldItem.amount == newItem.amount &&
+                    oldItem.date == newItem.date &&
+                    oldItem.tagId == newItem.tagId
         }
 
-        override fun areItemsTheSame(oldItem: TaggedTransaction, newItem: TaggedTransaction): Boolean {
+        override fun areItemsTheSame(
+            oldItem: TaggedTransaction,
+            newItem: TaggedTransaction
+        ): Boolean {
             return oldItem.id == newItem.id
         }
     }

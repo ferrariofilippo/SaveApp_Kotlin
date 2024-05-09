@@ -15,6 +15,7 @@
 .cxx
 local.properties
 /app/release/*.aab
+/app/release/baselineProfiles
 *.log
 /app/release/output.json
 *.jks

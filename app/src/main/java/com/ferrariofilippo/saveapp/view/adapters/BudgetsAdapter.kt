@@ -105,10 +105,11 @@ class BudgetsAdapter(
     class BudgetsComparator : DiffUtil.ItemCallback<TaggedBudget>() {
         override fun areContentsTheSame(oldItem: TaggedBudget, newItem: TaggedBudget): Boolean {
             return oldItem.name == newItem.name &&
-                    oldItem.max == oldItem.max &&
+                    oldItem.max == newItem.max &&
                     oldItem.used == newItem.used &&
                     oldItem.from == newItem.from &&
-                    oldItem.to == newItem.to
+                    oldItem.to == newItem.to &&
+                    oldItem.tagId == newItem.tagId
         }
 
         override fun areItemsTheSame(oldItem: TaggedBudget, newItem: TaggedBudget): Boolean {

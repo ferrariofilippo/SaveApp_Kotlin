@@ -338,34 +338,20 @@ class MainActivity : AppCompatActivity() {
     private fun onMenuItemClick(menuItem: MenuItem): Boolean {
         ensureNavControllerInitialized()
 
-        when (menuItem.itemId) {
-            R.id.home -> {
-                findNavController(R.id.containerView).navigate(R.id.homeFragment)
-                lastFragmentId = R.id.homeFragment
+        val navController = findNavController(R.id.containerView)
+        val current = navController.currentDestination
+        val destinationId = when (menuItem.itemId) {
+            R.id.home -> R.id.homeFragment
+            R.id.history -> R.id.historyFragment
+            R.id.budget -> R.id.budgetsFragment
+            else -> R.id.statsFragment
+        }
 
-                return true
-            }
-
-            R.id.history -> {
-                findNavController(R.id.containerView).navigate(R.id.historyFragment)
-                lastFragmentId = R.id.historyFragment
-
-                return true
-            }
-
-            R.id.budget -> {
-                findNavController(R.id.containerView).navigate(R.id.budgetsFragment)
-                lastFragmentId = R.id.budgetsFragment
-
-                return true
-            }
-
-            R.id.stats -> {
-                findNavController(R.id.containerView).navigate(R.id.statsFragment)
-                lastFragmentId = R.id.statsFragment
-
-                return true
-            }
+        if (current == null || current.id != destinationId) {
+            navController.clearBackStack(destinationId)
+            navController.navigate(destinationId)
+            lastFragmentId = destinationId
+            return true
         }
 
         return false

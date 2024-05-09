@@ -17,6 +17,14 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        private var _updateCallback: suspend () -> Unit = { }
+
+        suspend fun forceUpdate() {
+            _updateCallback()
+        }
+    }
+
     private val saveAppApplication = application as SaveAppApplication
 
     private val transactionRepo = saveAppApplication.transactionRepository
@@ -53,6 +61,8 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
                 updateTransactions()
             }
         }
+
+        _updateCallback = { updateTransactions() }
     }
 
     suspend fun updateTransactions() {
