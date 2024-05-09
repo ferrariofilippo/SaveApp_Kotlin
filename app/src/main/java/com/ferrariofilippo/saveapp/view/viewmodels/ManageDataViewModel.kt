@@ -36,7 +36,7 @@ class ManageDataViewModel(application: Application) : AndroidViewModel(applicati
     init {
         viewModelScope.launch {
             _lastBackupTimeStampSource.collect {
-                _lastBackupTimeStamp.value = String.format(app.getString(R.string.last_backup, it))
+                _lastBackupTimeStamp.value = String.format(app.getString(R.string.last_backup), it)
             }
         }
     }
