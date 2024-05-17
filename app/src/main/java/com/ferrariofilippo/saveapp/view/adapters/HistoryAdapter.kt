@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
@@ -56,12 +57,13 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedTransaction) {
+            val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
             amountItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.amount)}"
             descriptionItemView.text = item.description
             dateItemView.text = item.date.toString()
             tagButtonItemView.text = item.tagName
-            tagButtonItemView.setIconTintResource(item.tagColor)
-            tagButtonItemView.setStrokeColorResource(item.tagColor)
+            tagButtonItemView.setIconTintResource(colorRes)
+            tagButtonItemView.setStrokeColorResource(colorRes)
             tagButtonItemView.setOnClickListener {
                 Snackbar.make(
                     itemView.rootView.findViewById(R.id.containerView),

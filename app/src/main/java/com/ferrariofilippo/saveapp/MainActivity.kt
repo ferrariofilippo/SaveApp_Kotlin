@@ -21,6 +21,7 @@ import androidx.work.WorkManager
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.LogUtil
@@ -189,6 +190,7 @@ class MainActivity : AppCompatActivity() {
         BudgetUtil.init(saveApp)
         StatsUtil.init(saveApp)
         SpacingUtil.init(saveApp)
+        ColorUtil.initColors(saveApp)
 
         _restartFunction = { restartApplication() }
         _checkpointFunction = { saveApp.utilRepository.checkpoint() }

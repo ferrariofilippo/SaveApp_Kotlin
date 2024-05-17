@@ -21,6 +21,9 @@ import com.google.api.services.drive.Drive
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.time.Instant
@@ -37,6 +40,8 @@ class GoogleDriveDownloadWorker(context: Context, params: WorkerParameters) :
     private val jsonFactory = GsonFactory.getDefaultInstance()
 
     override suspend fun doWork(): Result {
+        val className = javaClass.kotlin.simpleName ?: ""
+
         val app = ctx.applicationContext as SaveAppApplication
         val scopes = inputData.getStringArray("SCOPES")?.toMutableList()
         val credentials: GoogleCredentials?
@@ -64,39 +69,45 @@ class GoogleDriveDownloadWorker(context: Context, params: WorkerParameters) :
                 .build()
 
         try {
-            val files = service.files().list()
-                .setSpaces("appDataFolder")
-                .setFields("nextPageToken, files(id, name)")
-                .setPageSize(6)
-                .execute()
+            LogUtil.logInfo(className, "doWork", "Download started")
+            withContext(Dispatchers.IO) {
+                val files = service.files().list()
+                    .setSpaces("appDataFolder")
+                    .setFields("nextPageToken, files(id, name)")
+                    .setPageSize(6)
+                    .execute()
 
-            for (type in fileTypesList) {
-                val fileCopy = File.createTempFile("db_$type", "", app.cacheDir)
-                val fileId = files.files
-                    .sortedBy { f -> f.name }
-                    .lastOrNull { f -> f.name.contains(if (type == "") "db" else type) }?.id
-
-                if (fileId != null) {
-                    service.files().get(fileId)
-                        .executeMediaAndDownloadTo(FileOutputStream(fileCopy))
-
-                    val destPath = when (type) {
-                        "" -> inputData.getString("DB_PATH")
-                        "-wal" -> inputData.getString("WAL_PATH")
-                        "-shm" -> inputData.getString("SHM_PATH")
-                        "-settings" -> inputData.getString("SETTINGS_PATH")
-                        else -> inputData.getString("STATS_PATH")
+                for (type in fileTypesList) {
+                    val fileCopy = runBlocking {
+                        File.createTempFile("db_$type", "", app.cacheDir)
                     }
+                    val fileId = files.files
+                        .sortedBy { f -> f.name }
+                        .lastOrNull { f -> f.name.contains(if (type == "") "db" else type) }?.id
 
-                    if (destPath != null) {
-                        fileCopy.copyTo(File(destPath), true)
+                    if (fileId != null) {
+                        service.files().get(fileId)
+                            .executeMediaAndDownloadTo(FileOutputStream(fileCopy))
+
+                        val destPath = when (type) {
+                            "" -> inputData.getString("DB_PATH")
+                            "-wal" -> inputData.getString("WAL_PATH")
+                            "-shm" -> inputData.getString("SHM_PATH")
+                            "-settings" -> inputData.getString("SETTINGS_PATH")
+                            else -> inputData.getString("STATS_PATH")
+                        }
+
+                        if (destPath != null) {
+                            fileCopy.copyTo(File(destPath), true)
+                        }
                     }
                 }
             }
             MainActivity.requireCheckpoint()
+            LogUtil.logInfo(className, "doWork", "Downloaded backup")
         } catch (e: GoogleJsonResponseException) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "doWork")
+            LogUtil.logException(e, className, "doWork")
             return Result.failure()
         }
 

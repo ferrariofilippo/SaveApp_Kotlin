@@ -144,7 +144,7 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         dataSet.colors = _colors
         dataSet.valueFormatter = PercentFormatter()
 
-        onTransactionsChangeCallback
+        onTransactionsChangeCallback()
     }
 
     private fun initYears() {

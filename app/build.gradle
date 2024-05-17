@@ -14,8 +14,8 @@ android {
         applicationId "com.ferrariofilippo.saveapp"
         minSdk 29
         targetSdk 34
-        versionCode 6
-        versionName "1.07"
+        versionCode 9
+        versionName "1.09"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,8 +58,8 @@ dependencies {
     implementation "androidx.core:core-ktx:1.13.1"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.google.android.material:material:1.12.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0"
     implementation "androidx.navigation:navigation-fragment-ktx:2.7.7"
     implementation "androidx.navigation:navigation-ui-ktx:2.7.7"
     implementation "androidx.compose.material3:material3:1.2.1"
@@ -71,6 +71,7 @@ dependencies {
 
     implementation "com.squareup.moshi:moshi-kotlin:1.13.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.13.0"
 
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
 

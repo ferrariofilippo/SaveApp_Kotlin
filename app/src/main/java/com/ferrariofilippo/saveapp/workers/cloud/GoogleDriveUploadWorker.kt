@@ -23,6 +23,9 @@ import com.google.api.services.drive.Drive
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.AccessToken
 import com.google.auth.oauth2.GoogleCredentials
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
@@ -43,6 +46,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
     private val ctx: Context = context
 
     private fun deleteOldBackup(service: Drive): Boolean {
+        val className = javaClass.kotlin.simpleName ?: ""
         try {
             val lastTimeStamp = SettingsUtil.lastBackupTimeStamp
             val files = service.files().list()
@@ -59,8 +63,9 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
                     service.files().delete(fileId)
                 }
             }
+            LogUtil.logInfo(className, "deleteOldBackup", "Deleted old backup")
         } catch (e: GoogleJsonResponseException) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "deleteOldBackup")
+            LogUtil.logException(e, className, "deleteOldBackup")
             return false
         }
 
@@ -68,6 +73,8 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
     }
 
     override suspend fun doWork(): Result {
+        val className = javaClass.kotlin.simpleName ?: ""
+
         val app = ctx.applicationContext as SaveAppApplication
         val scopes = inputData.getStringArray("SCOPES")?.toMutableList()
         val timeStamp = LocalDateTime.now().format(dateTimeFormatter)
@@ -97,39 +104,44 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
 
         try {
             MainActivity.requireCheckpoint()
-            for (type in fileTypesList) {
-                val fileMetadata = com.google.api.services.drive.model.File()
-                val fileName = "saveapp${if (type == "") "-db" else type}_${timeStamp}"
-                fileMetadata.setName(fileName)
-                fileMetadata.setParents(Collections.singletonList("appDataFolder"))
+            withContext(Dispatchers.IO) {
+                for (type in fileTypesList) {
+                    val fileName = "saveapp${if (type == "") "-db" else type}_${timeStamp}"
+                    val fileMetadata = com.google.api.services.drive.model.File()
+                    fileMetadata.setName(fileName)
+                    fileMetadata.setParents(Collections.singletonList("appDataFolder"))
 
-                val fileCopy = File.createTempFile(fileName, "", app.cacheDir)
-                val mediaContent = FileContent("application/octet-stream", fileCopy)
-                val srcPath = when (type) {
-                    "" -> inputData.getString("DB_PATH")
-                    "-wal" -> inputData.getString("WAL_PATH")
-                    "-shm" -> inputData.getString("SHM_PATH")
-                    "-settings" -> inputData.getString("SETTINGS_PATH")
-                    else -> inputData.getString("STATS_PATH")
-                }
-
-                if (srcPath != null) {
-                    val src = File(srcPath)
-                    if (src.exists() && src.length() > 0) {
-                        src.copyTo(fileCopy, true)
-                        service.files().create(fileMetadata, mediaContent)
-                            .setFields("id")
-                            .execute()
+                    val fileCopy = File.createTempFile(fileName, "", app.cacheDir)
+                    val mediaContent = FileContent("application/octet-stream", fileCopy)
+                    val srcPath = when (type) {
+                        "" -> inputData.getString("DB_PATH")
+                        "-wal" -> inputData.getString("WAL_PATH")
+                        "-shm" -> inputData.getString("SHM_PATH")
+                        "-settings" -> inputData.getString("SETTINGS_PATH")
+                        else -> inputData.getString("STATS_PATH")
                     }
+
+                    if (srcPath != null) {
+                        val src = File(srcPath)
+                        if (src.exists() && src.length() > 0) {
+                            src.copyTo(fileCopy, true)
+                            service.files().create(fileMetadata, mediaContent)
+                                .setFields("id")
+                                .execute()
+                            LogUtil.logInfo(className, "doWork", "Uploaded $fileName")
+                        }
+                    }
+                    fileCopy.delete()
                 }
             }
+            LogUtil.logInfo(className, "doWork", "Upload finished")
         } catch (e: GoogleJsonResponseException) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "doWork")
+            LogUtil.logException(e, className, "doWork")
             return Result.failure()
         }
 
-        deleteOldBackup(service)
+        withContext(Dispatchers.IO) { deleteOldBackup(service) }
         SettingsUtil.setLastBackupTimeStamp(timeStamp)
         handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
         return Result.success()

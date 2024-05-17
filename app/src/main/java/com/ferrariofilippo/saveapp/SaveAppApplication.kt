@@ -58,7 +58,8 @@ class SaveAppApplication : Application() {
             LogUtil.logException(
                 e,
                 javaClass.kotlin.simpleName ?: "",
-                "defaultUncaughtExceptionHandler"
+                "defaultUncaughtExceptionHandler",
+                false
             )
             Runtime.getRuntime().exit(1)
         }

@@ -62,7 +62,7 @@
                 android:layout_below="@id/add_tag_title"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="12dp"
-                app:boxBackgroundColor="@{vm.displayColor}">
+                app:boxBackgroundColor="@{vm.tagColor}">
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"

@@ -41,6 +41,8 @@ interface CurrencyApiServer {
 }
 
 object CurrencyUtil {
+    private const val CLASS_NAME = "CurrencyUtil"
+
     private val retrofitService: CurrencyApiServer by lazy {
         retrofit.create(CurrencyApiServer::class.java)
     }
@@ -79,7 +81,7 @@ object CurrencyUtil {
                 setDate(result.date)
                 setRates(rates)
             } catch (e: Exception) {
-                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "init")
+                LogUtil.logException(e, CLASS_NAME, "init")
                 rates = getRates()
             }
         } else {

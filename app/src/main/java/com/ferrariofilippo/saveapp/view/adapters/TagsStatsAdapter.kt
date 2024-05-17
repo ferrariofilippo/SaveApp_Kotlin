@@ -55,7 +55,7 @@ class TagsStatsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TagTransactionsSum) {
-            tagPillItemView.setColorFilter(ColorUtil.getColorOrDefault(ctx, item.color))
+            tagPillItemView.setColorFilter(item.color)
             tagNameItemView.text = item.name
             sumItemView.text =
                 String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)

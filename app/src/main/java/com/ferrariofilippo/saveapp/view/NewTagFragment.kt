@@ -64,9 +64,8 @@ class NewTagFragment : Fragment() {
         val tag = runBlocking { application.tagRepository.getById(tagId) }
         viewModel.oldTag = tag
         viewModel.tagName.value = tag?.name
-        viewModel.tagColor.value = tag?.color ?: R.color.emerald_700
-        viewModel.displayColor.value =
-            ColorUtil.getColorOrDefault(application, viewModel.tagColor.value!!)
+        viewModel.tagColor.value = tag?.color ?: viewModel.defaultColor
+
         viewModel.isIncomeTag.value = tag?.isIncome
         viewModel.isIncomeTagSwitchEnabled.value = false
     }
@@ -86,14 +85,13 @@ class NewTagFragment : Fragment() {
         val adapter = ColorDropdownAdapter(
             binding.colorInput.context,
             R.layout.color_dropdown_item,
-            viewModel.colors.toTypedArray()
+            ColorUtil.colors
         )
 
         colorAutoComplete.setAdapter(adapter)
         colorAutoComplete.setOnItemClickListener { parent, _, position, _ ->
             val selection = parent.adapter.getItem(position) as Int
-            viewModel.tagColor.value = selection
-            viewModel.displayColor.value = ColorUtil.getColorOrDefault(requireContext(), selection)
+            viewModel.tagColor.value = ColorUtil.getColorOrDefault(requireContext(), selection)
         }
     }
 

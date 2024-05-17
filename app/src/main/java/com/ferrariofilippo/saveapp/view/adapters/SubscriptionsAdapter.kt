@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
@@ -67,13 +68,14 @@ class SubscriptionsAdapter(
         }
 
         fun bind(item: TaggedSubscription) {
+            val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
             amountItemView.text = String.format("%s %.2f", currency.toSymbol(), item.amount)
             descriptionItemView.text = item.description
             nextRenewalItemView.text = item.nextRenewal.toString()
             renewalTypeItemView.text = getLocalizedRenewalType(item.renewalType)
             tagItemView.text = item.tagName
-            tagItemView.setIconTintResource(item.tagColor)
-            tagItemView.setStrokeColorResource(item.tagColor)
+            tagItemView.setIconTintResource(colorRes)
+            tagItemView.setStrokeColorResource(colorRes)
             tagItemView.setOnClickListener {
                 Snackbar.make(
                     itemView.rootView.findViewById(R.id.containerView),

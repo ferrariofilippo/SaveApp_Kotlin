@@ -26,6 +26,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
 
 object CloudStorageUtil {
+    private const val CLASS_NAME = "CloudStorageUtil"
+
     private fun displayError(activity: Activity?, messageId: Int) {
         if (activity == null)
             return
@@ -38,6 +40,7 @@ object CloudStorageUtil {
     }
 
     private fun authorizeDownload(app: SaveAppApplication, result: AuthorizationResult) {
+        LogUtil.logInfo(CLASS_NAME, "authorizeDownload", "Authorizing download...")
         if (result.hasResolution() && result.pendingIntent != null) {
             try {
                 val intentSenderRequest =
@@ -53,7 +56,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
-                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "authorizeDownload")
+                LogUtil.logException(e, CLASS_NAME, "authorizeDownload")
             }
         } else {
             enqueueDownload(app, result)
@@ -61,6 +64,7 @@ object CloudStorageUtil {
     }
 
     private fun authorizeUpload(app: SaveAppApplication, result: AuthorizationResult) {
+        LogUtil.logInfo(CLASS_NAME, "authorizeUpload", "Authorizing upload...")
         if (result.hasResolution() && result.pendingIntent != null) {
             try {
                 val intentSenderRequest =
@@ -76,7 +80,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
-                LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "authorizeUpload")
+                LogUtil.logException(e, CLASS_NAME, "authorizeUpload")
             }
         } else {
             enqueueUpload(app, result)
@@ -100,6 +104,7 @@ object CloudStorageUtil {
                 )
                 .build()
 
+        LogUtil.logInfo(CLASS_NAME, "enqueueDownload", "Starting backup download...")
         WorkManager.getInstance(app).enqueue(downloadWorkRequest)
     }
 
@@ -120,6 +125,7 @@ object CloudStorageUtil {
                 )
                 .build()
 
+        LogUtil.logInfo(CLASS_NAME, "enqueueUpload", "Starting backup upload...")
         WorkManager.getInstance(app).enqueue(uploadWorkRequest)
     }
 
@@ -143,7 +149,7 @@ object CloudStorageUtil {
                         true
                     )
                 }
-                LogUtil.logException(it, javaClass.kotlin.simpleName ?: "", "addOnFailureListener")
+                LogUtil.logException(it, CLASS_NAME, "addOnFailureListener")
             }
     }
 }

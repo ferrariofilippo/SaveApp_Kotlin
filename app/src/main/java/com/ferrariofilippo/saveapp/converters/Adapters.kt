@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.ferrariofilippo.saveapp.R
-import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.button.MaterialButton
 
 @BindingAdapter("dynamicIcon")
@@ -33,11 +32,6 @@ fun View.setCollapsibleIcon(isCollapsed: Boolean) {
 @BindingAdapter("dynamicTint")
 fun View.setDynamicTint(value: Int?) {
     value.let {
-        (this as ImageView).setColorFilter(
-            ColorUtil.getColorOrDefault(
-                context,
-                if (value == null || value == 0) R.color.emerald_500 else value
-            )
-        )
+        (this as ImageView).setColorFilter(value ?: context.getColor(R.color.emerald_500))
     }
 }

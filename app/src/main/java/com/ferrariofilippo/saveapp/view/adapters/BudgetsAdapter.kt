@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
+import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -66,12 +67,13 @@ class BudgetsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedBudget) {
+            val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
             nameItemView.text = item.name
             dateFromItemView.text = String.format(from, item.from.toString())
             dateToItemView.text = String.format(to, item.to.toString())
             tagItemView.text = item.tagName
-            tagItemView.setIconTintResource(item.tagColor)
-            tagItemView.setStrokeColorResource(item.tagColor)
+            tagItemView.setIconTintResource(colorRes)
+            tagItemView.setStrokeColorResource(colorRes)
             tagItemView.setOnClickListener {
                 Snackbar.make(
                     itemView.rootView.findViewById(R.id.containerView),

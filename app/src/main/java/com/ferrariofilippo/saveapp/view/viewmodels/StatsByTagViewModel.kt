@@ -126,7 +126,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
             }
 
             if (sum != 0.0) {
-                colors.add(ColorUtil.getColorOrDefault(_app, it.color))
+                colors.add(it.color)
                 entries.add(PieEntry(percentage.toFloat(), it.name))
             }
         }

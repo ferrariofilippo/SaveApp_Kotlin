@@ -51,7 +51,7 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
 
         fun bind(item: Tag) {
             tagNameItemView.text = item.name
-            tagPillItemView.setColorFilter(ColorUtil.getColorOrDefault(ctx, item.color))
+            tagPillItemView.setColorFilter(item.color)
         }
 
         companion object {

@@ -22,6 +22,8 @@ import java.io.FileOutputStream
 import java.time.LocalDate
 
 object ImportExportUtil {
+    private const val CLASS_NAME = "ImportExportUtil"
+
     const val CREATE_TRANSACTIONS_FILE: Int = 2
     const val OPEN_TRANSACTIONS_FILE: Int = 3
     const val CREATE_TRANSACTIONS_TEMPLATE = 5
@@ -211,7 +213,7 @@ object ImportExportUtil {
                 }
             }
         } catch (e: Exception) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importTransactions")
+            LogUtil.logException(e, CLASS_NAME, "importTransactions")
         }
     }
 
@@ -241,7 +243,7 @@ object ImportExportUtil {
                 }
             }
         } catch (e: Exception) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importSubscriptions")
+            LogUtil.logException(e, CLASS_NAME, "importSubscriptions")
         }
     }
 
@@ -271,7 +273,7 @@ object ImportExportUtil {
                 }
             }
         } catch (e: Exception) {
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "importBudgets")
+            LogUtil.logException(e, CLASS_NAME, "importBudgets")
         }
     }
 }
