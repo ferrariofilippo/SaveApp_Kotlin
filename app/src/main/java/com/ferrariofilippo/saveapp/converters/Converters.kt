@@ -25,6 +25,29 @@ object Converters {
             "CHF" -> Currencies.CHF
             "JPY" -> Currencies.JPY
             "CNY" -> Currencies.CNY
+            "BGN" -> Currencies.BGN
+            "BRL" -> Currencies.BRL
+            "CZK" -> Currencies.CZK
+            "DKK" -> Currencies.DKK
+            "HKD" -> Currencies.HKD
+            "HUF" -> Currencies.HUF
+            "IDR" -> Currencies.IDR
+            "ILS" -> Currencies.ILS
+            "INR" -> Currencies.INR
+            "ISK" -> Currencies.ISK
+            "KRW" -> Currencies.KRW
+            "MXN" -> Currencies.MXN
+            "MYR" -> Currencies.MYR
+            "NOK" -> Currencies.NOK
+            "NZD" -> Currencies.NZD
+            "PHP" -> Currencies.PHP
+            "PLN" -> Currencies.PLN
+            "RON" -> Currencies.RON
+            "SEK" -> Currencies.SEK
+            "SGD" -> Currencies.SGD
+            "THB" -> Currencies.THB
+            "TRY" -> Currencies.TRY
+            "ZAR" -> Currencies.ZAR
             else -> Currencies.USD
         }
     }

@@ -9,6 +9,7 @@ import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.util.DateUtil.toLocalDateOrNull
 import java.time.LocalDate
+import kotlin.math.abs
 
 object StringUtil {
     fun String.toTransactionOrNull(): Transaction? {
@@ -75,5 +76,20 @@ object StringUtil {
         return Budget(
             id, max, used, name, from, to, tagId
         )
+    }
+
+    @JvmStatic
+    fun toCurrencyString(amount: Double, ticker: String): String {
+        var suffix = ""
+        var compactAmount = amount
+        if (abs(amount) > 1_000_000_000) {
+            suffix = "M"
+            compactAmount /= 1_000_000
+        } else if (abs(amount) > 100_000) {
+            suffix = "k"
+            compactAmount /= 1_000
+        }
+
+        return String.format("%s %.2f%s", ticker, compactAmount, suffix)
     }
 }
