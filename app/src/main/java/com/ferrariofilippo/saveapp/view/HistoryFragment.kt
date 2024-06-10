@@ -52,6 +52,7 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.requireUpdate()
         _binding = FragmentHistoryBinding
             .inflate(inflater, container, false)
             .apply {

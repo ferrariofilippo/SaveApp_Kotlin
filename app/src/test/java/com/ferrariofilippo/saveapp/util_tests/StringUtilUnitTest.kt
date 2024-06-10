@@ -8,6 +8,7 @@ import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.entities.Subscription
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.util.StringUtil.toBudgetOrNull
+import com.ferrariofilippo.saveapp.util.StringUtil.toCurrencyString
 import com.ferrariofilippo.saveapp.util.StringUtil.toSubscriptionOrNull
 import com.ferrariofilippo.saveapp.util.StringUtil.toTransactionOrNull
 import org.junit.Test
@@ -120,5 +121,17 @@ class StringUtilUnitTest {
         assertNull("1,${10.0},NOT_A_DOUBLE,description,${date},${date},0".toBudgetOrNull())
         assertNull("1,${10.0},NOT_A_DOUBLE,description,NOT_A_DATE,${date},0".toBudgetOrNull())
         assertNull("1,${10.0},${10.0},description,${date},NOT_A_DATE,0".toBudgetOrNull())
+    }
+
+    @Test
+    fun toCurrencyString_isCorrect() {
+        val ticker = "EUR"
+        val lowAmount = 111.111
+        val meanAmount = 1_111_111.11
+        val highAmount = 11_111_111_111.111
+
+        assertEquals("$ticker 111.11", toCurrencyString(lowAmount, ticker).replace(',', '.'))
+        assertEquals("$ticker 1111.11k", toCurrencyString(meanAmount, ticker).replace(',', '.'))
+        assertEquals("$ticker 11111.11M", toCurrencyString(highAmount, ticker).replace(',', '.'))
     }
 }
