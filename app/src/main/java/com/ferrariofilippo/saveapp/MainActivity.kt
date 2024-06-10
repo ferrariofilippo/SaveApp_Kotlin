@@ -54,8 +54,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var lastFragmentId: Int = R.id.homeFragment
-
     private var navControllerInitialized = false
 
     private lateinit var rootDestinations: Set<Int>
@@ -311,27 +309,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lastFragmentId = R.id.homeFragment
         navControllerInitialized = true
     }
 
     private fun onAddTransactionClick() {
-        ensureNavControllerInitialized()
-
         try {
-            when (lastFragmentId) {
-                R.id.homeFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_homeFragment_to_newTransactionFragment)
-
-                R.id.historyFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_historyFragment_to_newTransactionFragment)
-
-                R.id.budgetsFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_budgetsFragment_to_newTransactionFragment)
-
-                R.id.statsFragment ->
-                    findNavController(R.id.containerView).navigate(R.id.action_statsFragment_to_newTransactionFragment)
-            }
+            ensureNavControllerInitialized()
+            val navController = findNavController(R.id.containerView)
+            navController.navigate(
+                when (navController.currentDestination?.id) {
+                    R.id.historyFragment -> R.id.action_historyFragment_to_newTransactionFragment
+                    R.id.budgetsFragment -> R.id.action_budgetsFragment_to_newTransactionFragment
+                    R.id.statsFragment -> R.id.action_statsFragment_to_newTransactionFragment
+                    else -> R.id.action_homeFragment_to_newTransactionFragment
+                }
+            )
         } catch (e: Exception) {
             LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "onAddTransactionClick")
         }
@@ -352,7 +344,6 @@ class MainActivity : AppCompatActivity() {
         if (current == null || current.id != destinationId) {
             navController.clearBackStack(destinationId)
             navController.navigate(destinationId)
-            lastFragmentId = destinationId
             return true
         }
 
