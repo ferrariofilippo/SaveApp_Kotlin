@@ -17,17 +17,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class HistoryViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        private var _updateCallback: suspend () -> Unit = { }
-
-        suspend fun forceUpdate() {
-            _updateCallback()
-        }
-    }
-
     private val saveAppApplication = application as SaveAppApplication
 
     private val transactionRepo = saveAppApplication.transactionRepository
+
+    private var updateRequired: Boolean = true
 
     val sortAscending: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -50,23 +44,28 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     val showEmptyMessage: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
-        viewModelScope.launch {
-            _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
-            showEmptyMessage.value = _transactions.value?.size == 0
-            tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
-        }
+        requireUpdate()
 
         year.observeForever {
             viewModelScope.launch {
                 updateTransactions()
             }
         }
-
-        _updateCallback = { updateTransactions() }
     }
 
     suspend fun updateTransactions() {
         _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
         showEmptyMessage.value = _transactions.value?.size == 0
+    }
+
+    fun requireUpdate() {
+        if (updateRequired) {
+            viewModelScope.launch {
+                _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
+                showEmptyMessage.value = _transactions.value?.size == 0
+                tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
+            }
+            updateRequired = true
+        }
     }
 }
