@@ -162,7 +162,7 @@
     <string name="name_already_used">Name is already in use</string>
     <string name="tag_created">Tag created.</string>
     <string name="tag_updated">Tag updated.</string>
-    <string name="cannot_delete_tag">Cannot delete the tag. It is in use by other data.</string>
+    <string name="cannot_delete_tag_data">Cannot delete the tag. It is in use by other data.</string>
     <string name="tag_icon">Tag icon</string>
     <string name="download_transactions_template">Download transactions template</string>
     <string name="export_transactions">Export transactions</string>
@@ -238,4 +238,6 @@
     <string name="parent_tag">Parent tag</string>
     <string name="tag_complete_name">%s/%s</string>
     <string name="aggregate_sub_tags">Aggregate sub-tags</string>
+    <string name="cannot_delete_tag_children">Cannot delete the tag. There is a sub-tag.</string>
+    <string name="cannot_delete_tag">Cannot delete the tag.</string>
 </resources>

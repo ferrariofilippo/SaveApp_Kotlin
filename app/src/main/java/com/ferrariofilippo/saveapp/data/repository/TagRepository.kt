@@ -17,8 +17,8 @@ class TagRepository(private val tagDao: TagDao) {
     }
 
     @WorkerThread
-    suspend fun getChildren(id: Int): List<Tag> {
-        return tagDao.getChildren(id)
+    suspend fun getFirstChildren(id: Int): Tag? {
+        return tagDao.getFirstChildren(id)
     }
 
     @WorkerThread

@@ -20,8 +20,8 @@ interface TagDao {
     @Query("SELECT * FROM tags WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Tag?
 
-    @Query("SELECT * FROM tags WHERE parentTagId = :id")
-    suspend fun getChildren(id: Int): List<Tag>
+    @Query("SELECT * FROM tags WHERE parentTagId = :id LIMIT 1")
+    suspend fun getFirstChildren(id: Int): Tag?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tag: Tag)
