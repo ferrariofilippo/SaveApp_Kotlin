@@ -50,8 +50,9 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
         }
 
         fun bind(item: Tag) {
-            tagNameItemView.text = item.name
             tagPillItemView.setColorFilter(item.color)
+            tagNameItemView.text =
+                String.format(ctx.getString(R.string.tag_complete_name), item.path, item.name)
         }
 
         companion object {

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="vm"
             type="com.ferrariofilippo.saveapp.view.viewmodels.NewTagViewModel" />
@@ -49,8 +49,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@={vm.tagName}"
-                    android:textAlignment="textEnd" />
+                    android:text="@={vm.tagName}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,11 +74,27 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagParentInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagNameInput"
+                android:layout_alignParentStart="true"
+                android:hint="@string/parent_tag"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@={vm.parentTagName}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/isIncomeSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tagNameInput"
+                android:layout_below="@id/tagParentInput"
                 android:layout_marginTop="12dp"
                 android:checked="@={vm.isIncomeTag}"
                 android:enabled="@{vm.isIncomeTagSwitchEnabled}"

@@ -234,4 +234,8 @@
     <string name="average_monthly_frequency">Average monthly frequency</string>
     <string name="frequencies">Frequencies</string>
     <string name="sums">Sums</string>
+    <string name="none">None</string>
+    <string name="parent_tag">Parent tag</string>
+    <string name="tag_complete_name">%s/%s</string>
+    <string name="aggregate_sub_tags">Aggregate sub-tags</string>
 </resources>

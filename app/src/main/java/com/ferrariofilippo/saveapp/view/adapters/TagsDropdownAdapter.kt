@@ -45,8 +45,9 @@ class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Ar
         if (viewHolder != null) {
             val tag = getItem(position)
             if (tag != null) {
-                viewHolder.name.text = tag.name
                 viewHolder.pill.setColorFilter(tag.color)
+                viewHolder.name.text =
+                    String.format(context.getString(R.string.tag_complete_name), tag.path, tag.name)
             }
         }
 

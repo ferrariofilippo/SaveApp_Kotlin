@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -9,18 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentNewTagBinding
+import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.util.ColorUtil
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.ferrariofilippo.saveapp.view.adapters.ColorDropdownAdapter
+import com.ferrariofilippo.saveapp.view.adapters.TagsDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.NewTagViewModel
 import kotlinx.coroutines.runBlocking
 
 class NewTagFragment : Fragment() {
     private lateinit var viewModel: NewTagViewModel
+
+    private val _noneString = requireContext().getString(R.string.none)
+    private val _whiteColor = requireContext().getColor(R.color.white)
 
     private var _binding: FragmentNewTagBinding? = null
     private val binding get(): FragmentNewTagBinding = _binding!!
@@ -75,6 +82,7 @@ class NewTagFragment : Fragment() {
         binding.cancelButton.setOnClickListener { (activity as MainActivity).popLastView() }
 
         setupColorPicker()
+        setupParentTagPicker()
 
         viewModel.onNameChanged = { manageNameError() }
     }
@@ -94,6 +102,42 @@ class NewTagFragment : Fragment() {
             viewModel.tagColor.value = ColorUtil.getColorOrDefault(requireContext(), selection)
         }
     }
+
+    private fun setupParentTagPicker() {
+        val parentTagAutoComplete = binding.tagParentInput.editText as AutoCompleteTextView
+        viewModel.tags.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()) {
+                val tags = it.toMutableList()
+                if (viewModel.oldTag != null) {
+                    TagUtil.removeAllChildrenTags(tags, viewModel.oldTag!!)
+                    tags.remove(viewModel.oldTag)
+                }
+
+                tags.add(0, Tag(0, _noneString, _whiteColor, false))
+
+                val adapter = TagsDropdownAdapter(
+                    binding.tagParentInput.context,
+                    R.layout.tag_dropdown_item,
+                    tags.toTypedArray()
+                )
+
+                parentTagAutoComplete.setAdapter(adapter)
+                parentTagAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+                    val selection = parent.adapter.getItem(position) as Tag
+                    if (selection.id == 0) {
+                        viewModel.parentTag = null
+                        viewModel.isIncomeTagSwitchEnabled.value = viewModel.oldTag != null && true
+                    } else {
+                        viewModel.parentTag = selection
+                        viewModel.isIncomeTagSwitchEnabled.value = false
+                        viewModel.isIncomeTag.value = selection.isIncome
+                    }
+                }
+            }
+        })
+    }
+
+
 
     private fun manageNameError() {
         val res = requireContext().resources

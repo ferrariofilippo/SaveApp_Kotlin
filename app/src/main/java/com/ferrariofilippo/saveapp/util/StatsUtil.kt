@@ -73,7 +73,7 @@ object StatsUtil {
         } finally {
             application.applicationScope.launch {
                 application.tagRepository.allTags.collect {
-                    val tags = it.filter { tag -> !tag.isIncome }
+                    val tags = it.filter { tag -> !tag.isIncome && tag.parentTagId == 0 }
 
                     if (monthTags.isEmpty() || monthTags.size != tags.size) {
                         monthTags = getMapFromTags(monthTags, tags)
@@ -127,18 +127,19 @@ object StatsUtil {
 
                 _lifeIncomes.value = _lifeIncomes.value!! + tr.amount
             } else {
+                val rootTagId = TagUtil.getTagRootId(tr.tagId)
                 if (isSameMonth) {
                     _monthExpenses.value = _monthExpenses.value!! + tr.amount
-                    monthTags[tr.tagId]!!.value = monthTags[tr.tagId]!!.value!! + tr.amount
+                    monthTags[rootTagId]!!.value = monthTags[rootTagId]!!.value!! + tr.amount
                 }
 
                 if (isSameYear) {
                     _yearExpenses.value = _yearExpenses.value!! + tr.amount
-                    yearTags[tr.tagId]!!.value = yearTags[tr.tagId]!!.value!! + tr.amount
+                    yearTags[rootTagId]!!.value = yearTags[rootTagId]!!.value!! + tr.amount
                 }
 
                 _lifeExpenses.value = _lifeExpenses.value!! + tr.amount
-                lifeTags[tr.tagId]!!.value = lifeTags[tr.tagId]!!.value!! + tr.amount
+                lifeTags[rootTagId]!!.value = lifeTags[rootTagId]!!.value!! + tr.amount
             }
 
             context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {

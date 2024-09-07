@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -28,11 +28,15 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     val tagColor: MutableLiveData<Int> = MutableLiveData(defaultColor)
 
+    val parentTagName: MutableLiveData<String> = MutableLiveData("")
+
     val isIncomeTag: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val isIncomeTagSwitchEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
 
     var oldTag: Tag? = null
+
+    var parentTag: Tag? = null
 
     var onNameChanged: () -> Unit = { }
 
@@ -44,11 +48,24 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     fun insert() = viewModelScope.launch {
         if (tagName.value != null && tagName.value!!.isNotBlank()) {
+            val parentTagId = parentTag?.id ?: 0
+            val rootTagId =
+                if (parentTag == null) 0
+                else if (parentTag?.rootTagId == 0) parentTag!!.id
+                else parentTag!!.rootTagId
+
+            val path =
+                if (parentTagId == 0) ""
+                else "${parentTag!!.path}/${parentTag!!.name}"
+
             val tag = Tag(
                 oldTag?.id ?: 0,
                 tagName.value!!,
                 tagColor.value ?: defaultColor,
-                isIncomeTag.value!!
+                isIncomeTag.value!!,
+                parentTagId,
+                rootTagId,
+                path
             )
 
             if (tag.id == 0) {

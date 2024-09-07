@@ -15,7 +15,6 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.statsitems.TagTransactionsSum
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
-import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -45,6 +44,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     private val _showEmptyMessage: MutableLiveData<Boolean> = MutableLiveData(false)
     val showEmptyMessage: LiveData<Boolean> = _showEmptyMessage
 
+    val aggregateSubTags: MutableLiveData<Boolean> = MutableLiveData(true)
+
     var years: List<String> = listOf()
 
     var dataSet: PieDataSet = PieDataSet(listOf(), _setLabel)
@@ -54,20 +55,12 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     init {
         initYears()
 
-        _tags.observeForever { tags ->
-            tags.let {
-                _tagSums.clear()
-                tags.forEach {
-                    if (_isShowingExpenses.value!! xor it.isIncome)
-                        _tagSums[it.id] = 0.0
-                }
-            }
-            calculateSums(_isShowingExpenses.value!!)
-        }
+        _tags.observeForever { manageTagChange(it) }
         _year.observeForever { value ->
             viewModelScope.launch {
                 _transactions = _app.transactionRepository.getAllTaggedByYear(value)
                 _showEmptyMessage.value = _transactions.isEmpty()
+
                 _tagSums.keys.forEach {
                     _tagSums[it] = 0.0
                 }
@@ -85,12 +78,13 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
                 _showEmptyMessage.value = _transactions.isEmpty()
                 _tagSums.clear()
                 _tags.value?.forEach {
-                    if (value xor it.isIncome)
+                    if ((value xor it.isIncome) && (it.parentTagId == 0 || !aggregateSubTags.value!!))
                         _tagSums[it.id] = 0.0
                 }
                 calculateSums(value)
             }
         }
+        aggregateSubTags.observeForever { manageTagChange(_tags.value!!) }
     }
 
     // Methods
@@ -102,12 +96,34 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _isShowingExpenses.value = isExpenses
     }
 
-    private fun calculateSums(selectExpenses: Boolean) {
-        _transactions.forEach {
-            if (selectExpenses xor TagUtil.incomeTagIds.contains(it.tagId)) {
-                _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
+    private fun manageTagChange(tags: List<Tag>) {
+        tags.let {
+            _tagSums.clear()
+            tags.forEach {
+                if ((_isShowingExpenses.value!! xor it.isIncome) && (it.parentTagId == 0 || !aggregateSubTags.value!!)) {
+                    _tagSums[it.id] = 0.0
+                }
             }
         }
+        calculateSums(_isShowingExpenses.value!!)
+    }
+
+    private fun calculateSums(selectExpenses: Boolean) {
+        if (aggregateSubTags.value!!) {
+            _transactions.forEach {
+                if (selectExpenses xor TagUtil.incomeTagIds.contains(it.tagId)) {
+                    val id = TagUtil.getTagRootId(it.tagId)
+                    _tagSums[id] = (_tagSums[id] ?: 0.0) + it.amount
+                }
+            }
+        } else {
+            _transactions.forEach {
+                if (selectExpenses xor TagUtil.incomeTagIds.contains(it.tagId)) {
+                    _tagSums[it.tagId] = (_tagSums[it.tagId] ?: 0.0) + it.amount
+                }
+            }
+        }
+
         updateEntries(selectExpenses)
     }
 

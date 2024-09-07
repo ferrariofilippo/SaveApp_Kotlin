@@ -234,4 +234,8 @@
     <string name="average_monthly_frequency">Frequenza media mensile</string>
     <string name="frequencies">Frequenze</string>
     <string name="sums">Somme</string>
+    <string name="none">Nessuno</string>
+    <string name="parent_tag">Tag genitore</string>
+    <string name="tag_complete_name">%s/%s</string>
+    <string name="aggregate_sub_tags">Aggrega sotto-tag</string>
 </resources>
