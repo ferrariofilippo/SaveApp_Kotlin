@@ -185,6 +185,7 @@ class MainActivity : AppCompatActivity() {
         SettingsUtil.setStore(saveApp)
         CurrencyUtil.setStore(saveApp)
         TagUtil.updateAll(saveApp)
+        TagUtil.setNameTemplate(saveApp.getString(R.string.tag_complete_name))
         BudgetUtil.init(saveApp)
         StatsUtil.init(saveApp)
         SpacingUtil.init(saveApp)

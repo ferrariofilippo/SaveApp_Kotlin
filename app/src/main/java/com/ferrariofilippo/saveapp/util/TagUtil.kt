@@ -8,9 +8,15 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import kotlinx.coroutines.launch
 
 object TagUtil {
+    private var _tagNameTemplate = ""
+
     private var _tags: MutableList<Tag> = mutableListOf()
     private var _tagIdToRootId: MutableMap<Int, Int> = mutableMapOf()
     val incomeTagIds: MutableSet<Int> = mutableSetOf()
+
+    fun setNameTemplate(template: String) {
+        _tagNameTemplate = template
+    }
 
     fun updateAll(application: SaveAppApplication) {
         incomeTagIds.clear()
@@ -51,12 +57,27 @@ object TagUtil {
         var i = 0
         while (i < tags.size) {
             if (tags[i].parentTagId == target.id) {
-                val next = tags[i]
-                tags.removeAt(i)
-                removeAllChildrenTags(tags, next)
+                removeAllChildrenTags(tags, tags.removeAt(i))
             } else {
                 ++i
             }
         }
+    }
+
+    fun removeAllExpensesOrIncomes(tags: MutableList<Tag>, removeExpenses: Boolean) {
+        var i = 0
+        while (i < tags.size) {
+            if (tags[i].isIncome xor removeExpenses) {
+                tags.removeAt(i)
+            } else {
+                ++i
+            }
+        }
+    }
+
+    fun computeTagFullName(tag: Tag) {
+        tag.fullName =
+            if (tag.parentTagId == 0) tag.name
+            else String.format(_tagNameTemplate, tag.path, tag.name)
     }
 }

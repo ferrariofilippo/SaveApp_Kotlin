@@ -28,8 +28,6 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     val tagColor: MutableLiveData<Int> = MutableLiveData(defaultColor)
 
-    val parentTagName: MutableLiveData<String> = MutableLiveData("")
-
     val isIncomeTag: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val isIncomeTagSwitchEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
@@ -42,7 +40,11 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         viewModelScope.launch {
-            tags.value = saveAppApplication.tagRepository.allTags.first() ?: listOf()
+            @Suppress("UNNECESSARY_SAFE_CALL")
+            tags.value = saveAppApplication.tagRepository.allTags
+                .first()
+                ?.onEach { TagUtil.computeTagFullName(it) }
+                ?.sortedBy { it.fullName } ?: listOf()
         }
     }
 
@@ -56,6 +58,7 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
             val path =
                 if (parentTagId == 0) ""
+                else if (parentTag!!.path.isBlank()) parentTag!!.name
                 else "${parentTag!!.path}/${parentTag!!.name}"
 
             val tag = Tag(
@@ -73,6 +76,9 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
                 TagUtil.updateAll(saveAppApplication)
             } else {
                 saveAppApplication.tagRepository.update(tag)
+                if (oldTag != null && tag.parentTagId != oldTag!!.parentTagId) {
+                    updateChildren(tag)
+                }
             }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
@@ -84,6 +90,15 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
             ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
         } else {
             onNameChanged()
+        }
+    }
+
+    private suspend fun updateChildren(parent: Tag) {
+        TagUtil.computeTagFullName(parent)
+        saveAppApplication.tagRepository.getChildren(parent.id).forEach {
+            it.path = parent.fullName
+            saveAppApplication.tagRepository.update(it)
+            updateChildren(it)
         }
     }
 }

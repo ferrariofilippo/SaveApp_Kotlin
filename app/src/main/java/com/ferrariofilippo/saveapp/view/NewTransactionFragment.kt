@@ -84,7 +84,8 @@ class NewTransactionFragment : Fragment() {
         viewModel.setIsSubscriptionSwitchEnabled(false)
 
         if (isTransaction) {
-            val transaction = runBlocking { application.transactionRepository.getById(itemId) } ?: return
+            val transaction =
+                runBlocking { application.transactionRepository.getById(itemId) } ?: return
 
             viewModel.editingTransaction = transaction
             viewModel.setAmount(String.format("%.2f", transaction.amount))
@@ -148,7 +149,7 @@ class NewTransactionFragment : Fragment() {
 
                 if (tagId != 0) {
                     val i = it.indexOfFirst { tag -> tag.id == tagId }
-                    tagAutoComplete.setText(it[i].name, false)
+                    tagAutoComplete.setText(it[i].fullName, false)
                     viewModel.setTag(it[i])
                 }
             }

@@ -76,17 +76,16 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tagParentInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tagNameInput"
-                android:layout_alignParentStart="true"
-                android:hint="@string/parent_tag"
-                app:endIconMode="clear_text">
+                android:hint="@string/parent_tag">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@={vm.parentTagName}" />
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

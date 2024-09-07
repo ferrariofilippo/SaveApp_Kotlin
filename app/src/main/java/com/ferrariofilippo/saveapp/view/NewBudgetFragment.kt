@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -133,7 +133,7 @@ class NewBudgetFragment : Fragment() {
 
                 if (viewModel.editingBudget != null && viewModel.editingBudget!!.tagId != 0) {
                     val i = it.indexOfFirst { tag -> tag.id == viewModel.editingBudget!!.tagId }
-                    tagAutoComplete.setText(it[i].name, false)
+                    tagAutoComplete.setText(it[i].fullName, false)
                     viewModel.setTag(it[i])
                 }
             }

@@ -84,7 +84,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
                 calculateSums(value)
             }
         }
-        aggregateSubTags.observeForever { manageTagChange(_tags.value!!) }
+        aggregateSubTags.observeForever { refreshTags(_tags.value) }
     }
 
     // Methods
@@ -96,7 +96,20 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _isShowingExpenses.value = isExpenses
     }
 
-    private fun manageTagChange(tags: List<Tag>) {
+    private fun manageTagChange(tags: List<Tag>?) {
+        if (tags == null) {
+            return
+        }
+
+        tags.forEach { TagUtil.computeTagFullName(it) }
+        refreshTags(tags)
+    }
+
+    private fun refreshTags(tags: List<Tag>?) {
+        if (tags == null) {
+            return
+        }
+
         tags.let {
             _tagSums.clear()
             tags.forEach {
@@ -137,8 +150,8 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
         _tags.value?.forEach {
             val sum = _tagSums[it.id] ?: 0.0
             val percentage = if (generalSum != 0.0) sum * 100.0 / generalSum else 0.0
-            if (selectExpenses xor it.isIncome) {
-                items.add(TagTransactionsSum(it.id, it.name, it.color, sum, percentage))
+            if ((selectExpenses xor it.isIncome) && (it.parentTagId == 0 || !aggregateSubTags.value!!)) {
+                items.add(TagTransactionsSum(it.id, it.fullName, it.color, sum, percentage))
             }
 
             if (sum != 0.0) {
@@ -147,7 +160,7 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
 
-        _tagSumItems.value = items.toList()
+        _tagSumItems.value = items.sortedBy { it.name }
 
         dataSet = PieDataSet(entries, _setLabel)
         dataSet.colors = colors

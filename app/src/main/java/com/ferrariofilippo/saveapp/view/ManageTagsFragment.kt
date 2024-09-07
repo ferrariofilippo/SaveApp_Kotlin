@@ -76,14 +76,17 @@ class ManageTagsFragment : Fragment() {
     }
 
     private fun setupRecycler() {
-        val adapter = TagsAdapter(requireContext(), SpacingUtil.padding)
+        val adapter = TagsAdapter(SpacingUtil.padding)
 
         binding.tagsRecyclerView.adapter = adapter
         binding.tagsRecyclerView.layoutManager = LinearLayoutManager(context)
 
         viewModel.tags.observe(viewLifecycleOwner, Observer { tags ->
             tags?.let {
-                adapter.submitList(tags)
+                adapter.submitList(tags
+                    .onEach { TagUtil.computeTagFullName(it) }
+                    .sortedBy { it.fullName }
+                )
             }
         })
 

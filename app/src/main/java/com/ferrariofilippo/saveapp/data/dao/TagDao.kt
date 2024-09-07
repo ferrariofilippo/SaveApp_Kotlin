@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.data.dao
@@ -19,6 +19,9 @@ interface TagDao {
 
     @Query("SELECT * FROM tags WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): Tag?
+
+    @Query("SELECT * FROM tags WHERE parentTagId = :id")
+    suspend fun getChildren(id: Int): List<Tag>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tag: Tag)

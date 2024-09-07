@@ -26,8 +26,8 @@ import kotlinx.coroutines.runBlocking
 class NewTagFragment : Fragment() {
     private lateinit var viewModel: NewTagViewModel
 
-    private val _noneString = requireContext().getString(R.string.none)
-    private val _whiteColor = requireContext().getColor(R.color.white)
+    private lateinit var _noneString: String
+    private var _whiteColor: Int = 0
 
     private var _binding: FragmentNewTagBinding? = null
     private val binding get(): FragmentNewTagBinding = _binding!!
@@ -109,10 +109,13 @@ class NewTagFragment : Fragment() {
             if (it.isNotEmpty()) {
                 val tags = it.toMutableList()
                 if (viewModel.oldTag != null) {
+                    TagUtil.removeAllExpensesOrIncomes(tags, viewModel.oldTag!!.isIncome)
                     TagUtil.removeAllChildrenTags(tags, viewModel.oldTag!!)
                     tags.remove(viewModel.oldTag)
                 }
 
+                _noneString = requireContext().getString(R.string.none)
+                _whiteColor = requireContext().getColor(R.color.white)
                 tags.add(0, Tag(0, _noneString, _whiteColor, false))
 
                 val adapter = TagsDropdownAdapter(
@@ -133,18 +136,28 @@ class NewTagFragment : Fragment() {
                         viewModel.isIncomeTag.value = selection.isIncome
                     }
                 }
+
+                if (viewModel.oldTag != null && viewModel.oldTag!!.parentTagId != 0) {
+                    val i = it.indexOfFirst { tag -> tag.id == viewModel.oldTag!!.parentTagId }
+                    parentTagAutoComplete.setText(it[i].fullName, false)
+                    viewModel.parentTag = it[i]
+                }
             }
         })
     }
 
-
-
     private fun manageNameError() {
-        val res = requireContext().resources
+        val ctx = requireContext()
+        val res = ctx.resources
+        val name = viewModel.tagName.value
+        val fullName =
+            if (viewModel.parentTag == null) name
+            else String.format(ctx.getString(R.string.tag_complete_name), viewModel.parentTag!!.fullName, name ?: "")
 
-        if (viewModel.tagName.value == null || viewModel.tagName.value!!.isBlank()) {
+        @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+        if (name == null || name!!.isBlank()) {
             binding.tagNameInput.error = res.getString(R.string.name_error)
-        } else if (viewModel.tags.value?.indexOfFirst { it.name == viewModel.tagName.value } != -1) {
+        } else if (viewModel.tags.value?.indexOfFirst { it.fullName == fullName } != -1) {
             binding.tagNameInput.error = res.getString(R.string.name_already_used)
         } else {
             binding.tagNameInput.error = null

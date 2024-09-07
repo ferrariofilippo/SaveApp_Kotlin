@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.entities.Tag
-import com.ferrariofilippo.saveapp.util.ColorUtil
 
 class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Array<Tag>) :
     ArrayAdapter<Tag>(context, layoutId, items), Filterable {
@@ -45,9 +44,8 @@ class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Ar
         if (viewHolder != null) {
             val tag = getItem(position)
             if (tag != null) {
+                viewHolder.name.text = tag.fullName
                 viewHolder.pill.setColorFilter(tag.color)
-                viewHolder.name.text =
-                    String.format(context.getString(R.string.tag_complete_name), tag.path, tag.name)
             }
         }
 
@@ -57,7 +55,7 @@ class TagsDropdownAdapter(context: Context, layoutId: Int, private val items: Ar
     override fun getFilter(): Filter {
         val filter: Filter = object : Filter() {
             override fun convertResultToString(resultValue: Any?): CharSequence {
-                return (resultValue as Tag).name
+                return (resultValue as Tag).fullName
             }
 
             // All tags should always be visible. Do not filter them

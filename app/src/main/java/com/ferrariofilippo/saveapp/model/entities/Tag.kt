@@ -4,6 +4,7 @@
 package com.ferrariofilippo.saveapp.model.entities
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tags")
@@ -15,4 +16,6 @@ data class Tag(
     var parentTagId: Int = 0,
     var rootTagId: Int = 0,
     var path: String = ""
-)
+) {
+    @Ignore var fullName: String = ""
+}
