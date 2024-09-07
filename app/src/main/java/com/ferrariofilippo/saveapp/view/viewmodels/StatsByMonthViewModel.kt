@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -23,6 +24,25 @@ import java.time.LocalDate
 class StatsByMonthViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
+    // Observers
+    private val _yearObserver = Observer<String> { value ->
+        viewModelScope.launch {
+            updateTransactions(value)
+        }
+    }
+
+    private val _showExpensesObserver = Observer<Boolean> { value ->
+        _setLabel = if (value)
+            application.getString(R.string.expenses_by_month)
+        else
+            application.getString(R.string.incomes_by_month)
+
+        viewModelScope.launch {
+            updateTransactions(year.value!!)
+        }
+    }
+
+    // UI & Data
     private var _transactions: List<TaggedTransaction> = listOf()
 
     private val _monthSums: MutableList<Double> =
@@ -62,7 +82,8 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
         _app.getString(R.string.december_name)
     )
 
-    private val _monthSumItems: MutableLiveData<List<MonthTransactionsSum>> = MutableLiveData(listOf())
+    private val _monthSumItems: MutableLiveData<List<MonthTransactionsSum>> =
+        MutableLiveData(listOf())
     val monthSumItems get(): LiveData<List<MonthTransactionsSum>> = _monthSumItems
 
     private val _year: MutableLiveData<String> = MutableLiveData(LocalDate.now().year.toString())
@@ -79,21 +100,15 @@ class StatsByMonthViewModel(application: Application) : AndroidViewModel(applica
 
     init {
         initYears()
-        _year.observeForever { value ->
-            viewModelScope.launch {
-                updateTransactions(value)
-            }
-        }
-        _isShowingExpenses.observeForever { value ->
-            _setLabel = if (value)
-                application.getString(R.string.expenses_by_month)
-            else
-                application.getString(R.string.incomes_by_month)
+        _year.observeForever(_yearObserver)
+        _isShowingExpenses.observeForever(_showExpensesObserver)
+    }
 
-            viewModelScope.launch {
-                updateTransactions(year.value!!)
-            }
-        }
+    // Overrides
+    override fun onCleared() {
+        _year.removeObserver(_yearObserver)
+        _isShowingExpenses.removeObserver(_showExpensesObserver)
+        super.onCleared()
     }
 
     // Methods

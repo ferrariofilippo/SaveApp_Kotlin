@@ -5,8 +5,10 @@ package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -22,6 +24,26 @@ import java.time.LocalDate
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val saveAppApplication = application as SaveAppApplication
 
+    // Observers
+    private val _monthIncomesObserver =
+        Observer<Double> { _monthSummary.value = it - monthExpenses.value!! }
+
+    private val _monthExpensesObserver =
+        Observer<Double> { _monthSummary.value = monthIncomes.value!! - it }
+
+    private val _yearIncomesObserver =
+        Observer<Double> { _yearSummary.value = it - yearExpenses.value!! }
+
+    private val _yearExpensesObserver =
+        Observer<Double> { _yearSummary.value = yearIncomes.value!! - it }
+
+    private val _lifeIncomesObserver =
+        Observer<Double> { _lifeNetWorth.value = it - lifeExpenses.value!! }
+
+    private val _lifeExpensesObserver =
+        Observer<Double> { _lifeNetWorth.value = lifeIncomes.value!! - it }
+
+    // Data & UI
     private val tagRepository: TagRepository = saveAppApplication.tagRepository
 
     private val months: Map<Int, MutableLiveData<Double>> = StatsUtil.monthTags
@@ -81,6 +103,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _lifeHighestTagValue = MutableLiveData(-1.0)
     val lifeHighestTagValue: LiveData<Double> = _lifeHighestTagValue
 
+    private lateinit var _lifecycleOwner: LifecycleOwner
+
     init {
         viewModelScope.launch {
             SettingsUtil.getCurrency().collect {
@@ -91,7 +115,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         setupMonth()
         setupYear()
         setupLife()
+    }
 
+    // Overrides
+    override fun onCleared() {
+        monthExpenses.removeObserver(_monthExpensesObserver)
+        monthIncomes.removeObserver(_monthIncomesObserver)
+        yearExpenses.removeObserver(_yearExpensesObserver)
+        yearIncomes.removeObserver(_yearIncomesObserver)
+        lifeExpenses.removeObserver(_lifeExpensesObserver)
+        lifeIncomes.removeObserver(_lifeIncomesObserver)
+        super.onCleared()
+    }
+
+    // Methods
+    fun setLifecycleOwner(owner: LifecycleOwner) {
+        _lifecycleOwner = owner
         observeTags()
     }
 
@@ -113,12 +152,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupMonth() {
-        monthExpenses.observeForever {
-            _monthSummary.value = monthIncomes.value!! - it
-        }
-        monthIncomes.observeForever {
-            _monthSummary.value = it - monthExpenses.value!!
-        }
+        monthExpenses.observeForever(_monthExpensesObserver)
+        monthIncomes.observeForever(_monthIncomesObserver)
 
         runBlocking {
             for (i: Int in months.keys) {
@@ -132,12 +167,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupYear() {
-        yearExpenses.observeForever {
-            _yearSummary.value = yearIncomes.value!! - it
-        }
-        yearIncomes.observeForever {
-            _yearSummary.value = it - yearExpenses.value!!
-        }
+        yearExpenses.observeForever(_yearExpensesObserver)
+        yearIncomes.observeForever(_yearIncomesObserver)
 
         runBlocking {
             for (i: Int in years.keys) {
@@ -151,12 +182,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupLife() {
-        lifeExpenses.observeForever {
-            _lifeNetWorth.value = lifeIncomes.value!! - it
-        }
-        lifeIncomes.observeForever {
-            _lifeNetWorth.value = it - lifeExpenses.value!!
-        }
+        lifeExpenses.observeForever(_lifeExpensesObserver)
+        lifeIncomes.observeForever(_lifeIncomesObserver)
 
         runBlocking {
             for (i: Int in life.keys) {
@@ -171,7 +198,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun observeTags() {
         for (i: Int in months.keys) {
-            months[i]!!.observeForever {
+            months[i]!!.observe(_lifecycleOwner) {
                 if (it > _monthHighestTagValue.value!!) {
                     _monthHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _monthHighestTagValue.value = it
@@ -179,7 +206,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         for (i: Int in years.keys) {
-            years[i]!!.observeForever {
+            years[i]!!.observe(_lifecycleOwner) {
                 if (it > _yearHighestTagValue.value!!) {
                     _yearHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _yearHighestTagValue.value = it
@@ -187,7 +214,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         for (i: Int in life.keys) {
-            life[i]!!.observeForever {
+            life[i]!!.observe(_lifecycleOwner) {
                 if (it > lifeHighestTagValue.value!!) {
                     _lifeHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _lifeHighestTagValue.value = it

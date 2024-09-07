@@ -7,6 +7,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -24,6 +25,23 @@ import java.time.LocalDate
 class StatsByNameViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
+    // Observers
+    private val _queryObserver = Observer<String> { value ->
+        viewModelScope.launch {
+            updateStats(value)
+        }
+    }
+
+    private val _showSumsObserver = Observer<Boolean> { value ->
+        _graphTitle.value =
+            if (value) _app.getString(R.string.sums) else _app.getString(R.string.frequencies)
+
+        viewModelScope.launch {
+            updateStats(query.value!!)
+        }
+    }
+
+    // UI
     private val _months = arrayOf(
         _app.getString(R.string.january),
         _app.getString(R.string.february),
@@ -118,19 +136,15 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
             _symbol.value = Currencies.from(SettingsUtil.getCurrency().first()).toSymbol()
         }
 
-        query.observeForever { q ->
-            viewModelScope.launch {
-                updateStats(q)
-            }
-        }
-        _isShowingSums.observeForever { value ->
-            _graphTitle.value =
-                if (value) _app.getString(R.string.sums) else _app.getString(R.string.frequencies)
+        query.observeForever(_queryObserver)
+        _isShowingSums.observeForever(_showSumsObserver)
+    }
 
-            viewModelScope.launch {
-                updateStats(query.value!!)
-            }
-        }
+    // Overrides
+    override fun onCleared() {
+        query.removeObserver(_queryObserver)
+        _isShowingSums.removeObserver(_showSumsObserver)
+        super.onCleared()
     }
 
     // Methods
