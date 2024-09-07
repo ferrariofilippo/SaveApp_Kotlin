@@ -162,7 +162,7 @@
     <string name="name_already_used">Nome già in uso</string>
     <string name="tag_created">Tag creato.</string>
     <string name="tag_updated">Tag aggiornato.</string>
-    <string name="cannot_delete_tag">Impossibile eliminare il tag. Il tag è usato da altri dati.</string>
+    <string name="cannot_delete_tag_data">Impossibile eliminare il tag. Il tag è usato da altri dati.</string>
     <string name="tag_icon">Icona tag</string>
     <string name="download_transactions_template">Scarica il template per i movimenti</string>
     <string name="export_transactions">Esporta i movimenti</string>
@@ -234,4 +234,10 @@
     <string name="average_monthly_frequency">Frequenza media mensile</string>
     <string name="frequencies">Frequenze</string>
     <string name="sums">Somme</string>
+    <string name="none">Nessuno</string>
+    <string name="parent_tag">Tag genitore</string>
+    <string name="tag_complete_name">%s/%s</string>
+    <string name="aggregate_sub_tags">Aggrega sotto-tag</string>
+    <string name="cannot_delete_tag_children">Impossibile eliminare il tag. Esistono dei sotto-tag.</string>
+    <string name="cannot_delete_tag">Impossibile eliminare il tag.</string>
 </resources>

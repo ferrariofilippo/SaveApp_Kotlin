@@ -12,6 +12,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
+import com.ferrariofilippo.saveapp.util.TagUtil
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -61,9 +62,14 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     fun requireUpdate() {
         if (updateRequired) {
             viewModelScope.launch {
-                _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
+                _transactions.value =
+                    transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
                 showEmptyMessage.value = _transactions.value?.size == 0
-                tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
+                tags.value = saveAppApplication.tagRepository.allTags
+                    .first()
+                    .onEach { TagUtil.computeTagFullName(it) }
+                    .sortedBy { it.fullName }
+                    .toTypedArray()
             }
             updateRequired = true
         }

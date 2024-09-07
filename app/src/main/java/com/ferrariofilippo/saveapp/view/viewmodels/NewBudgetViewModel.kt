@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -20,6 +20,7 @@ import com.ferrariofilippo.saveapp.model.entities.Tag
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -60,7 +61,11 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
 
     init {
         viewModelScope.launch {
-            tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
+            tags.value = saveAppApplication.tagRepository.allTags
+                .first()
+                .onEach { TagUtil.computeTagFullName(it) }
+                .sortedBy { it.fullName }
+                .toTypedArray()
         }
     }
 

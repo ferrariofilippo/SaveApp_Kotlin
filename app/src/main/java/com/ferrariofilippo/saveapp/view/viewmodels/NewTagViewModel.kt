@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -34,21 +34,41 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
 
     var oldTag: Tag? = null
 
+    var parentTag: Tag? = null
+
     var onNameChanged: () -> Unit = { }
 
     init {
         viewModelScope.launch {
-            tags.value = saveAppApplication.tagRepository.allTags.first() ?: listOf()
+            @Suppress("UNNECESSARY_SAFE_CALL")
+            tags.value = saveAppApplication.tagRepository.allTags
+                .first()
+                ?.onEach { TagUtil.computeTagFullName(it) }
+                ?.sortedBy { it.fullName } ?: listOf()
         }
     }
 
     fun insert() = viewModelScope.launch {
         if (tagName.value != null && tagName.value!!.isNotBlank()) {
+            val parentTagId = parentTag?.id ?: 0
+            val rootTagId =
+                if (parentTag == null) 0
+                else if (parentTag?.rootTagId == 0) parentTag!!.id
+                else parentTag!!.rootTagId
+
+            val path =
+                if (parentTagId == 0) ""
+                else if (parentTag!!.path.isBlank()) parentTag!!.name
+                else "${parentTag!!.path}/${parentTag!!.name}"
+
             val tag = Tag(
                 oldTag?.id ?: 0,
                 tagName.value!!,
                 tagColor.value ?: defaultColor,
-                isIncomeTag.value!!
+                isIncomeTag.value!!,
+                parentTagId,
+                rootTagId,
+                path
             )
 
             if (tag.id == 0) {
@@ -56,6 +76,12 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
                 TagUtil.updateAll(saveAppApplication)
             } else {
                 saveAppApplication.tagRepository.update(tag)
+                if (oldTag != null && tag.parentTagId != oldTag!!.parentTagId) {
+                    val copyOfTags = tags.value!!.toMutableList()
+                    copyOfTags.remove(oldTag)
+                    copyOfTags.add(tag)
+                    updateChildren(copyOfTags, tag)
+                }
             }
 
             val activity = saveAppApplication.getCurrentActivity() as MainActivity
@@ -67,6 +93,21 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
             ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
         } else {
             onNameChanged()
+        }
+    }
+
+    private suspend fun updateChildren(tagsList: MutableList<Tag>, parent: Tag) {
+        TagUtil.computeTagFullName(parent)
+        var i = 0
+        while (i < tagsList.size) {
+            if (tagsList[i].parentTagId == parent.id) {
+                val child = tagsList.removeAt(i)
+                child.path = parent.fullName
+                saveAppApplication.tagRepository.update(child)
+                updateChildren(tagsList, child)
+            } else {
+                ++i
+            }
         }
     }
 }

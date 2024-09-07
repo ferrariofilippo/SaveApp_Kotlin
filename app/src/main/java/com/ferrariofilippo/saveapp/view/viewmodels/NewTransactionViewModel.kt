@@ -27,13 +27,15 @@ import com.ferrariofilippo.saveapp.util.CurrencyUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
+import com.ferrariofilippo.saveapp.util.TagUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
-class NewTransactionViewModel(application: Application) : AndroidViewModel(application), Observable {
+class NewTransactionViewModel(application: Application) : AndroidViewModel(application),
+    Observable {
     private val saveAppApplication = application as SaveAppApplication
 
     private val transactionRepository = saveAppApplication.transactionRepository
@@ -74,8 +76,12 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
 
     init {
         viewModelScope.launch {
-            tags.value = saveAppApplication.tagRepository.allTags.first().toTypedArray()
             budgets.value = saveAppApplication.budgetRepository.allBudgets.first().toTypedArray()
+            tags.value = saveAppApplication.tagRepository.allTags
+                .first()
+                .onEach { TagUtil.computeTagFullName(it) }
+                .sortedBy { it.fullName }
+                .toTypedArray()
         }
     }
 
@@ -287,7 +293,8 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
         }
 
         if (budgetId != 0) {
-            val result = BudgetUtil.tryAddTransactionToBudget(transaction, editingTransaction != null)
+            val result =
+                BudgetUtil.tryAddTransactionToBudget(transaction, editingTransaction != null)
             if (result != AddToBudgetResult.SUCCEEDED) {
                 handleAddBudgetResult(result)
                 return false

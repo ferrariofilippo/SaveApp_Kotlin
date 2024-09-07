@@ -37,13 +37,22 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/subscriptionSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagInput"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:checked="@={vm.aggregateSubTags}"
+                android:text="@string/aggregate_sub_tags" />
+
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/byTagTypeToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="8dp"
                 app:selectionRequired="true"
                 app:singleSelection="true">
 

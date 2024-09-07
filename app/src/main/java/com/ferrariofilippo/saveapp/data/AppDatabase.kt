@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [Budget::class, Transaction::class, Subscription::class, Tag::class],
-    version = 4
+    version = 5
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
@@ -157,6 +157,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE tags ADD COLUMN parentTagId INTEGER DEFAULT 0 NOT NULL")
+                db.execSQL("ALTER TABLE tags ADD COLUMN rootTagId INTEGER DEFAULT 0 NOT NULL")
+                db.execSQL("ALTER TABLE tags ADD COLUMN path TEXT DEFAULT '' NOT NULL")
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -171,7 +179,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     DB_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .addCallback(AppDatabaseCallback(scope, context))
                     .build()
 

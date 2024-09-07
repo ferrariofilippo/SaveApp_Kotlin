@@ -3,7 +3,6 @@
 
 package com.ferrariofilippo.saveapp.view.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +14,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.entities.Tag
-import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.divider.MaterialDivider
 
-class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
+class TagsAdapter(private val padding: Array<Int>) :
     ListAdapter<Tag, TagsAdapter.TagViewHolder>(TagsComparator()) {
     // Overrides
     override fun onBindViewHolder(holder: TagViewHolder, position: Int) {
@@ -26,7 +24,7 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
-        return TagViewHolder.create(parent, ctx, padding)
+        return TagViewHolder.create(parent, padding)
     }
 
     // Methods
@@ -35,7 +33,7 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
     }
 
     // Inner classes
-    class TagViewHolder(itemView: View, private val ctx: Context, padding: Array<Int>) :
+    class TagViewHolder(itemView: View, padding: Array<Int>) :
         RecyclerView.ViewHolder(itemView) {
         private val container = itemView.findViewById<RelativeLayout>(R.id.tagContainer)
         private val divider = itemView.findViewById<MaterialDivider>(R.id.tagsDivider)
@@ -50,25 +48,25 @@ class TagsAdapter(private val ctx: Context, private val padding: Array<Int>) :
         }
 
         fun bind(item: Tag) {
-            tagNameItemView.text = item.name
+            tagNameItemView.text = item.fullName
             tagPillItemView.setColorFilter(item.color)
         }
 
         companion object {
-            fun create(parent: ViewGroup, ctx: Context, padding: Array<Int>): TagViewHolder {
+            fun create(parent: ViewGroup, padding: Array<Int>): TagViewHolder {
                 val view: View =
                     LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.tag_item, parent, false)
 
-                return TagViewHolder(view, ctx, padding)
+                return TagViewHolder(view, padding)
             }
         }
     }
 
     class TagsComparator : DiffUtil.ItemCallback<Tag>() {
         override fun areContentsTheSame(oldItem: Tag, newItem: Tag): Boolean {
-            return oldItem.name == newItem.name && oldItem.color == newItem.color
+            return oldItem.fullName == newItem.fullName && oldItem.color == newItem.color
         }
 
         override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {

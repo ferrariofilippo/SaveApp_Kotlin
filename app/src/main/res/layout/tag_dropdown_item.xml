@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+
+<!-- Copyright (c) 2024 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/tag_pill"
-        android:ellipsize="end"
+        android:ellipsize="middle"
         android:maxLines="1"
         android:paddingVertical="8dp"
         android:text="@string/tag_hint"
