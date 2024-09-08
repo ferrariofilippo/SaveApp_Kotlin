@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.enums.Currencies
@@ -21,6 +22,13 @@ object SettingsUtil {
     private val DEFAULT_CURRENCY = intPreferencesKey("default_currency")
     private val LAST_BACKUP_TIME_STAMP = stringPreferencesKey("last_backup_time_stamp")
     private val USE_COMPACT_MODE = booleanPreferencesKey("use_compact_mode")
+    private val SUMMARY_INTEGRITY_CHECK_INTERVAL =
+        longPreferencesKey("summary_integrity_check_interval")
+    private val PERIODIC_BACKUP_VISIBLE = booleanPreferencesKey("periodic_backup_visible")
+    private val PERIODIC_BACKUP_UPLOAD = booleanPreferencesKey("periodic_backup_upload")
+    private val PERIODIC_BACKUP_INTERVAL = longPreferencesKey("periodic_backup_interval")
+    private val PERIODIC_BACKUP_REQUIRES_WIFI =
+        booleanPreferencesKey("periodic_backup_requires_wifi")
 
     private var settingsStore: DataStore<Preferences>? = null
 
@@ -81,6 +89,86 @@ object SettingsUtil {
             }
             .map { preferences ->
                 preferences[USE_COMPACT_MODE] ?: false
+            }
+    }
+
+    suspend fun setSummaryIntegrityCheckInterval(interval: Long) {
+        settingsStore!!.edit { pref ->
+            pref[SUMMARY_INTEGRITY_CHECK_INTERVAL] = interval
+        }
+    }
+
+    fun getSummaryIntegrityCheckInterval(): Flow<Long> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[SUMMARY_INTEGRITY_CHECK_INTERVAL] ?: (24 * 60)
+            }
+    }
+
+    suspend fun setPeriodicBackupVisible(enable: Boolean) {
+        settingsStore!!.edit { pref ->
+            pref[PERIODIC_BACKUP_VISIBLE] = enable
+        }
+    }
+
+    fun getPeriodicBackupVisible(): Flow<Boolean> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[PERIODIC_BACKUP_VISIBLE] ?: false
+            }
+    }
+
+    suspend fun setPeriodicBackupUpload(enable: Boolean) {
+        settingsStore!!.edit { pref ->
+            pref[PERIODIC_BACKUP_UPLOAD] = enable
+        }
+    }
+
+    fun getPeriodicBackupUpload(): Flow<Boolean> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[PERIODIC_BACKUP_UPLOAD] ?: false
+            }
+    }
+
+    suspend fun setPeriodicBackupInterval(interval: Long) {
+        settingsStore!!.edit { pref ->
+            pref[PERIODIC_BACKUP_INTERVAL] = interval
+        }
+    }
+
+    fun getPeriodicBackupInterval(): Flow<Long> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[PERIODIC_BACKUP_INTERVAL] ?: (7 * 24 * 60)
+            }
+    }
+
+    suspend fun setPeriodicBackupRequiresWiFi(requireWiFi: Boolean) {
+        settingsStore!!.edit { pref ->
+            pref[PERIODIC_BACKUP_REQUIRES_WIFI] = requireWiFi
+        }
+    }
+
+    fun getPeriodicBackupRequiresWiFi(): Flow<Boolean> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[PERIODIC_BACKUP_REQUIRES_WIFI] ?: true
             }
     }
 }

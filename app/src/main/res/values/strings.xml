@@ -240,4 +240,16 @@
     <string name="aggregate_sub_tags">Aggregate sub-tags</string>
     <string name="cannot_delete_tag_children">Cannot delete the tag. There is a sub-tag.</string>
     <string name="cannot_delete_tag">Cannot delete the tag.</string>
+    <string name="enable_periodic_backups">Enable periodic backups</string>
+    <string name="require_wifi">Use Wi-Fi to upload backups</string>
+    <string name="interval">Interval</string>
+    <string name="DAILY">Daily</string>
+    <string name="TWO_DAYS">48 hours</string>
+    <string name="TWO_WEEKS">Bi-weekly</string>
+    <string name="check_integrity_now">Check integrity now</string>
+    <string name="integrity_check_interval">Integrity check interval</string>
+    <string name="integrity_check_description">
+        SaveApp periodically runs an integrity check of statistics to ensure they are synced
+        (Internet connection NOT needed).
+    </string>
 </resources>

@@ -7,6 +7,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -21,6 +22,12 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     private val saveAppApplication = application as SaveAppApplication
 
     private val transactionRepo = saveAppApplication.transactionRepository
+
+    private val _yearObserver = Observer<Int> { _ ->
+        viewModelScope.launch {
+            updateTransactions()
+        }
+    }
 
     private var updateRequired: Boolean = true
 
@@ -47,13 +54,16 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
     init {
         requireUpdate()
 
-        year.observeForever {
-            viewModelScope.launch {
-                updateTransactions()
-            }
-        }
+        year.observeForever(_yearObserver)
     }
 
+    // Overrides
+    override fun onCleared() {
+        year.removeObserver(_yearObserver)
+        super.onCleared()
+    }
+
+    // Methods
     suspend fun updateTransactions() {
         _transactions.value = transactionRepo.getAllTaggedByYearSorted(year.value!!.toString())
         showEmptyMessage.value = _transactions.value?.size == 0

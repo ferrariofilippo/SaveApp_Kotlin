@@ -240,4 +240,16 @@
     <string name="aggregate_sub_tags">Aggrega sotto-tag</string>
     <string name="cannot_delete_tag_children">Impossibile eliminare il tag. Esistono dei sotto-tag.</string>
     <string name="cannot_delete_tag">Impossibile eliminare il tag.</string>
+    <string name="enable_periodic_backups">Attiva backup periodici</string>
+    <string name="require_wifi">Usa il Wi-Fi per caricare i backup</string>
+    <string name="interval">Periodicità</string>
+    <string name="DAILY">Quotidianamente</string>
+    <string name="TWO_DAYS">48 ore</string>
+    <string name="TWO_WEEKS">Bisettimanale</string>
+    <string name="check_integrity_now">Verifica integrità ora</string>
+    <string name="integrity_check_interval">Periodicità verifiche integrità</string>
+    <string name="integrity_check_description">
+        SaveApp esegue periodicamente una verifica dell\'integrità delle statistiche per sincronizzarle
+        (NON è necessaria una connessione a Internet).
+    </string>
 </resources>

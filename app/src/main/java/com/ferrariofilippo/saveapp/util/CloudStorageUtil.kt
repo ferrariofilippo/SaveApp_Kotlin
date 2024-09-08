@@ -7,16 +7,23 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.result.IntentSenderRequest
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import androidx.work.await
 import androidx.work.workDataOf
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.data.AppDatabase
+import com.ferrariofilippo.saveapp.model.SummaryStatistics
+import com.ferrariofilippo.saveapp.util.TimeUtil.getInitialDelay
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageDataViewModel
 import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveDownloadWorker
+import com.ferrariofilippo.saveapp.workers.cloud.GoogleDrivePeriodicUploadWorker
 import com.ferrariofilippo.saveapp.workers.cloud.GoogleDriveUploadWorker
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
@@ -24,9 +31,12 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.Scope
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
+import kotlinx.coroutines.flow.first
+import java.util.concurrent.TimeUnit
 
 object CloudStorageUtil {
     private const val CLASS_NAME = "CloudStorageUtil"
+    private const val PERIODIC_BACKUP_TAG = "periodic_backup_upload"
 
     private fun displayError(activity: Activity?, messageId: Int) {
         if (activity == null)
@@ -44,8 +54,7 @@ object CloudStorageUtil {
         if (result.hasResolution() && result.pendingIntent != null) {
             try {
                 val intentSenderRequest =
-                    IntentSenderRequest.Builder(result.pendingIntent!!.intentSender)
-                        .build()
+                    IntentSenderRequest.Builder(result.pendingIntent!!.intentSender).build()
                 (app.getCurrentActivity() as MainActivity).downloadBackupFromDrive.launch(
                     intentSenderRequest
                 )
@@ -68,8 +77,7 @@ object CloudStorageUtil {
         if (result.hasResolution() && result.pendingIntent != null) {
             try {
                 val intentSenderRequest =
-                    IntentSenderRequest.Builder(result.pendingIntent!!.intentSender)
-                        .build()
+                    IntentSenderRequest.Builder(result.pendingIntent!!.intentSender).build()
                 (app.getCurrentActivity() as MainActivity).uploadBackupToDrive.launch(
                     intentSenderRequest
                 )
@@ -99,7 +107,7 @@ object CloudStorageUtil {
                         "WAL_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-wal").absolutePath,
                         "SHM_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-shm").absolutePath,
                         "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.SETTINGS_FILE_NAME}.preferences_pb",
-                        "STATS_PATH" to "$filesDirPath/${StatsUtil.FILE_NAME}"
+                        "STATS_PATH" to "$filesDirPath/${SummaryStatistics.FILE_NAME}"
                     )
                 )
                 .build()
@@ -120,7 +128,7 @@ object CloudStorageUtil {
                         "WAL_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-wal").absolutePath,
                         "SHM_PATH" to app.getDatabasePath("${AppDatabase.DB_NAME}-shm").absolutePath,
                         "SETTINGS_PATH" to "$filesDirPath/datastore/${SaveAppApplication.SETTINGS_FILE_NAME}.preferences_pb",
-                        "STATS_PATH" to "$filesDirPath/${StatsUtil.FILE_NAME}"
+                        "STATS_PATH" to "$filesDirPath/${SummaryStatistics.FILE_NAME}"
                     )
                 )
                 .build()
@@ -151,5 +159,35 @@ object CloudStorageUtil {
                 }
                 LogUtil.logException(it, CLASS_NAME, "addOnFailureListener")
             }
+    }
+
+    suspend fun updateScheduledBackupUpload(app: SaveAppApplication) {
+        val wManager = WorkManager.getInstance(app)
+        wManager.cancelAllWorkByTag(PERIODIC_BACKUP_TAG).await()
+        LogUtil.logInfo(CLASS_NAME, "updateScheduledBackupUpload", "Periodic backup canceled")
+
+        if (!SettingsUtil.getPeriodicBackupUpload().first()) {
+            return
+        }
+
+        val interval = SettingsUtil.getPeriodicBackupInterval().first().toLong()
+        val requiresWiFi = SettingsUtil.getPeriodicBackupRequiresWiFi().first()
+        val constraints = Constraints
+            .Builder()
+            .setRequiresDeviceIdle(true)
+            .setRequiredNetworkType(if (requiresWiFi) NetworkType.UNMETERED else NetworkType.CONNECTED)
+            .build()
+
+        val periodicBackupUpload = PeriodicWorkRequestBuilder<GoogleDrivePeriodicUploadWorker>(
+            interval,
+            TimeUnit.MINUTES
+        )
+            .addTag(PERIODIC_BACKUP_TAG)
+            .setConstraints(constraints)
+            .setInitialDelay(getInitialDelay(3), TimeUnit.MINUTES)
+            .build()
+
+        wManager.enqueue(periodicBackupUpload)
+        LogUtil.logInfo(CLASS_NAME, "updateScheduledBackupUpload", "Periodic backup started")
     }
 }

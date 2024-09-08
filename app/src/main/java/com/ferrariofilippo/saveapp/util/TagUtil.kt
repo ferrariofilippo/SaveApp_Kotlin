@@ -5,6 +5,7 @@ package com.ferrariofilippo.saveapp.util
 
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.entities.Tag
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 object TagUtil {
@@ -13,6 +14,8 @@ object TagUtil {
     private var _tags: MutableList<Tag> = mutableListOf()
     private var _tagIdToRootId: MutableMap<Int, Int> = mutableMapOf()
     val incomeTagIds: MutableSet<Int> = mutableSetOf()
+
+    val tagsCount get() = _tags.size
 
     fun setNameTemplate(template: String) {
         _tagNameTemplate = template
@@ -32,6 +35,21 @@ object TagUtil {
                         incomeTagIds.add(tag.id)
                     }
                 }
+            }
+        }
+    }
+
+    suspend fun updateNow(application: SaveAppApplication) {
+        incomeTagIds.clear()
+        _tags.clear()
+        val tags = application.tagRepository.allTags.first()
+        _tags.clear()
+        _tags.addAll(tags)
+        _tagIdToRootId.clear()
+        incomeTagIds.clear()
+        tags.forEach { tag ->
+            if (tag.isIncome) {
+                incomeTagIds.add(tag.id)
             }
         }
     }

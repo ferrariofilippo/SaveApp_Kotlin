@@ -7,6 +7,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -22,11 +23,43 @@ import java.time.LocalDate
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val saveAppApplication = application as SaveAppApplication
 
+    // Observers
+    private val _mapsChangedObserver = Observer<Boolean> {
+        clearTagsObservers()
+        months = StatsUtil.monthTags
+        years = StatsUtil.yearTags
+        life = StatsUtil.lifeTags
+        observeTags()
+    }
+
+    private val _monthIncomesObserver =
+        Observer<Double> { _monthSummary.value = it - monthExpenses.value!! }
+
+    private val _monthExpensesObserver =
+        Observer<Double> { _monthSummary.value = monthIncomes.value!! - it }
+
+    private val _yearIncomesObserver =
+        Observer<Double> { _yearSummary.value = it - yearExpenses.value!! }
+
+    private val _yearExpensesObserver =
+        Observer<Double> { _yearSummary.value = yearIncomes.value!! - it }
+
+    private val _lifeIncomesObserver =
+        Observer<Double> { _lifeNetWorth.value = it - lifeExpenses.value!! }
+
+    private val _lifeExpensesObserver =
+        Observer<Double> { _lifeNetWorth.value = lifeIncomes.value!! - it }
+
+    private val _monthObservers = mutableMapOf<Int, Observer<Double>>()
+    private val _yearObservers = mutableMapOf<Int, Observer<Double>>()
+    private val _lifeObservers = mutableMapOf<Int, Observer<Double>>()
+
+    // Data & UI
     private val tagRepository: TagRepository = saveAppApplication.tagRepository
 
-    private val months: Map<Int, MutableLiveData<Double>> = StatsUtil.monthTags
-    private val years: Map<Int, MutableLiveData<Double>> = StatsUtil.yearTags
-    private val life: Map<Int, MutableLiveData<Double>> = StatsUtil.lifeTags
+    private var months: Map<Int, MutableLiveData<Double>> = StatsUtil.monthTags
+    private var years: Map<Int, MutableLiveData<Double>> = StatsUtil.yearTags
+    private var life: Map<Int, MutableLiveData<Double>> = StatsUtil.lifeTags
 
     private val defaultTag: Tag = Tag(0, "", R.color.emerald_500, false)
 
@@ -92,9 +125,24 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         setupYear()
         setupLife()
 
+        StatsUtil.mapsChangedFlipFlop.observeForever(_mapsChangedObserver)
         observeTags()
     }
 
+    // Overrides
+    override fun onCleared() {
+        monthExpenses.removeObserver(_monthExpensesObserver)
+        monthIncomes.removeObserver(_monthIncomesObserver)
+        yearExpenses.removeObserver(_yearExpensesObserver)
+        yearIncomes.removeObserver(_yearIncomesObserver)
+        lifeExpenses.removeObserver(_lifeExpensesObserver)
+        lifeIncomes.removeObserver(_lifeIncomesObserver)
+        StatsUtil.mapsChangedFlipFlop.removeObserver(_mapsChangedObserver)
+        clearTagsObservers()
+        super.onCleared()
+    }
+
+    // Methods
     private fun setMonth(): String {
         return when (LocalDate.now().monthValue) {
             1 -> saveAppApplication.getString(R.string.january)
@@ -113,12 +161,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupMonth() {
-        monthExpenses.observeForever {
-            _monthSummary.value = monthIncomes.value!! - it
-        }
-        monthIncomes.observeForever {
-            _monthSummary.value = it - monthExpenses.value!!
-        }
+        monthExpenses.observeForever(_monthExpensesObserver)
+        monthIncomes.observeForever(_monthIncomesObserver)
 
         runBlocking {
             for (i: Int in months.keys) {
@@ -132,12 +176,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupYear() {
-        yearExpenses.observeForever {
-            _yearSummary.value = yearIncomes.value!! - it
-        }
-        yearIncomes.observeForever {
-            _yearSummary.value = it - yearExpenses.value!!
-        }
+        yearExpenses.observeForever(_yearExpensesObserver)
+        yearIncomes.observeForever(_yearIncomesObserver)
 
         runBlocking {
             for (i: Int in years.keys) {
@@ -151,12 +191,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupLife() {
-        lifeExpenses.observeForever {
-            _lifeNetWorth.value = lifeIncomes.value!! - it
-        }
-        lifeIncomes.observeForever {
-            _lifeNetWorth.value = it - lifeExpenses.value!!
-        }
+        lifeExpenses.observeForever(_lifeExpensesObserver)
+        lifeIncomes.observeForever(_lifeIncomesObserver)
 
         runBlocking {
             for (i: Int in life.keys) {
@@ -169,30 +205,48 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    private fun clearTagsObservers() {
+        for (i in _monthObservers.keys) {
+            months[i]!!.removeObserver(_monthObservers[i]!!)
+        }
+        for (i in _yearObservers.keys) {
+            years[i]!!.removeObserver(_yearObservers[i]!!)
+        }
+        for (i in _lifeObservers.keys) {
+            life[i]!!.removeObserver(_lifeObservers[i]!!)
+        }
+        _monthObservers.clear()
+        _yearObservers.clear()
+        _lifeObservers.clear()
+    }
+
     private fun observeTags() {
         for (i: Int in months.keys) {
-            months[i]!!.observeForever {
+            _monthObservers[i] = Observer {
                 if (it > _monthHighestTagValue.value!!) {
                     _monthHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _monthHighestTagValue.value = it
                 }
             }
+            months[i]!!.observeForever(_monthObservers[i]!!)
         }
         for (i: Int in years.keys) {
-            years[i]!!.observeForever {
+            _yearObservers[i] = Observer {
                 if (it > _yearHighestTagValue.value!!) {
                     _yearHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _yearHighestTagValue.value = it
                 }
             }
+            years[i]!!.observeForever(_yearObservers[i]!!)
         }
         for (i: Int in life.keys) {
-            life[i]!!.observeForever {
+            _lifeObservers[i] = Observer {
                 if (it > lifeHighestTagValue.value!!) {
                     _lifeHighestTag.value = runBlocking { tagRepository.getById(i) }
                     _lifeHighestTagValue.value = it
                 }
             }
+            life[i]!!.observeForever(_lifeObservers[i]!!)
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters
 import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.util.LogUtil
+import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageDataViewModel
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -110,6 +111,8 @@ class GoogleDriveDownloadWorker(context: Context, params: WorkerParameters) :
             LogUtil.logException(e, className, "doWork")
             return Result.failure()
         }
+
+        SettingsUtil.setPeriodicBackupVisible(true)
 
         handler.post {
             ManageDataViewModel.setAreBackupButtonsEnabled(true)

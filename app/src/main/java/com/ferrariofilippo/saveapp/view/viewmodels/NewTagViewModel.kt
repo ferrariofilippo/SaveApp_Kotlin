@@ -80,7 +80,7 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
                     val copyOfTags = tags.value!!.toMutableList()
                     copyOfTags.remove(oldTag)
                     copyOfTags.add(tag)
-                    updateChildren(copyOfTags, tag)
+                    updateChildren(copyOfTags, tag, if (rootTagId == 0) tag.id else rootTagId)
                 }
             }
 
@@ -96,15 +96,16 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private suspend fun updateChildren(tagsList: MutableList<Tag>, parent: Tag) {
+    private suspend fun updateChildren(tagsList: MutableList<Tag>, parent: Tag, rootId: Int) {
         TagUtil.computeTagFullName(parent)
         var i = 0
         while (i < tagsList.size) {
             if (tagsList[i].parentTagId == parent.id) {
                 val child = tagsList.removeAt(i)
                 child.path = parent.fullName
+                child.rootTagId = rootId
                 saveAppApplication.tagRepository.update(child)
-                updateChildren(tagsList, child)
+                updateChildren(tagsList, child, rootId)
             } else {
                 ++i
             }

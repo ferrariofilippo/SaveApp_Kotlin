@@ -17,6 +17,15 @@ import com.ferrariofilippo.saveapp.util.TagUtil
 class StatsByYearViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
+    private val _transactionsObserver = Observer<List<TaggedTransaction>> { value ->
+        _expensesByYear.keys.forEach {
+            _expensesByYear[it] = 0.0
+            _incomesByYear[it] = 0.0
+        }
+        calculateSums(value)
+        updateEntries()
+    }
+
     private val _transactions: LiveData<List<TaggedTransaction>> =
         _app.transactionRepository.allTaggedTransactions.asLiveData()
 
@@ -27,23 +36,21 @@ class StatsByYearViewModel(application: Application) : AndroidViewModel(applicat
     val yearStatsItems get(): LiveData<List<YearStats>> = _yearStatsItems
 
     init {
-        _transactions.observeForever(Observer { transactions ->
-            _expensesByYear.keys.forEach {
-                _expensesByYear[it] = 0.0
-                _incomesByYear[it] = 0.0
-            }
-            transactions?.let {
-                calculateSums(transactions)
-            }
-            updateEntries()
-        })
+        _transactions.observeForever(_transactionsObserver)
+    }
+
+    // Overrides
+    override fun onCleared() {
+        _transactions.removeObserver(_transactionsObserver)
+        super.onCleared()
     }
 
     // Methods
     private fun calculateSums(transactions: List<TaggedTransaction>) {
         transactions.forEach {
             val year = it.date.year
-            val multipliers = if (TagUtil.incomeTagIds.contains(it.tagId)) listOf(0.0, 1.0) else listOf(1.0, 0.0)
+            val multipliers =
+                if (TagUtil.incomeTagIds.contains(it.tagId)) listOf(0.0, 1.0) else listOf(1.0, 0.0)
 
             _expensesByYear[year] = (_expensesByYear[year] ?: 0.0) + (it.amount * multipliers[0])
             _incomesByYear[year] = (_incomesByYear[year] ?: 0.0) + (it.amount * multipliers[1])
