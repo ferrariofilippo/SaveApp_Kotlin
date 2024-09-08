@@ -23,8 +23,8 @@ object LogUtil {
                 .now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             val formattedType = type.padEnd(7, ' ').substring(0, 7)
-            val formattedClassName = className.padEnd(20, ' ').substring(0, 20)
-            val formattedMethodName = methodName.padEnd(20, ' ').substring(0, 20)
+            val formattedClassName = className.padEnd(30, ' ').substring(0, 30)
+            val formattedMethodName = methodName.padEnd(30, ' ').substring(0, 30)
             FileWriter(_logFilePath, true).use {
                 it.write("$timeStamp|$formattedType|$formattedClassName|$formattedMethodName|${args[0]}\n")
                 for (i in 1..<args.size) {
@@ -72,7 +72,7 @@ object LogUtil {
     fun clearLogs() {
         try {
             FileWriter(_logFilePath, false).use {
-                it.write("")
+                it.write("\n\r")
                 it.flush()
             }
         } catch (_: IOException) {

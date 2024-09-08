@@ -199,6 +199,7 @@ class MainActivity : AppCompatActivity() {
 
         saveApp.setCurrentActivity(this)
 
+        lifecycleScope.launch { StatsUtil.startIntegrityCheckInterval(saveApp) }
         lifecycleScope.launch { SubscriptionUtil.validateSubscriptions(saveApp) }
         lifecycleScope.launch { CurrencyUtil.init() }
 
