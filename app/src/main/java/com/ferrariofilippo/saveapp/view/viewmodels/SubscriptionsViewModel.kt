@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Filippo Ferrario
+// Copyright (c) 2024 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -7,6 +7,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.enums.Currencies
@@ -14,6 +15,20 @@ import com.ferrariofilippo.saveapp.model.taggeditems.TaggedSubscription
 
 class SubscriptionsViewModel(application: Application) : AndroidViewModel(application) {
     private val subscriptionRepository = (application as SaveAppApplication).subscriptionRepository
+
+    private val _subscriptionsObserver = Observer<List<TaggedSubscription>> { value ->
+        value.let {
+            _activeSubscriptionsCount.value = value.size
+
+            var sum = 0.0
+            value.forEach {
+                sum += it.amount * it.renewalType.multiplier
+            }
+
+            _monthlyExpense.value = sum / 12.0
+            _yearlyExpense.value = sum
+        }
+    }
 
     val subscriptions: LiveData<List<TaggedSubscription>> =
         subscriptionRepository.allTaggedSubscriptions.asLiveData()
@@ -31,19 +46,13 @@ class SubscriptionsViewModel(application: Application) : AndroidViewModel(applic
     val yearlyExpense: LiveData<Double> = _yearlyExpense
 
     init {
-        subscriptions.observeForever { subscriptions ->
-            subscriptions.let {
-                _activeSubscriptionsCount.value = subscriptions.size
+        subscriptions.observeForever(_subscriptionsObserver)
+    }
 
-                var sum = 0.0
-                subscriptions.forEach {
-                    sum += it.amount * it.renewalType.multiplier
-                }
-
-                _monthlyExpense.value = sum / 12.0
-                _yearlyExpense.value = sum
-            }
-        }
+    // Overrides
+    override fun onCleared() {
+        subscriptions.removeObserver(_subscriptionsObserver)
+        super.onCleared()
     }
 
     // Methods

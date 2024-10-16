@@ -19,6 +19,11 @@ class TransactionRepository(private val transactionDao: TransactionDao) {
     }
 
     @WorkerThread
+    suspend fun getWindowAfterDate(date: String): List<Transaction> {
+        return transactionDao.getWindowAfterDate(date)
+    }
+
+    @WorkerThread
     suspend fun getAllTaggedByYear(year: String): List<TaggedTransaction> {
         return transactionDao.getAllTaggedByYear(year)
     }

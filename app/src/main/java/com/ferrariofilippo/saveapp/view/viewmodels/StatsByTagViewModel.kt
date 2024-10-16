@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
@@ -25,6 +26,42 @@ import java.time.LocalDate
 class StatsByTagViewModel(application: Application) : AndroidViewModel(application) {
     private val _app = application as SaveAppApplication
 
+    // Observers
+    private val _tagsObserver = Observer<List<Tag>> { value -> manageTagChange(value) }
+
+    private val _yearObserver = Observer<String> { value ->
+        viewModelScope.launch {
+            _transactions = _app.transactionRepository.getAllTaggedByYear(value)
+            _showEmptyMessage.value = _transactions.isEmpty()
+
+            _tagSums.keys.forEach {
+                _tagSums[it] = 0.0
+            }
+            calculateSums(_isShowingExpenses.value!!)
+        }
+    }
+
+    private val _showExpensesObserver = Observer<Boolean> { value ->
+        _setLabel = if (value)
+            application.getString(R.string.expenses_by_tag)
+        else
+            application.getString(R.string.incomes_by_tag)
+
+        viewModelScope.launch {
+            _transactions = _app.transactionRepository.getAllTaggedByYear(_year.value!!)
+            _showEmptyMessage.value = _transactions.isEmpty()
+            _tagSums.clear()
+            _tags.value?.forEach {
+                if ((value xor it.isIncome) && (it.parentTagId == 0 || !aggregateSubTags.value!!))
+                    _tagSums[it.id] = 0.0
+            }
+            calculateSums(value)
+        }
+    }
+
+    private val _aggregateObserver = Observer<Boolean> { refreshTags(_tags.value) }
+
+    // Data
     private val _tags: LiveData<List<Tag>> = _app.tagRepository.allTags.asLiveData()
 
     private var _transactions: List<TaggedTransaction> = listOf()
@@ -55,36 +92,19 @@ class StatsByTagViewModel(application: Application) : AndroidViewModel(applicati
     init {
         initYears()
 
-        _tags.observeForever { manageTagChange(it) }
-        _year.observeForever { value ->
-            viewModelScope.launch {
-                _transactions = _app.transactionRepository.getAllTaggedByYear(value)
-                _showEmptyMessage.value = _transactions.isEmpty()
+        _tags.observeForever(_tagsObserver)
+        _year.observeForever(_yearObserver)
+        _isShowingExpenses.observeForever(_showExpensesObserver)
+        aggregateSubTags.observeForever(_aggregateObserver)
+    }
 
-                _tagSums.keys.forEach {
-                    _tagSums[it] = 0.0
-                }
-                calculateSums(_isShowingExpenses.value!!)
-            }
-        }
-        _isShowingExpenses.observeForever { value ->
-            _setLabel = if (value)
-                application.getString(R.string.expenses_by_tag)
-            else
-                application.getString(R.string.incomes_by_tag)
-
-            viewModelScope.launch {
-                _transactions = _app.transactionRepository.getAllTaggedByYear(_year.value!!)
-                _showEmptyMessage.value = _transactions.isEmpty()
-                _tagSums.clear()
-                _tags.value?.forEach {
-                    if ((value xor it.isIncome) && (it.parentTagId == 0 || !aggregateSubTags.value!!))
-                        _tagSums[it.id] = 0.0
-                }
-                calculateSums(value)
-            }
-        }
-        aggregateSubTags.observeForever { refreshTags(_tags.value) }
+    // Overrides
+    override fun onCleared() {
+        _tags.removeObserver(_tagsObserver)
+        _year.removeObserver(_yearObserver)
+        _isShowingExpenses.removeObserver(_showExpensesObserver)
+        aggregateSubTags.removeObserver(_aggregateObserver)
+        super.onCleared()
     }
 
     // Methods

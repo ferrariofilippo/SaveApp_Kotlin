@@ -5,34 +5,31 @@ package com.ferrariofilippo.saveapp.util
 
 import android.content.Context
 import android.os.Handler
-import android.util.JsonReader
-import android.util.JsonWriter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.await
 import com.ferrariofilippo.saveapp.SaveAppApplication
+import com.ferrariofilippo.saveapp.model.SummaryStatistics
 import com.ferrariofilippo.saveapp.model.entities.Transaction
-import com.ferrariofilippo.saveapp.model.entities.Tag
-import kotlinx.coroutines.launch
-import java.io.FileNotFoundException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import com.ferrariofilippo.saveapp.workers.statistics.StatisticsIntegrityCheckerWorker
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 
 object StatsUtil {
-    const val FILE_NAME = "stats.json"
+    private const val CLASS_NAME = "StatsUtil"
 
-    private const val LAST_UPDATE = "last_update"
-    private const val MONTH_EXPENSES = "month_expenses"
-    private const val MONTH_INCOMES = "month_incomes"
-    private const val YEAR_EXPENSES = "year_expenses"
-    private const val YEAR_INCOMES = "year_incomes"
-    private const val LIFE_EXPENSES = "life_expenses"
-    private const val LIFE_INCOMES = "life_incomes"
-    private const val MONTH_TAGS = "month_tags"
-    private const val YEAR_TAGS = "year_tags"
-    private const val LIFE_TAGS = "life_tags"
+    const val PERIODIC_INTEGRITY_CHECK_TAG = "periodic_statistics_integrity_check"
+    const val ONE_TIME_INTEGRITY_CHECK_TAG = "one_time_statistics_integrity_check"
 
-    private var _lastUpdate: LocalDate? = null
+    private val _summary = SummaryStatistics()
+
+    private val _mapsChangedFlipFlop = MutableLiveData(false)
+    val mapsChangedFlipFlop get(): LiveData<Boolean> = _mapsChangedFlipFlop
 
     private val _monthExpenses = MutableLiveData(0.0)
     val monthExpenses get(): LiveData<Double> = _monthExpenses
@@ -59,36 +56,8 @@ object StatsUtil {
     var lifeTags: Map<Int, MutableLiveData<Double>> = mapOf()
 
     fun init(application: SaveAppApplication) {
-        try {
-            application.openFileInput(FILE_NAME).use {
-                readJSON(JsonReader(InputStreamReader(it, "UTF-8")))
-            }
-
-            if (checkForReset()) {
-                application.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
-                    writeJSON(JsonWriter(OutputStreamWriter(it, "UTF-8")))
-                }
-            }
-        } catch (_: FileNotFoundException) {
-        } finally {
-            application.applicationScope.launch {
-                application.tagRepository.allTags.collect {
-                    val tags = it.filter { tag -> !tag.isIncome && tag.parentTagId == 0 }
-
-                    if (monthTags.isEmpty() || monthTags.size != tags.size) {
-                        monthTags = getMapFromTags(monthTags, tags)
-                    }
-
-                    if (yearTags.isEmpty() || yearTags.size != tags.size) {
-                        yearTags = getMapFromTags(yearTags, tags)
-                    }
-
-                    if (lifeTags.isEmpty() || lifeTags.size != tags.size) {
-                        lifeTags = getMapFromTags(lifeTags, tags)
-                    }
-                }
-            }
-        }
+        _summary.loadData(application, ::updateMaps)
+        importFromSummary()
     }
 
     fun applyRateToAll(context: Context, rate: Double) {
@@ -103,153 +72,133 @@ object StatsUtil {
         yearTags.keys.forEach { monthTags[it]!!.value = yearTags[it]!!.value!! * rate }
         lifeTags.keys.forEach { lifeTags[it]!!.value = lifeTags[it]!!.value!! * rate }
 
-        context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
-            writeJSON(JsonWriter(OutputStreamWriter(it, "UTF-8")))
-        }
+        saveChanges(context)
     }
 
     fun addTransactionToStat(context: Context, tr: Transaction) {
-        val isSameMonth =
-            LocalDate.now().month == tr.date.month && LocalDate.now().year == tr.date.year
-
         val isSameYear = LocalDate.now().year == tr.date.year
+        val isSameMonth = LocalDate.now().month == tr.date.month
 
-        val handler = Handler(context.mainLooper)
-        handler.post {
+        Handler(context.mainLooper).post {
             if (TagUtil.incomeTagIds.contains(tr.tagId)) {
-                if (isSameMonth) {
-                    _monthIncomes.value = _monthIncomes.value!! + tr.amount
-                }
-
                 if (isSameYear) {
                     _yearIncomes.value = _yearIncomes.value!! + tr.amount
+
+                    if (isSameMonth) {
+                        _monthIncomes.value = _monthIncomes.value!! + tr.amount
+                    }
                 }
 
                 _lifeIncomes.value = _lifeIncomes.value!! + tr.amount
             } else {
                 val rootTagId = TagUtil.getTagRootId(tr.tagId)
-                if (isSameMonth) {
-                    _monthExpenses.value = _monthExpenses.value!! + tr.amount
-                    monthTags[rootTagId]!!.value = monthTags[rootTagId]!!.value!! + tr.amount
-                }
-
                 if (isSameYear) {
                     _yearExpenses.value = _yearExpenses.value!! + tr.amount
                     yearTags[rootTagId]!!.value = yearTags[rootTagId]!!.value!! + tr.amount
+
+                    if (isSameMonth) {
+                        _monthExpenses.value = _monthExpenses.value!! + tr.amount
+                        monthTags[rootTagId]!!.value = monthTags[rootTagId]!!.value!! + tr.amount
+                    }
                 }
 
                 _lifeExpenses.value = _lifeExpenses.value!! + tr.amount
                 lifeTags[rootTagId]!!.value = lifeTags[rootTagId]!!.value!! + tr.amount
             }
 
-            context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use {
-                writeJSON(JsonWriter(OutputStreamWriter(it, "UTF-8")))
+            saveChanges(context)
+        }
+    }
+
+    suspend fun startIntegrityCheckInterval(app: SaveAppApplication) {
+        val wManager = WorkManager.getInstance(app)
+        try {
+            if (wManager.getWorkInfosByTagFlow(PERIODIC_INTEGRITY_CHECK_TAG).first() == null) {
+                updateIntegrityCheckInterval(app)
             }
+        } catch (_: NoSuchElementException) {
+            updateIntegrityCheckInterval(app)
         }
     }
 
-    private fun readJSON(reader: JsonReader) {
-        reader.use { jsonReader ->
-            jsonReader.beginObject()
+    suspend fun updateIntegrityCheckInterval(app: SaveAppApplication) {
+        val wManager = WorkManager.getInstance(app)
+        wManager.cancelAllWorkByTag(PERIODIC_INTEGRITY_CHECK_TAG).await()
+        wManager.pruneWork().await()
 
-            while (jsonReader.hasNext()) {
-                when (jsonReader.nextName()) {
-                    LAST_UPDATE -> _lastUpdate = LocalDate.parse(jsonReader.nextString())
-                    MONTH_EXPENSES -> _monthExpenses.value = jsonReader.nextDouble()
-                    MONTH_INCOMES -> _monthIncomes.value = jsonReader.nextDouble()
-                    YEAR_EXPENSES -> _yearExpenses.value = jsonReader.nextDouble()
-                    YEAR_INCOMES -> _yearIncomes.value = jsonReader.nextDouble()
-                    LIFE_EXPENSES -> _lifeExpenses.value = jsonReader.nextDouble()
-                    LIFE_INCOMES -> _lifeIncomes.value = jsonReader.nextDouble()
-                    MONTH_TAGS -> monthTags = readMap(jsonReader)
-                    YEAR_TAGS -> yearTags = readMap(jsonReader)
-                    LIFE_TAGS -> lifeTags = readMap(jsonReader)
-                }
-            }
+        val constraints = Constraints
+            .Builder()
+            .setRequiresDeviceIdle(true)
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
 
-            jsonReader.endObject()
-        }
+        val workRequest = OneTimeWorkRequestBuilder<StatisticsIntegrityCheckerWorker>()
+            .addTag(PERIODIC_INTEGRITY_CHECK_TAG)
+            .setConstraints(constraints)
+            .setInitialDelay(TimeUtil.getInitialDelay(3), TimeUnit.MINUTES)
+            .build()
+
+        wManager.enqueue(workRequest)
+
+        LogUtil.logInfo(
+            CLASS_NAME,
+            ::updateIntegrityCheckInterval.name,
+            "Enqueued statistics worker: ${workRequest.id}"
+        )
     }
 
-    private fun readMap(reader: JsonReader): Map<Int, MutableLiveData<Double>> {
-        val map = mutableMapOf<Int, MutableLiveData<Double>>()
+    suspend fun runIntegrityCheckNow(app: SaveAppApplication) {
+        val wManager = WorkManager.getInstance(app)
+        val workRequest = OneTimeWorkRequestBuilder<StatisticsIntegrityCheckerWorker>()
+            .addTag(ONE_TIME_INTEGRITY_CHECK_TAG)
+            .build()
 
-        reader.beginObject()
-        while (reader.hasNext()) {
-            val id = reader.nextName().toIntOrNull() ?: 0
-            val value = reader.nextDouble()
-            map[id] = MutableLiveData(value)
-        }
-        reader.endObject()
-
-        return map.toMap()
+        wManager.pruneWork().await()
+        wManager.enqueue(workRequest)
     }
 
-    private fun writeJSON(writer: JsonWriter) {
-        writer.setIndent("  ")
-        writer.beginObject()
+    private fun saveChanges(ctx: Context) {
+        _summary.monthExpenses = _monthExpenses.value!!
+        _summary.monthIncomes = _monthIncomes.value!!
+        _summary.yearExpenses = _yearExpenses.value!!
+        _summary.yearIncomes = _yearIncomes.value!!
+        _summary.lifeExpenses = _lifeExpenses.value!!
+        _summary.lifeIncomes = _lifeIncomes.value!!
 
-        writer.name(LAST_UPDATE).value(LocalDate.now().toString())
-        writer.name(MONTH_EXPENSES).value(_monthExpenses.value!!)
-        writer.name(MONTH_INCOMES).value(_monthIncomes.value!!)
-        writer.name(YEAR_EXPENSES).value(_yearExpenses.value!!)
-        writer.name(YEAR_INCOMES).value(_yearIncomes.value!!)
-        writer.name(LIFE_EXPENSES).value(_lifeExpenses.value!!)
-        writer.name(LIFE_INCOMES).value(_lifeIncomes.value!!)
+        _summary.monthTags.clear()
+        _summary.yearTags.clear()
+        _summary.lifeTags.clear()
+        monthTags.keys.forEach { _summary.monthTags[it] = monthTags[it]!!.value!! }
+        yearTags.keys.forEach { _summary.yearTags[it] = yearTags[it]!!.value!! }
+        lifeTags.keys.forEach { _summary.lifeTags[it] = lifeTags[it]!!.value!! }
 
-        writeMap(writer, MONTH_TAGS, monthTags)
-        writeMap(writer, YEAR_TAGS, yearTags)
-        writeMap(writer, LIFE_TAGS, lifeTags)
-
-        writer.endObject()
-        writer.close()
+        _summary.saveChanges(ctx)
     }
 
-    private fun writeMap(writer: JsonWriter, key: String, map: Map<Int, MutableLiveData<Double>>) {
-        writer.name(key)
-        writer.beginObject()
-        map.keys.forEach {
-            writer.name(it.toString()).value(map[it]!!.value!!)
-        }
-        writer.endObject()
+    private fun importFromSummary() {
+        _monthExpenses.value = _summary.monthExpenses
+        _monthIncomes.value = _summary.monthIncomes
+        _yearExpenses.value = _summary.yearExpenses
+        _yearIncomes.value = _summary.yearIncomes
+        _lifeExpenses.value = _summary.lifeExpenses
+        _lifeIncomes.value = _summary.lifeIncomes
+
+        updateMaps()
     }
 
-    private fun getMapFromTags(
-        oldMap: Map<Int, MutableLiveData<Double>>,
-        tags: List<Tag>
-    ): Map<Int, MutableLiveData<Double>> {
-        val map = mutableMapOf<Int, MutableLiveData<Double>>()
-        tags.map {
-            if (oldMap.containsKey(it.id)) {
-                map[it.id] = oldMap[it.id]!!
-            } else {
-                map[it.id] = MutableLiveData(0.0)
-            }
-        }
+    private fun updateMaps() {
+        val monthMap = mutableMapOf<Int, MutableLiveData<Double>>()
+        val yearMap = mutableMapOf<Int, MutableLiveData<Double>>()
+        val lifeMap = mutableMapOf<Int, MutableLiveData<Double>>()
 
-        return map.toMap()
-    }
+        _summary.monthTags.keys.forEach { monthMap[it] = MutableLiveData(_summary.monthTags[it]) }
+        _summary.yearTags.keys.forEach { yearMap[it] = MutableLiveData(_summary.yearTags[it]) }
+        _summary.lifeTags.keys.forEach { lifeMap[it] = MutableLiveData(_summary.lifeTags[it]) }
 
-    private fun checkForReset(): Boolean {
-        if (_lastUpdate == null) {
-            return false
-        }
+        monthTags = monthMap
+        yearTags = yearMap
+        lifeTags = lifeMap
 
-        var updated = false
-        if (_lastUpdate!!.monthValue != LocalDate.now().monthValue) {
-            _monthExpenses.value = 0.0
-            _monthIncomes.value = 0.0
-            monthTags.keys.forEach { monthTags[it]!!.value = 0.0 }
-            updated = true
-        }
-
-        if (_lastUpdate!!.year != LocalDate.now().year) {
-            _yearExpenses.value = 0.0
-            _yearIncomes.value = 0.0
-            yearTags.keys.forEach { yearTags[it]!!.value = 0.0 }
-            updated = true
-        }
-
-        return updated
+        _mapsChangedFlipFlop.value = !(_mapsChangedFlipFlop.value ?: false)
     }
 }

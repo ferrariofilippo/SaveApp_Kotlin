@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,9 +15,12 @@ import com.ferrariofilippo.saveapp.MainActivity
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.databinding.FragmentManageDataBinding
+import com.ferrariofilippo.saveapp.model.enums.PeriodicInterval
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
 import com.ferrariofilippo.saveapp.util.ImportExportUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.StatsUtil
+import com.ferrariofilippo.saveapp.view.adapters.IntervalDropdownAdapter
 import com.ferrariofilippo.saveapp.view.viewmodels.ManageDataViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -55,18 +59,8 @@ class ManageDataFragment : Fragment() {
         val app = requireActivity().application as SaveAppApplication
         val act = app.getCurrentActivity()!! as MainActivity
 
-        binding.restoreBackupButton.setOnClickListener {
-            activity?.lifecycleScope?.launch {
-                startDbRestore()
-            }
-        }
-        binding.createBackupButton.setOnClickListener {
-            ManageDataViewModel.setAreBackupButtonsEnabled(false)
-            activity?.lifecycleScope?.launch {
-                CloudStorageUtil.authorize(app, true)
-            }
-        }
-
+        setupBackupUI(act, app)
+        setupStatisticsUI(app)
         setupTransactionsButtons(act)
         setupSubscriptionsButtons(act)
         setupBudgetsButtons(act)
@@ -126,5 +120,71 @@ class ManageDataFragment : Fragment() {
                 )
             }
             .show()
+    }
+
+    private fun setupBackupUI(act: MainActivity?, app: SaveAppApplication) {
+        binding.restoreBackupButton.setOnClickListener {
+            act?.lifecycleScope?.launch {
+                startDbRestore()
+            }
+        }
+        binding.createBackupButton.setOnClickListener {
+            ManageDataViewModel.setAreBackupButtonsEnabled(false)
+            act?.lifecycleScope?.launch {
+                CloudStorageUtil.authorize(app, true)
+            }
+        }
+
+        setupPeriodicBackupIntervalPicker()
+    }
+
+    private fun setupPeriodicBackupIntervalPicker() {
+        val intervalAutoComplete = binding.backupIntervalInput.editText as AutoCompleteTextView
+        val adapter = IntervalDropdownAdapter(
+            binding.backupIntervalInput.context,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            viewModel.intervals
+        )
+
+        intervalAutoComplete.setAdapter(adapter)
+        intervalAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+            val selection = parent.adapter.getItem(position) as PeriodicInterval
+            viewModel.setPeriodicBackupInterval(selection)
+        }
+
+        intervalAutoComplete.setText(
+            adapter.getLocalizedName(viewModel.backupInterval),
+            false
+        )
+    }
+
+    private fun setupStatisticsUI(app: SaveAppApplication) {
+        binding.checkIntegrityNowButton.setOnClickListener {
+            lifecycleScope.launch {
+                StatsUtil.runIntegrityCheckNow(app)
+            }
+        }
+
+        setupIntegrityCheckIntervalPicker()
+    }
+
+    private fun setupIntegrityCheckIntervalPicker() {
+        val intervalAutoComplete =
+            binding.integrityCheckIntervalInput.editText as AutoCompleteTextView
+        val adapter = IntervalDropdownAdapter(
+            binding.integrityCheckIntervalInput.context,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            viewModel.intervals
+        )
+
+        intervalAutoComplete.setAdapter(adapter)
+        intervalAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+            viewModel.setIntegrityCheckInterval(parent.adapter.getItem(position) as PeriodicInterval)
+        }
+
+        intervalAutoComplete.setText(
+            adapter.getLocalizedName(viewModel.integrityCheckInterval),
+            false
+        )
     }
 }
