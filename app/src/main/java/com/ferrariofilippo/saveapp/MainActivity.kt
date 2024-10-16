@@ -18,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.work.WorkManager
+import androidx.work.await
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
@@ -199,7 +200,6 @@ class MainActivity : AppCompatActivity() {
 
         saveApp.setCurrentActivity(this)
 
-        lifecycleScope.launch { StatsUtil.startIntegrityCheckInterval(saveApp) }
         lifecycleScope.launch { SubscriptionUtil.validateSubscriptions(saveApp) }
         lifecycleScope.launch { CurrencyUtil.init() }
 
@@ -208,7 +208,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        WorkManager.getInstance(this).cancelAllWork()
+        val ctx = this
+        lifecycleScope.launch {
+            val manager = WorkManager.getInstance(ctx)
+            manager.cancelAllWorkByTag(CloudStorageUtil.ONE_TIME_BACKUP_DOWNLOAD_TAG).await()
+            manager.cancelAllWorkByTag(CloudStorageUtil.ONE_TIME_BACKUP_UPLOAD_TAG).await()
+            manager.pruneWork().await()
+
+            StatsUtil.startIntegrityCheckInterval(ctx.application as SaveAppApplication)
+        }
     }
 
     // Methods

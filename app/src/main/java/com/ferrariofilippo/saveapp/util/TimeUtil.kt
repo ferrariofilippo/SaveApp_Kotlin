@@ -8,12 +8,12 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 object TimeUtil {
-    fun getInitialDelay(hour: Int): Long {
+    fun getInitialDelay(hour: Int, delayMinutes: Long = 0): Long {
         val now = LocalDateTime.now()
         val targetTime = LocalDateTime.of(
             now.toLocalDate().plusDays(if (now.hour >= hour) 1 else 0),
             LocalTime.of(hour, 0)
-        )
+        ).plusMinutes(delayMinutes)
 
         return now.until(targetTime, ChronoUnit.MINUTES)
     }

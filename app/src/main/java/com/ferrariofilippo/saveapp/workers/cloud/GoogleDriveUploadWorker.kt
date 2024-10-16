@@ -73,6 +73,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         val className = javaClass.kotlin.simpleName ?: ""
+        LogUtil.logInfo(className, ::doWork.name, "Backup started")
 
         val app = ctx.applicationContext as SaveAppApplication
         val scopes = inputData.getStringArray("SCOPES")?.toMutableList()
@@ -90,7 +91,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
             credentials = GoogleCredentials.create(token)
         } catch (e: Exception) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
-            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", "doWork")
+            LogUtil.logException(e, javaClass.kotlin.simpleName ?: "", ::doWork.name)
             return Result.failure()
         }
 
@@ -127,16 +128,16 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
                             service.files().create(fileMetadata, mediaContent)
                                 .setFields("id")
                                 .execute()
-                            LogUtil.logInfo(className, "doWork", "Uploaded $fileName")
+                            LogUtil.logInfo(className, ::doWork.name, "Uploaded $fileName")
                         }
                     }
                     fileCopy.delete()
                 }
             }
-            LogUtil.logInfo(className, "doWork", "Upload finished")
+            LogUtil.logInfo(className, ::doWork.name, "Upload finished")
         } catch (e: GoogleJsonResponseException) {
             handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
-            LogUtil.logException(e, className, "doWork")
+            LogUtil.logException(e, className, ::doWork.name)
             return Result.failure()
         }
 
@@ -145,6 +146,7 @@ class GoogleDriveUploadWorker(context: Context, params: WorkerParameters) :
         SettingsUtil.setLastBackupTimeStamp(timeStamp)
         SettingsUtil.setPeriodicBackupVisible(true)
         handler.post { ManageDataViewModel.setAreBackupButtonsEnabled(true) }
+
         return Result.success()
     }
 }

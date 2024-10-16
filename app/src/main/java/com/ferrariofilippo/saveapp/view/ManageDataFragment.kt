@@ -160,7 +160,9 @@ class ManageDataFragment : Fragment() {
 
     private fun setupStatisticsUI(app: SaveAppApplication) {
         binding.checkIntegrityNowButton.setOnClickListener {
-            StatsUtil.runIntegrityCheckNow(app)
+            lifecycleScope.launch {
+                StatsUtil.runIntegrityCheckNow(app)
+            }
         }
 
         setupIntegrityCheckIntervalPicker()

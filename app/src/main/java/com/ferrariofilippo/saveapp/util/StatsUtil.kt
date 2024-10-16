@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.await
 import com.ferrariofilippo.saveapp.SaveAppApplication
@@ -22,7 +21,10 @@ import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 object StatsUtil {
-    private const val PERIODIC_INTEGRITY_CHECK_TAG = "periodic_statistics_integrity_check"
+    private const val CLASS_NAME = "StatsUtil"
+
+    const val PERIODIC_INTEGRITY_CHECK_TAG = "periodic_statistics_integrity_check"
+    const val ONE_TIME_INTEGRITY_CHECK_TAG = "one_time_statistics_integrity_check"
 
     private val _summary = SummaryStatistics()
 
@@ -122,30 +124,36 @@ object StatsUtil {
     suspend fun updateIntegrityCheckInterval(app: SaveAppApplication) {
         val wManager = WorkManager.getInstance(app)
         wManager.cancelAllWorkByTag(PERIODIC_INTEGRITY_CHECK_TAG).await()
+        wManager.pruneWork().await()
 
-        val interval = SettingsUtil.getSummaryIntegrityCheckInterval().first().toLong()
         val constraints = Constraints
             .Builder()
             .setRequiresDeviceIdle(true)
             .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
             .build()
 
-        val workRequest =
-            PeriodicWorkRequestBuilder<StatisticsIntegrityCheckerWorker>(interval, TimeUnit.HOURS)
-                .addTag(PERIODIC_INTEGRITY_CHECK_TAG)
-                .setConstraints(constraints)
-                .setInitialDelay(TimeUtil.getInitialDelay(3), TimeUnit.MINUTES)
-                .build()
-
-        wManager.enqueue(workRequest)
-    }
-
-    fun runIntegrityCheckNow(app: SaveAppApplication) {
-        val wManager = WorkManager.getInstance(app)
         val workRequest = OneTimeWorkRequestBuilder<StatisticsIntegrityCheckerWorker>()
             .addTag(PERIODIC_INTEGRITY_CHECK_TAG)
+            .setConstraints(constraints)
+            .setInitialDelay(TimeUtil.getInitialDelay(3), TimeUnit.MINUTES)
             .build()
 
+        wManager.enqueue(workRequest)
+
+        LogUtil.logInfo(
+            CLASS_NAME,
+            ::updateIntegrityCheckInterval.name,
+            "Enqueued statistics worker: ${workRequest.id}"
+        )
+    }
+
+    suspend fun runIntegrityCheckNow(app: SaveAppApplication) {
+        val wManager = WorkManager.getInstance(app)
+        val workRequest = OneTimeWorkRequestBuilder<StatisticsIntegrityCheckerWorker>()
+            .addTag(ONE_TIME_INTEGRITY_CHECK_TAG)
+            .build()
+
+        wManager.pruneWork().await()
         wManager.enqueue(workRequest)
     }
 

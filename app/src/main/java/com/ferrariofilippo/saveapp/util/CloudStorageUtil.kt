@@ -10,7 +10,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.await
@@ -36,7 +35,9 @@ import java.util.concurrent.TimeUnit
 
 object CloudStorageUtil {
     private const val CLASS_NAME = "CloudStorageUtil"
-    private const val PERIODIC_BACKUP_TAG = "periodic_backup_upload"
+    const val PERIODIC_BACKUP_TAG = "periodic_backup_upload"
+    const val ONE_TIME_BACKUP_UPLOAD_TAG = "one_time_backup_upload"
+    const val ONE_TIME_BACKUP_DOWNLOAD_TAG = "one_time_backup_download"
 
     private fun displayError(activity: Activity?, messageId: Int) {
         if (activity == null)
@@ -110,6 +111,7 @@ object CloudStorageUtil {
                         "STATS_PATH" to "$filesDirPath/${SummaryStatistics.FILE_NAME}"
                     )
                 )
+                .addTag(ONE_TIME_BACKUP_DOWNLOAD_TAG)
                 .build()
 
         LogUtil.logInfo(CLASS_NAME, "enqueueDownload", "Starting backup download...")
@@ -131,6 +133,7 @@ object CloudStorageUtil {
                         "STATS_PATH" to "$filesDirPath/${SummaryStatistics.FILE_NAME}"
                     )
                 )
+                .addTag(ONE_TIME_BACKUP_UPLOAD_TAG)
                 .build()
 
         LogUtil.logInfo(CLASS_NAME, "enqueueUpload", "Starting backup upload...")
@@ -164,13 +167,12 @@ object CloudStorageUtil {
     suspend fun updateScheduledBackupUpload(app: SaveAppApplication) {
         val wManager = WorkManager.getInstance(app)
         wManager.cancelAllWorkByTag(PERIODIC_BACKUP_TAG).await()
-        LogUtil.logInfo(CLASS_NAME, "updateScheduledBackupUpload", "Periodic backup canceled")
+        wManager.pruneWork().await()
 
         if (!SettingsUtil.getPeriodicBackupUpload().first()) {
             return
         }
 
-        val interval = SettingsUtil.getPeriodicBackupInterval().first().toLong()
         val requiresWiFi = SettingsUtil.getPeriodicBackupRequiresWiFi().first()
         val constraints = Constraints
             .Builder()
@@ -178,16 +180,17 @@ object CloudStorageUtil {
             .setRequiredNetworkType(if (requiresWiFi) NetworkType.UNMETERED else NetworkType.CONNECTED)
             .build()
 
-        val periodicBackupUpload = PeriodicWorkRequestBuilder<GoogleDrivePeriodicUploadWorker>(
-            interval,
-            TimeUnit.MINUTES
-        )
+        val workRequest = OneTimeWorkRequestBuilder<GoogleDrivePeriodicUploadWorker>()
             .addTag(PERIODIC_BACKUP_TAG)
             .setConstraints(constraints)
             .setInitialDelay(getInitialDelay(3), TimeUnit.MINUTES)
             .build()
 
-        wManager.enqueue(periodicBackupUpload)
-        LogUtil.logInfo(CLASS_NAME, "updateScheduledBackupUpload", "Periodic backup started")
+        wManager.enqueue(workRequest)
+        LogUtil.logInfo(
+            CLASS_NAME,
+            ::updateScheduledBackupUpload.name,
+            "Enqueued backup worker: ${workRequest.id}"
+        )
     }
 }
