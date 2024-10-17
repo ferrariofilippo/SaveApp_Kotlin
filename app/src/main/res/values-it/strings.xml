@@ -252,4 +252,5 @@
         SaveApp esegue periodicamente una verifica dell\'integrità delle statistiche per sincronizzarle
         (NON è necessaria una connessione a Internet).
     </string>
+    <string name="new_transaction_shortcut">Movimento</string>
 </resources>
