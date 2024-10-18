@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Licensed under the MIT License. See the LICENSE. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="compose"
+        android:enabled="true"
+        android:icon="@drawable/new_transaction_icon"
+        android:shortcutShortLabel="@string/new_transaction_shortcut">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ferrariofilippo.saveapp"
+            android:targetClass="com.ferrariofilippo.saveapp.MainActivity">
+            <extra
+                android:name="com.ferrariofilippo.saveapp.launchNewTransaction"
+                android:value="1" />
+        </intent>
+    </shortcut>
+</shortcuts>

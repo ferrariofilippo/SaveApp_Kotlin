@@ -42,6 +42,10 @@ import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     companion object {
+        private const val OPEN_NEW_TRANSACTION_PAGE_INTENT_KEY =
+            "com.ferrariofilippo.saveapp.launchNewTransaction"
+        private const val OPEN_NEW_TRANSACTION_PAGE_INTENT_CODE = 1
+
         private var _restartFunction: () -> Unit = { }
 
         private var _checkpointFunction: () -> Unit = { }
@@ -54,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             _checkpointFunction()
         }
     }
+
+    private var _shouldOpenNewTransactionPage = false
 
     private var navControllerInitialized = false
 
@@ -204,6 +210,11 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()
+
+        _shouldOpenNewTransactionPage = intent.getIntExtra(
+            OPEN_NEW_TRANSACTION_PAGE_INTENT_KEY,
+            0
+        ) == OPEN_NEW_TRANSACTION_PAGE_INTENT_CODE
     }
 
     override fun onStart() {
@@ -216,6 +227,11 @@ class MainActivity : AppCompatActivity() {
             manager.pruneWork().await()
 
             StatsUtil.startIntegrityCheckInterval(ctx.application as SaveAppApplication)
+        }
+
+        if (_shouldOpenNewTransactionPage) {
+            _shouldOpenNewTransactionPage = false
+            onAddTransactionClick()
         }
     }
 

@@ -252,4 +252,5 @@
         SaveApp periodically runs an integrity check of statistics to ensure they are synced
         (Internet connection NOT needed).
     </string>
+    <string name="new_transaction_shortcut">Transaction</string>
 </resources>
