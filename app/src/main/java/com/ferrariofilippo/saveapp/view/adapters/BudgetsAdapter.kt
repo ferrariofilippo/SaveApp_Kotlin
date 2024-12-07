@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.ColorUtil
+import com.ferrariofilippo.saveapp.util.DateUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -68,9 +69,10 @@ class BudgetsAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedBudget) {
             val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
+            val formatter = DateUtil.getFormatter(java.util.Locale.getDefault())
             nameItemView.text = item.name
-            dateFromItemView.text = String.format(from, item.from.toString())
-            dateToItemView.text = String.format(to, item.to.toString())
+            dateFromItemView.text = String.format(from, item.from.format(formatter))
+            dateToItemView.text = String.format(to, item.to.format(formatter))
             tagItemView.text = item.tagName
             tagItemView.setIconTintResource(colorRes)
             tagItemView.setStrokeColorResource(colorRes)

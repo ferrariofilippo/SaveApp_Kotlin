@@ -81,8 +81,8 @@
                 <Button
                     android:id="@+id/pastBudgetsCollapseButton"
                     style="?attr/materialIconButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:contentDescription="@string/show_past_budgets"
                     app:collapsibleIcon="@{vm.pastSectionCollapsed}"

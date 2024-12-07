@@ -6,7 +6,9 @@ package com.ferrariofilippo.saveapp.converters
 import androidx.databinding.InverseMethod
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.enums.RenewalType
+import com.ferrariofilippo.saveapp.util.DateUtil
 import java.time.LocalDate
+import java.util.Locale
 
 object Converters {
     @InverseMethod("tickerToCurrency")
@@ -55,12 +57,12 @@ object Converters {
     @InverseMethod("stringToDate")
     @JvmStatic
     fun dateToString(value: LocalDate?): String {
-        return value?.toString() ?: LocalDate.now().toString()
+        return (value ?: LocalDate.now()).format(DateUtil.getFormatter(Locale.getDefault()))
     }
 
     @JvmStatic
     fun stringToDate(value: String): LocalDate {
-        return LocalDate.parse(value)
+        return LocalDate.parse(value, DateUtil.getFormatter(Locale.getDefault()))
     }
 
     @InverseMethod("stringToRenewal")

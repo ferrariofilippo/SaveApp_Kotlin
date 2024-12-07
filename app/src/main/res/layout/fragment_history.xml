@@ -56,8 +56,8 @@
             <Button
                 android:id="@+id/search_button"
                 style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/change_sorting"
@@ -91,8 +91,8 @@
                 <Button
                     android:id="@+id/sort_button"
                     style="?attr/materialIconButtonFilledTonalStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/change_sorting"
@@ -124,112 +124,117 @@
                 android:layout_height="wrap_content"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                    android:id="@+id/drag_handle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/search_bar"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="148dp"
-                    android:background="@drawable/search_background"
-                    android:hint="@{vm.searchBarHint}"
-                    android:paddingHorizontal="12dp"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:endIconMode="clear_text"
-                    app:hintAnimationEnabled="false"
-                    app:startIconDrawable="@drawable/baseline_search_32">
+                    android:layout_marginBottom="24dp"
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                        android:id="@+id/drag_handle"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxLines="1"
-                        android:text="@={vm.searchQuery}" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="32dp"
-                    android:layout_marginTop="96dp">
+                        android:layout_height="wrap_content" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tagFilterInput"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:id="@+id/search_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@id/clearTagFilterButton"
-                        android:hint="@string/tag_hint">
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@drawable/search_background"
+                        android:hint="@{vm.searchBarHint}"
+                        android:paddingHorizontal="12dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:endIconMode="clear_text"
+                        app:hintAnimationEnabled="false"
+                        app:startIconDrawable="@drawable/baseline_search_32">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
+                            android:layout_height="match_parent"
                             android:maxLines="1"
-                            android:singleLine="true" />
+                            android:text="@={vm.searchQuery}" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <Button
-                        android:id="@+id/clearTagFilterButton"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/clear"
-                        android:visibility="@{vm.tagId == 0 ? View.GONE : View.VISIBLE}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="32dp"
-                    android:layout_marginTop="164dp"
-                    android:background="@drawable/year_selector_background"
-                    android:paddingHorizontal="4dp">
-
-                    <Button
-                        android:id="@+id/decrease_year_button"
-                        style="?attr/materialIconButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:contentDescription="@string/decrease_year_button"
-                        app:icon="@drawable/baseline_remove_24"
-                        app:strokeWidth="0dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_marginHorizontal="32dp"
-                        android:layout_toStartOf="@id/increase_year_button"
-                        android:layout_toEndOf="@id/decrease_year_button"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="@{String.valueOf(vm.year)}"
-                        android:textAlignment="center"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
-                        android:textColor="?attr/colorPrimaryVariant" />
+                        android:layout_marginTop="8dp">
 
-                    <Button
-                        android:id="@+id/increase_year_button"
-                        style="?attr/materialIconButtonStyle"
-                        android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tagFilterInput"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/clearTagFilterButton"
+                            android:hint="@string/tag_hint">
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/clearTagFilterButton"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12dp"
+                            android:text="@string/clear"
+                            android:visibility="@{vm.tagId == 0 ? View.GONE : View.VISIBLE}" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:contentDescription="@string/increase_year_button"
-                        app:icon="@drawable/round_add_24" />
-                </RelativeLayout>
+                        android:layout_marginHorizontal="32dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/year_selector_background"
+                        android:paddingHorizontal="4dp">
+
+                        <Button
+                            android:id="@+id/decrease_year_button"
+                            style="?attr/materialIconButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentStart="true"
+                            android:contentDescription="@string/decrease_year_button"
+                            app:icon="@drawable/baseline_remove_24"
+                            app:strokeWidth="0dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_toStartOf="@id/increase_year_button"
+                            android:layout_toEndOf="@id/decrease_year_button"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@{String.valueOf(vm.year)}"
+                            android:textAlignment="center"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorPrimaryVariant" />
+
+                        <Button
+                            android:id="@+id/increase_year_button"
+                            style="?attr/materialIconButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/increase_year_button"
+                            app:icon="@drawable/round_add_24" />
+                    </RelativeLayout>
+                </LinearLayout>
             </FrameLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>

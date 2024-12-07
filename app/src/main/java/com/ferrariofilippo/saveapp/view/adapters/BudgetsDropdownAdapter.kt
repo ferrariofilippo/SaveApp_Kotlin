@@ -15,6 +15,7 @@ import android.widget.TextView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.ColorUtil
+import com.ferrariofilippo.saveapp.util.DateUtil
 
 class BudgetsDropdownAdapter(
     context: Context,
@@ -51,7 +52,8 @@ class BudgetsDropdownAdapter(
             val budget = getItem(position)
             if (budget != null) {
                 viewHolder.name.text = budget.name
-                viewHolder.endDate.text = budget.to.toString()
+                viewHolder.endDate.text =
+                    budget.to.format(DateUtil.getFormatter(java.util.Locale.getDefault()))
                 viewHolder.pill.setColorFilter(budget.tagColor)
             }
         }

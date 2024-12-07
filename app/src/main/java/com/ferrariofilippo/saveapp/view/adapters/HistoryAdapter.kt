@@ -16,6 +16,7 @@ import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedTransaction
 import com.ferrariofilippo.saveapp.util.ColorUtil
+import com.ferrariofilippo.saveapp.util.DateUtil
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.snackbar.Snackbar
@@ -60,7 +61,7 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
             val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
             amountItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.amount)}"
             descriptionItemView.text = item.description
-            dateItemView.text = item.date.toString()
+            dateItemView.text = item.date.format(DateUtil.getFormatter(java.util.Locale.getDefault()))
             tagButtonItemView.text = item.tagName
             tagButtonItemView.setIconTintResource(colorRes)
             tagButtonItemView.setStrokeColorResource(colorRes)

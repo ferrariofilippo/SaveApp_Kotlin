@@ -63,7 +63,7 @@
                 android:layout_toStartOf="@id/budgetCurrencyInput"
                 android:hint="@string/amount_hint"
                 app:counterEnabled="true"
-                app:counterMaxLength="12"
+                app:counterMaxLength="20"
                 app:endIconMode="clear_text"
                 app:prefixText="@{vm.currency.toSymbol()}">
 
@@ -103,7 +103,7 @@
                 android:hint="@string/used_hint"
                 android:visibility="@{vm.isUsedInputVisible ? View.VISIBLE : View.GONE}"
                 app:counterEnabled="true"
-                app:counterMaxLength="12"
+                app:counterMaxLength="20"
                 app:endIconMode="clear_text"
                 app:prefixText="@{vm.currency.toSymbol()}">
 
