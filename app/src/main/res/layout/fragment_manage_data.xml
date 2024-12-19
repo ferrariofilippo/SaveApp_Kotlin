@@ -28,7 +28,7 @@
                 android:id="@+id/settingsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
 
                 <ImageView
                     android:id="@+id/settings_page_icon"
@@ -100,9 +100,9 @@
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
                         android:gravity="end"
-                        android:layout_marginTop="8dp">
+                        android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/checkIntegrityNowButton"
@@ -162,7 +162,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/importTransactionsButton"
+                            android:layout_alignParentEnd="true"
                             android:contentDescription="@string/download_transactions_template"
                             android:text="@string/template" />
 
@@ -171,6 +171,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateTransactionsButton"
                             android:layout_marginHorizontal="4dp"
                             android:layout_toStartOf="@id/exportTransactionsButton"
                             android:contentDescription="@string/import_transactions"
@@ -182,6 +183,7 @@
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateTransactionsButton"
                             android:layout_alignParentEnd="true"
                             android:contentDescription="@string/export_transactions"
                             android:text="@string/export_data"
@@ -236,7 +238,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/importSubscriptionsButton"
+                            android:layout_alignParentEnd="true"
                             android:contentDescription="@string/download_subscriptions_template"
                             android:text="@string/template" />
 
@@ -245,6 +247,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateSubscriptionsButton"
                             android:layout_marginHorizontal="4dp"
                             android:layout_toStartOf="@id/exportSubscriptionsButton"
                             android:contentDescription="@string/import_subscriptions"
@@ -253,9 +256,11 @@
 
                         <Button
                             android:id="@+id/exportSubscriptionsButton"
+
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateSubscriptionsButton"
                             android:layout_alignParentEnd="true"
                             android:contentDescription="@string/export_subscriptions"
                             android:text="@string/export_data"
@@ -309,7 +314,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/importBudgetsButton"
+                            android:layout_alignParentEnd="true"
                             android:contentDescription="@string/download_budgets_template"
                             android:text="@string/template" />
 
@@ -318,6 +323,7 @@
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateBudgetsButton"
                             android:layout_marginHorizontal="4dp"
                             android:layout_toStartOf="@id/exportBudgetsButton"
                             android:contentDescription="@string/import_budgets"
@@ -329,6 +335,7 @@
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/templateBudgetsButton"
                             android:layout_alignParentEnd="true"
                             android:contentDescription="@string/export_budgets"
                             android:text="@string/export_data"
@@ -455,9 +462,10 @@
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
-                            android:hint="@string/interval"
-                            android:enabled="@{vm.periodicBackupsEnabled}">
+                            android:enabled="@{vm.periodicBackupsEnabled}"
+                            android:hint="@string/interval">
 
                             <AutoCompleteTextView
                                 android:layout_width="match_parent"
