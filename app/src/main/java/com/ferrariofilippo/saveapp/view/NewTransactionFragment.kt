@@ -237,7 +237,7 @@ class NewTransactionFragment : Fragment() {
         val amount = viewModel.getAmount().replace(",", ".").toDoubleOrNull()
 
         binding.amountInput.error =
-            if (amount != null && amount > 0.0) null
+            if (viewModel.isUsingFormula || (amount != null && amount > 0.0)) null
             else context?.resources?.getString(R.string.amount_error)
     }
 

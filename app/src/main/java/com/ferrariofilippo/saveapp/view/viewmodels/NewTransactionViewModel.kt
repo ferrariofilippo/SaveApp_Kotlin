@@ -24,6 +24,8 @@ import com.ferrariofilippo.saveapp.model.enums.RenewalType
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CurrencyUtil
+import com.ferrariofilippo.saveapp.util.LogUtil
+import com.ferrariofilippo.saveapp.util.MathUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
@@ -56,6 +58,9 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
     private var _renewalType: RenewalType = RenewalType.WEEKLY
 
     private var _isSubscriptionSwitchEnabled: Boolean = true
+
+    private var _isUsingFormula: Boolean = true
+    val isUsingFormula get() = _isUsingFormula
 
     val tags: MutableLiveData<Array<Tag>> = MutableLiveData<Array<Tag>>()
 
@@ -97,6 +102,7 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
         }
 
         _amount = value
+        _isUsingFormula = value.startsWith('=')
         notifyPropertyChanged(BR.amount)
         onAmountChanged.invoke()
     }
@@ -263,7 +269,19 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
 
     fun amountOnFocusChange(v: View, hasFocus: Boolean) {
         if (!hasFocus) {
-            val amount = _amount.replace(",", ".").toDoubleOrNull()
+            var amount: Double? = 0.0
+            val str = _amount.replace(",", ".")
+            if (_amount.startsWith('=')) {
+                try {
+                    amount = MathUtil.solve(str)
+                } catch (e: ArithmeticException) {
+                    _isUsingFormula = false
+                    LogUtil.logException(e, this::class.java.simpleName, ::setAmount.name, true)
+                }
+            } else {
+                amount = str.toDoubleOrNull()
+            }
+
             setAmount(
                 if (amount == null) ""
                 else String.format("%.2f", amount)
