@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
@@ -13,6 +13,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import com.ferrariofilippo.saveapp.model.enums.SaveAppThemes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -21,7 +22,10 @@ import kotlinx.coroutines.launch
 object SettingsUtil {
     private val DEFAULT_CURRENCY = intPreferencesKey("default_currency")
     private val LAST_BACKUP_TIME_STAMP = stringPreferencesKey("last_backup_time_stamp")
+
     private val USE_COMPACT_MODE = booleanPreferencesKey("use_compact_mode")
+    private val USER_THEME = intPreferencesKey("user_theme")
+
     private val SUMMARY_INTEGRITY_CHECK_INTERVAL =
         longPreferencesKey("summary_integrity_check_interval")
     private val PERIODIC_BACKUP_VISIBLE = booleanPreferencesKey("periodic_backup_visible")
@@ -89,6 +93,22 @@ object SettingsUtil {
             }
             .map { preferences ->
                 preferences[USE_COMPACT_MODE] ?: false
+            }
+    }
+
+    suspend fun setTheme(theme: SaveAppThemes) {
+        settingsStore!!.edit { pref ->
+            pref[USER_THEME] = theme.id
+        }
+    }
+
+    fun getTheme(): Flow<SaveAppThemes> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                SaveAppThemes.from(preferences[USER_THEME] ?: 0)
             }
     }
 

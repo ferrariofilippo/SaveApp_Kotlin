@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -6,7 +6,6 @@
     <style name="Theme.SaveApp" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/emerald_400</item>
-        <item name="colorPrimaryVariant">@color/emerald_300</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorSurface</item>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,7 +10,7 @@
         android:contentDescription="@string/content_description_home"
         android:icon="@drawable/round_home_24"
         android:title="@string/home"
-        app:iconTint="?attr/colorOnPrimary"
+        app:iconTint="?attr/colorOnSurfaceVariant"
         app:showAsAction="always" />
 
     <item
@@ -18,7 +18,7 @@
         android:contentDescription="@string/content_description_history"
         android:icon="@drawable/round_history_24"
         android:title="@string/history"
-        app:iconTint="?attr/colorOnPrimary"
+        app:iconTint="?attr/colorOnSurfaceVariant"
         app:showAsAction="always" />
 
     <item
@@ -26,7 +26,7 @@
         android:contentDescription="@string/content_description_budget"
         android:icon="@drawable/round_credit_card_24"
         android:title="@string/budget"
-        app:iconTint="?attr/colorOnPrimary"
+        app:iconTint="?attr/colorOnSurfaceVariant"
         app:showAsAction="always" />
 
     <item
@@ -34,7 +34,7 @@
         android:contentDescription="@string/content_description_stats"
         android:icon="@drawable/round_query_stats_24"
         android:title="@string/stats"
-        app:iconTint="?attr/colorOnPrimary"
+        app:iconTint="?attr/colorOnSurfaceVariant"
         app:showAsAction="always" />
 
 </menu>

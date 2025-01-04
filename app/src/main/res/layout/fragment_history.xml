@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,7 +38,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/history_clock"
                 app:srcCompat="@drawable/round_history_24"
-                app:tint="?attr/colorPrimaryVariant" />
+                app:tint="?attr/colorPrimary" />
 
             <TextView
                 android:id="@+id/history_title"
@@ -51,7 +51,7 @@
                 android:maxLines="1"
                 android:text="@string/history"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textColor="?attr/colorPrimary" />
 
             <Button
                 android:id="@+id/search_button"
@@ -143,17 +143,23 @@
                         android:background="@drawable/search_background"
                         android:hint="@{vm.searchBarHint}"
                         android:paddingHorizontal="12dp"
+                        android:textColorHint="?attr/colorOnPrimaryContainer"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="0dp"
                         app:endIconMode="clear_text"
+                        app:endIconTint="?attr/colorOnPrimaryContainer"
                         app:hintAnimationEnabled="false"
-                        app:startIconDrawable="@drawable/baseline_search_32">
+                        app:startIconDrawable="@drawable/baseline_search_32"
+                        app:startIconTint="?attr/colorOnPrimaryContainer">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginBottom="6dp"
                             android:maxLines="1"
-                            android:text="@={vm.searchQuery}" />
+                            android:padding="0dp"
+                            android:text="@={vm.searchQuery}"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -223,7 +229,7 @@
                             android:text="@{String.valueOf(vm.year)}"
                             android:textAlignment="center"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
-                            android:textColor="?attr/colorPrimaryVariant" />
+                            android:textColor="?attr/colorPrimary" />
 
                         <Button
                             android:id="@+id/increase_year_button"

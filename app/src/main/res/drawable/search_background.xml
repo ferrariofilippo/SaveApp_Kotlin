@@ -3,7 +3,7 @@
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="4dp"
+    android:paddingBottom="1dp"
     android:shape="rectangle">
 
     <solid android:color="?attr/colorPrimaryContainer" />

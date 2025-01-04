@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +31,7 @@
                 android:maxLines="1"
                 android:text="@string/add_tag"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textColor="?attr/colorPrimary" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tagNameInput"

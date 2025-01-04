@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -6,7 +6,6 @@
     <style name="Theme.SaveApp" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/emerald_700</item>
-        <item name="colorPrimaryVariant">@color/emerald_500</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorSurface</item>
@@ -17,5 +16,9 @@
         <item name="colorSecondaryContainer">@color/emerald_100</item>
         <item name="colorSurfaceContainerHighest">@color/emerald_900</item>
         <item name="colorOnPrimaryFixedVariant">@color/gray_700</item>
+    </style>
+
+    <!-- Dynamic colors theme. -->
+    <style name="Theme.DynamicColors" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
     </style>
 </resources>

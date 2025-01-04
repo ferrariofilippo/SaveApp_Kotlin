@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +33,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/subscriptions_icon"
                 app:srcCompat="@drawable/baseline_autorenew_48"
-                app:tint="?attr/colorPrimaryVariant" />
+                app:tint="?attr/colorPrimary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -45,7 +45,7 @@
                 android:maxLines="1"
                 android:text="@string/subscriptions"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textColor="?attr/colorPrimary" />
         </RelativeLayout>
 
         <com.google.android.material.card.MaterialCardView

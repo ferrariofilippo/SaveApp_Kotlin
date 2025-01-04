@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp
@@ -6,7 +6,6 @@ package com.ferrariofilippo.saveapp
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
@@ -31,12 +30,15 @@ import com.ferrariofilippo.saveapp.util.SpacingUtil
 import com.ferrariofilippo.saveapp.util.StatsUtil
 import com.ferrariofilippo.saveapp.util.SubscriptionUtil
 import com.ferrariofilippo.saveapp.util.TagUtil
+import com.ferrariofilippo.saveapp.util.ThemeManagerUtil
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
@@ -201,6 +203,13 @@ class MainActivity : AppCompatActivity() {
         _restartFunction = { restartApplication() }
         _checkpointFunction = { saveApp.utilRepository.checkpoint() }
 
+        val themeId = runBlocking { ThemeManagerUtil.getCurrentThemeResId() }
+        if (themeId == 0) {
+            DynamicColors.applyToActivityIfAvailable(this)
+        } else {
+            setTheme(themeId)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -308,7 +317,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        val addTransactionButton: Button = findViewById(R.id.addTransactionFAB)
+        val addTransactionButton: FloatingActionButton = findViewById(R.id.addTransactionFAB)
         addTransactionButton.setOnClickListener {
             onAddTransactionClick()
         }
@@ -327,7 +336,7 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.homeFragment, R.id.historyFragment, R.id.budgetsFragment, R.id.statsFragment)
 
         findNavController(R.id.containerView).addOnDestinationChangedListener { _, destination, _ ->
-            val fab = findViewById<ExtendedFloatingActionButton>(R.id.addTransactionFAB)
+            val fab = findViewById<FloatingActionButton>(R.id.addTransactionFAB)
             if (rootDestinations.contains(destination.id)) {
                 fab.show()
             } else {

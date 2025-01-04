@@ -22,6 +22,7 @@ import com.ferrariofilippo.saveapp.databinding.FragmentSettingsBinding
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.util.LogUtil
 import com.ferrariofilippo.saveapp.util.SettingsUtil
+import com.ferrariofilippo.saveapp.util.ThemeManagerUtil
 import com.ferrariofilippo.saveapp.view.viewmodels.SettingsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -61,6 +62,7 @@ class SettingsFragment : Fragment() {
     // Methods
     private fun setupUI() {
         setupCurrencyPicker()
+        setupThemePicker()
         setupButtons()
 
         binding.compactModeSwitch.isChecked =
@@ -107,6 +109,27 @@ class SettingsFragment : Fragment() {
                 currencyAutoComplete.setText(currency.name, false)
             }
         })
+    }
+
+    private fun setupThemePicker() {
+        val themeAutoComplete = binding.themePicker.editText as AutoCompleteTextView
+        val adapter = ArrayAdapter(
+            binding.themePicker.context,
+            R.layout.support_simple_spinner_dropdown_item,
+            viewModel.themesToStrings.values.toTypedArray()
+        )
+
+        themeAutoComplete.setOnItemClickListener { parent, _, position, _ ->
+            val theme = viewModel.stringToThemes[parent.adapter.getItem(position) as String]
+            if (theme != null) {
+                runBlocking { ThemeManagerUtil.setTheme(theme) }
+                MainActivity.requireRestart()
+            }
+        }
+
+        themeAutoComplete.setAdapter(adapter)
+        val theme = runBlocking { viewModel.defaultTheme.first() }
+        themeAutoComplete.setText(viewModel.themesToStrings[theme], false)
     }
 
     private fun setupButtons() {

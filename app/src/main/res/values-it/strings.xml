@@ -253,4 +253,7 @@
         (NON è necessaria una connessione a Internet).
     </string>
     <string name="new_transaction_shortcut">Movimento</string>
+    <string name="theme">Tema</string>
+    <string name="default_theme">Base</string>
+    <string name="dynamic_colors">Colori Dinamici</string>
 </resources>
