@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/newTransactionFragment"
         android:name="com.ferrariofilippo.saveapp.view.NewTransactionFragment"
-        android:label="@string/add_transaction">
+        android:label="@string/new_transaction">
         <argument
             android:name="itemId"
             android:defaultValue="0"

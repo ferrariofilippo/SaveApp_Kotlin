@@ -16,6 +16,12 @@ import com.ferrariofilippo.saveapp.util.SettingsUtil
 import kotlinx.coroutines.flow.Flow
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+    private val _currenciesSectionCollapsed = MutableLiveData(true)
+    val currenciesSectionCollapsed: LiveData<Boolean> = _currenciesSectionCollapsed
+
+    private val _aboutSectionCollapsed = MutableLiveData(true)
+    val aboutSectionCollapsed: LiveData<Boolean> = _aboutSectionCollapsed
+
     val currencies: MutableLiveData<Array<Currencies>> =
         MutableLiveData<Array<Currencies>>(Currencies.entries.toTypedArray())
 
@@ -35,4 +41,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         application.getString(R.string.default_theme) to SaveAppThemes.DefaultTheme,
         application.getString(R.string.dynamic_colors) to SaveAppThemes.DynamicColors,
     )
+
+    fun toggleCurrenciesSectionVisibility() {
+        _currenciesSectionCollapsed.value = !_currenciesSectionCollapsed.value!!
+    }
+
+    fun toggleAboutSectionVisibility() {
+        _aboutSectionCollapsed.value = !_aboutSectionCollapsed.value!!
+    }
 }

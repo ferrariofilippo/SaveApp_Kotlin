@@ -74,6 +74,21 @@ class ManageDataViewModel(application: Application) : AndroidViewModel(applicati
     private var _integrityCheckInterval = PeriodicInterval.DAILY
     val integrityCheckInterval get() = _integrityCheckInterval
 
+    private val _statisticsSectionCollapsed = MutableLiveData(true)
+    val statisticsSectionCollapsed: LiveData<Boolean> = _statisticsSectionCollapsed
+
+    private val _transactionsSectionCollapsed = MutableLiveData(true)
+    val transactionsSectionCollapsed: LiveData<Boolean> = _transactionsSectionCollapsed
+
+    private val _subscriptionsSectionCollapsed = MutableLiveData(true)
+    val subscriptionsSectionCollapsed: LiveData<Boolean> = _subscriptionsSectionCollapsed
+
+    private val _budgetsSectionCollapsed = MutableLiveData(true)
+    val budgetsSectionCollapsed: LiveData<Boolean> = _budgetsSectionCollapsed
+
+    private val _cloudSectionCollapsed = MutableLiveData(false)
+    val cloudSectionCollapsed: LiveData<Boolean> = _cloudSectionCollapsed
+
     val intervals = PeriodicInterval.entries.toTypedArray()
 
     val areBackupButtonsEnabled: LiveData<Boolean> = _areBackupButtonsEnabled
@@ -133,5 +148,25 @@ class ManageDataViewModel(application: Application) : AndroidViewModel(applicati
                 StatsUtil.updateIntegrityCheckInterval(app)
             }
         }
+    }
+
+    fun toggleStatisticsSectionVisibility() {
+        _statisticsSectionCollapsed.value = !_statisticsSectionCollapsed.value!!
+    }
+
+    fun toggleTransactionsSectionVisibility() {
+        _transactionsSectionCollapsed.value = !_transactionsSectionCollapsed.value!!
+    }
+
+    fun toggleSubscriptionSectionVisibility() {
+        _subscriptionsSectionCollapsed.value = !_subscriptionsSectionCollapsed.value!!
+    }
+
+    fun toggleBudgetsSectionVisibility() {
+        _budgetsSectionCollapsed.value = !_budgetsSectionCollapsed.value!!
+    }
+
+    fun toggleCloudSectionVisibility() {
+        _cloudSectionCollapsed.value = !_cloudSectionCollapsed.value!!
     }
 }

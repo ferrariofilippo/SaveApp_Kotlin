@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -58,10 +58,12 @@ class HistoryAdapter(private val currency: Currencies, private val padding: Arra
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedTransaction) {
+            val locale = java.util.Locale.getDefault()
             val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
-            amountItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.amount)}"
+            amountItemView.text =
+                "${currency.toSymbol()} ${String.format(locale, "%.2f", item.amount)}"
             descriptionItemView.text = item.description
-            dateItemView.text = item.date.format(DateUtil.getFormatter(java.util.Locale.getDefault()))
+            dateItemView.text = item.date.format(DateUtil.getFormatter(locale))
             tagButtonItemView.text = item.tagName
             tagButtonItemView.setIconTintResource(colorRes)
             tagButtonItemView.setStrokeColorResource(colorRes)

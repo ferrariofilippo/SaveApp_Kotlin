@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -81,7 +81,6 @@ class StatsByTagFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val adapter = TagsStatsAdapter(
-            requireContext(),
             runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) },
             SpacingUtil.padding
         )

@@ -30,7 +30,7 @@
         android:id="@+id/addTransactionFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/add_transaction"
+        android:contentDescription="@string/new_transaction"
         app:srcCompat="@drawable/round_add_24"
         app:layout_anchor="@id/bottomAppBar" />
 

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -11,7 +11,7 @@
     <string name="content_description_history">History button</string>
     <string name="stats">Stats</string>
     <string name="content_description_stats">Stats button</string>
-    <string name="add_transaction">Add a transaction</string>
+    <string name="new_transaction">New transaction</string>
     <string name="transaction">Transaction</string>
     <string name="bets">Bets</string>
     <string name="clothes">Clothes</string>
@@ -25,7 +25,7 @@
     <string name="sport">Sport</string>
     <string name="tech">Tech</string>
     <string name="transports">Transports</string>
-    <string name="searchbar_hint">Search description</string>
+    <string name="searchbar_hint">Find</string>
     <string name="amount_hint">Amount</string>
     <string name="is_subscription">Is a subscription?</string>
     <string name="date_hint">Date</string>
@@ -74,11 +74,11 @@
     <string name="from_display">From: %s</string>
     <string name="to_display">To: %s</string>
     <string name="active_budgets">Active budgets</string>
-    <string name="past_budgets">Past budgets</string>
+    <string name="filled_budgets">Filled budgets</string>
     <string name="name_hint">Name</string>
     <string name="from_date_hint">From date</string>
     <string name="to_date_hint">To date</string>
-    <string name="add_budget">Add budget</string>
+    <string name="new_budget">New budget</string>
     <string name="wallet">Wallet</string>
     <string name="name_error">Name is empty</string>
     <string name="initial_date">Initial date</string>
@@ -154,10 +154,10 @@
     <string name="default_currency_updated">Default currency updated</string>
     <string name="tags">Tags</string>
     <string name="manage">Manage</string>
-    <string name="tag_card_description">Applying tags to transactions is an easy way to organize data.</string>
+    <string name="tag_card_description">Tags provide a convenient way to organize your data.</string>
     <string name="manage_tags">Manage tags</string>
     <string name="tag">Tag</string>
-    <string name="add_tag">Add a tag</string>
+    <string name="new_tag">New tag</string>
     <string name="tag_deleted">Tag deleted.</string>
     <string name="name_already_used">Name is already in use</string>
     <string name="tag_created">Tag created.</string>
@@ -256,4 +256,12 @@
     <string name="theme">Theme</string>
     <string name="default_theme">Default</string>
     <string name="dynamic_colors">Dynamic Colors</string>
+    <string name="toggle_about_visibility">Toggle \"About\" visibility</string>
+    <string name="toggle_currencies_visibility">Toggle \"Currencies\" visibility</string>
+    <string name="toggle_statistics_visibility">Toggle \"Statistics\" visibility</string>
+    <string name="toggle_transactions_visibility">Toggle \"Transactions\" visibility</string>
+    <string name="toggle_subscriptions_visibility">Toggle \"Subscriptions\" visibility</string>
+    <string name="toggle_budgets_visibility">Toggle \"Budgets\" visibility</string>
+    <string name="toggle_cloud_visibility">Toggle \"Cloud\" visibility</string>
+    <string name="enable_formulas">Enable formulas</string>
 </resources>

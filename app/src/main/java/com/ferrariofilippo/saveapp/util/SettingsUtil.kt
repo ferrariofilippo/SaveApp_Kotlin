@@ -24,6 +24,7 @@ object SettingsUtil {
     private val LAST_BACKUP_TIME_STAMP = stringPreferencesKey("last_backup_time_stamp")
 
     private val USE_COMPACT_MODE = booleanPreferencesKey("use_compact_mode")
+    private val ENABLE_FORMULAS = booleanPreferencesKey("enable_formulas")
     private val USER_THEME = intPreferencesKey("user_theme")
 
     private val SUMMARY_INTEGRITY_CHECK_INTERVAL =
@@ -94,6 +95,16 @@ object SettingsUtil {
             .map { preferences ->
                 preferences[USE_COMPACT_MODE] ?: false
             }
+    }
+
+    suspend fun setEnableFormulas(enableFormulas: Boolean) {
+        settingsStore!!.edit { pref -> pref[ENABLE_FORMULAS] = enableFormulas }
+    }
+
+    fun getEnableFormulas(): Flow<Boolean> {
+        return settingsStore!!.data
+            .catch { emit(emptyPreferences()) }
+            .map { preferences -> preferences[ENABLE_FORMULAS] ?: false }
     }
 
     suspend fun setTheme(theme: SaveAppThemes) {

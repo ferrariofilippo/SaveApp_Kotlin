@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -17,11 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.enums.Currencies
 import com.ferrariofilippo.saveapp.model.statsitems.TagTransactionsSum
-import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.google.android.material.divider.MaterialDivider
 
 class TagsStatsAdapter(
-    private val context: Context,
     private val currency: Currencies,
     private val padding: Array<Int>
 ) : ListAdapter<TagTransactionsSum, TagsStatsAdapter.TagsStatsViewHolder>(TagsStatsComparator()) {
@@ -31,13 +29,12 @@ class TagsStatsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsStatsViewHolder {
-        return TagsStatsViewHolder.create(parent, currency, context, padding)
+        return TagsStatsViewHolder.create(parent, currency, padding)
     }
 
     class TagsStatsViewHolder(
         itemView: View,
         private val currency: Currencies,
-        private val ctx: Context,
         padding: Array<Int>
     ) : RecyclerView.ViewHolder(itemView) {
         private val container = itemView.findViewById<LinearLayoutCompat>(R.id.tagStatsContainer)
@@ -55,23 +52,29 @@ class TagsStatsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: TagTransactionsSum) {
+            val locale = java.util.Locale.getDefault()
             tagPillItemView.setColorFilter(item.color)
             tagNameItemView.text = item.name
             sumItemView.text =
-                String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)
+                String.format(
+                    locale,
+                    "(%.1f%%) %s %.2f",
+                    item.percentage,
+                    currency.toSymbol(),
+                    item.sum
+                )
         }
 
         companion object {
             fun create(
                 parent: ViewGroup,
                 currency: Currencies,
-                ctx: Context,
                 padding: Array<Int>
             ): TagsStatsViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.tag_stats_item, parent, false)
 
-                return TagsStatsViewHolder(view, currency, ctx, padding)
+                return TagsStatsViewHolder(view, currency, padding)
             }
         }
     }
@@ -84,7 +87,10 @@ class TagsStatsAdapter(
             return oldItem.name == newItem.name && oldItem.sum == newItem.sum
         }
 
-        override fun areItemsTheSame(oldItem: TagTransactionsSum, newItem: TagTransactionsSum): Boolean {
+        override fun areItemsTheSame(
+            oldItem: TagTransactionsSum,
+            newItem: TagTransactionsSum
+        ): Boolean {
             return oldItem.tagId == newItem.tagId
         }
     }

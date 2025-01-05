@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.viewmodels
@@ -47,6 +47,8 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
 
     val baseCurrency: Currencies =
         runBlocking { Currencies.from(SettingsUtil.getCurrency().first()) }
+
+    val enableFormulas: Boolean = runBlocking { SettingsUtil.getEnableFormulas().first() }
 
     private var _amount: String = ""
     private var _currency: Currencies = baseCurrency

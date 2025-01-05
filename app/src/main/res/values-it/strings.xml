@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2024 Filippo Ferrario -->
+<!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
 <resources>
@@ -11,7 +11,7 @@
     <string name="content_description_history">Bottone storico</string>
     <string name="stats">Statistiche</string>
     <string name="content_description_stats">Bottone statistiche</string>
-    <string name="add_transaction">Aggiungi un movimento</string>
+    <string name="new_transaction">Nuovo movimento</string>
     <string name="transaction">Movimento</string>
     <string name="bets">Scommesse</string>
     <string name="clothes">Abbigliamento</string>
@@ -25,7 +25,7 @@
     <string name="sport">Sport</string>
     <string name="tech">Tech</string>
     <string name="transports">Trasporti</string>
-    <string name="searchbar_hint">Cerca descrizione</string>
+    <string name="searchbar_hint">Cerca</string>
     <string name="amount_hint">Valore</string>
     <string name="is_subscription">È un abbonamento?</string>
     <string name="date_hint">Data</string>
@@ -74,11 +74,11 @@
     <string name="from_display">Da: %s</string>
     <string name="to_display">A: %s</string>
     <string name="active_budgets">Budget attivi</string>
-    <string name="past_budgets">Budget passati</string>
+    <string name="filled_budgets">Budget esauriti</string>
     <string name="name_hint">Nome</string>
     <string name="from_date_hint">Dalla data</string>
     <string name="to_date_hint">Alla data</string>
-    <string name="add_budget">Aggiungi budget</string>
+    <string name="new_budget">Nuovo budget</string>
     <string name="wallet">Portafogli</string>
     <string name="name_error">Il nome è vuoto</string>
     <string name="initial_date">Data di inizio</string>
@@ -157,7 +157,7 @@
     <string name="tag_card_description">Applicare dei tag ai movimenti permette di organizzare più facilmente i dati.</string>
     <string name="manage_tags">Gestisci i tag</string>
     <string name="tag">Tag</string>
-    <string name="add_tag">Aggiungi un tag</string>
+    <string name="new_tag">Nuovo tag</string>
     <string name="tag_deleted">Tag eliminato.</string>
     <string name="name_already_used">Nome già in uso</string>
     <string name="tag_created">Tag creato.</string>
@@ -256,4 +256,12 @@
     <string name="theme">Tema</string>
     <string name="default_theme">Base</string>
     <string name="dynamic_colors">Colori Dinamici</string>
+    <string name="toggle_about_visibility">Cambia la visibilità della sezione \"Chi siamo\"</string>
+    <string name="toggle_currencies_visibility">Cambia la visibilità della sezione \"Valute\"</string>
+    <string name="toggle_statistics_visibility">Cambia la visibilità della sezione \"Statistiche\"</string>
+    <string name="toggle_transactions_visibility">Cambia la visibilità della sezione \"Transazioni\"</string>
+    <string name="toggle_subscriptions_visibility">Cambia la visibilità della sezione \"Abbonamenti\"</string>
+    <string name="toggle_budgets_visibility">Cambia la visibilità della sezione \"Budget\"</string>
+    <string name="toggle_cloud_visibility">Cambia la visibilità della sezione \"Cloud\"</string>
+    <string name="enable_formulas">Attiva formule</string>
 </resources>

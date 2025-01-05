@@ -48,7 +48,7 @@
                     android:layout_toEndOf="@id/add_budget_icon"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@string/add_budget"
+                    android:text="@string/new_budget"
                     android:textAppearance="?attr/textAppearanceHeadlineMedium"
                     android:textColor="?attr/colorPrimary" />
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!-- Copyright (c) 2025 Filippo Ferrario -->
 <!-- Licensed under the MIT License. See the LICENSE. -->
 
@@ -53,6 +54,7 @@
                     android:textColor="?attr/colorPrimary" />
             </RelativeLayout>
 
+            <!-- Currencies card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/currencyCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -68,16 +70,37 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/currencies"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/currenciesCollapseButton"
+                            android:text="@string/currencies"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                        <Button
+                            android:id="@+id/currenciesCollapseButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_currencies_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.currenciesSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp">
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:visibility="@{vm.currenciesSectionCollapsed ? View.GONE : View.VISIBLE}">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/defaultCurrencyPicker"
@@ -103,29 +126,36 @@
                             android:layout_centerVertical="true"
                             android:indeterminate="true"
                             android:visibility="@{vm.isUpdatingCurrency ? View.VISIBLE : View.GONE}" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/currenciesCardDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/defaultCurrencyPicker"
+                            android:layout_marginTop="8dp" />
+
+                        <TextView
+                            android:id="@+id/currenciesCardNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/currenciesCardDivider"
+                            android:layout_marginVertical="4dp"
+                            android:text="@string/set_default_currency_description"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/currenciesCardNote"
+                            android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                            android:text="@string/currencies_notice"
+                            android:textColor="?android:attr/textColorSecondary" />
                     </RelativeLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="4dp"
-                        android:text="@string/set_default_currency_description"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/currencies_notice"
-                        android:textColor="?android:attr/textColorSecondary" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Appearance card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/appearanceCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -139,7 +169,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -152,6 +183,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/use_compact_mode" />
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/enableFormulasSwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enable_formulas" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/themePicker"
@@ -168,6 +205,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Tags card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tagsCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -181,7 +219,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="12dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -221,6 +260,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Data card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/dataCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -240,6 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/manageDataButton"
                         android:text="@string/data"
                         android:textAppearance="?attr/textAppearanceHeadline5" />
 
@@ -255,6 +296,7 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Advanced card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/advancedCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -295,8 +337,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toStartOf="@id/exportLogsButton"
-                            android:text="@string/clear_logs"
-                            app:icon="@drawable/baseline_delete_24" />
+                            android:text="@string/clear_logs" />
 
                         <Button
                             android:id="@+id/exportLogsButton"
@@ -340,7 +381,9 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- About card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/aboutCard"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -354,29 +397,51 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:text="@string/about_description"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/aboutCollapseButton"
+                            android:text="@string/about"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                        <Button
+                            android:id="@+id/aboutCollapseButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_about_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.aboutSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{vm.aboutSectionCollapsed ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/aboutCardDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:text="@string/about_description"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?android:attr/textColorSecondary" />
 
                         <Button
                             android:id="@+id/creditsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/aboutCardDescription"
                             android:layout_toStartOf="@id/privacyButton"
                             android:text="@string/credits"
                             app:icon="@drawable/baseline_person_pin_circle_24" />
@@ -386,6 +451,7 @@
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/aboutCardDescription"
                             android:layout_alignParentEnd="true"
                             android:layout_marginStart="4dp"
                             android:text="@string/privacy"

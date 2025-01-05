@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
@@ -68,9 +68,13 @@ class SettingsFragment : Fragment() {
         binding.compactModeSwitch.isChecked =
             runBlocking { SettingsUtil.getUseCompactMode().first() }
         binding.compactModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                SettingsUtil.setUseCompactMode(isChecked)
-            }
+            lifecycleScope.launch { SettingsUtil.setUseCompactMode(isChecked) }
+        }
+
+        binding.enableFormulasSwitch.isChecked =
+            runBlocking { SettingsUtil.getEnableFormulas().first() }
+        binding.enableFormulasSwitch.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch { SettingsUtil.setEnableFormulas(isChecked) }
         }
     }
 
@@ -160,6 +164,12 @@ class SettingsFragment : Fragment() {
         binding.privacyButton.setOnClickListener {
             val uri = Uri.parse("https://saveapp.vercel.app/privacy")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+        binding.currenciesCollapseButton.setOnClickListener {
+            viewModel.toggleCurrenciesSectionVisibility()
+        }
+        binding.aboutCollapseButton.setOnClickListener {
+            viewModel.toggleAboutSectionVisibility()
         }
     }
 }

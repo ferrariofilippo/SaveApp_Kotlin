@@ -54,6 +54,7 @@
                     android:textColor="?attr/colorPrimary" />
             </RelativeLayout>
 
+            <!-- Statistics card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/statisticsCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -62,33 +63,58 @@
                 android:layout_below="@id/settingsHeader"
                 android:layout_margin="4dp">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/statisticsCardTitle"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/statistics"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/statisticsToggleButton"
+                            android:text="@string/statistics"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                        <Button
+                            android:id="@+id/statisticsToggleButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_statistics_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.statisticsSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/statisticsCardNote"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
+                        android:layout_below="@id/statisticsCardTitle"
+                        android:layout_marginBottom="8dp"
                         android:text="@string/integrity_check_description"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:visibility="@{vm.statisticsSectionCollapsed ? View.GONE : View.VISIBLE}" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/integrityCheckIntervalInput"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/integrity_check_interval">
+                        android:layout_below="@id/statisticsCardNote"
+                        android:hint="@string/integrity_check_interval"
+                        android:visibility="@{vm.statisticsSectionCollapsed ? View.GONE : View.VISIBLE}">
 
                         <AutoCompleteTextView
                             android:layout_width="match_parent"
@@ -97,25 +123,21 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
+                    <Button
+                        android:id="@+id/checkIntegrityNowButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/integrityCheckIntervalInput"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/checkIntegrityNowButton"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="@string/check_integrity_now"
-                            app:icon="@drawable/outline_safety_check_24" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        android:text="@string/check_integrity_now"
+                        android:visibility="@{vm.statisticsSectionCollapsed ? View.GONE : View.VISIBLE}"
+                        app:icon="@drawable/outline_safety_check_24" />
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Transactions card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/transactionsCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -131,38 +153,62 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/transactions"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:text="@string/manage_transactions"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/transactionsToggleButton"
+                            android:text="@string/transactions"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/import_transactions_note"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        <Button
+                            android:id="@+id/transactionsToggleButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_transactions_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.transactionsSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:visibility="@{vm.transactionsSectionCollapsed ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/transactionsCardDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/manage_transactions"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:id="@+id/transactionsCardNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/transactionsCardDescription"
+                            android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                            android:text="@string/import_transactions_note"
+                            android:textColor="?android:attr/textColorSecondary" />
 
                         <Button
                             android:id="@+id/templateTransactionsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/transactionsCardNote"
                             android:layout_alignParentEnd="true"
+                            android:layout_marginTop="8dp"
                             android:contentDescription="@string/download_transactions_template"
                             android:text="@string/template" />
 
@@ -192,6 +238,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Subscriptions card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/subscriptionsCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -207,38 +254,62 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/subscriptions"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:text="@string/manage_subscriptions"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/toggleSubscriptionsButton"
+                            android:text="@string/subscriptions"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/import_subscriptions_note"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        <Button
+                            android:id="@+id/toggleSubscriptionsButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_subscriptions_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.subscriptionsSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:visibility="@{vm.subscriptionsSectionCollapsed ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/subscriptionsCardDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/manage_subscriptions"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:id="@+id/subscriptionsCardNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/subscriptionsCardDescription"
+                            android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                            android:text="@string/import_subscriptions_note"
+                            android:textColor="?android:attr/textColorSecondary" />
 
                         <Button
                             android:id="@+id/templateSubscriptionsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/subscriptionsCardNote"
                             android:layout_alignParentEnd="true"
+                            android:layout_marginTop="8dp"
                             android:contentDescription="@string/download_subscriptions_template"
                             android:text="@string/template" />
 
@@ -256,7 +327,6 @@
 
                         <Button
                             android:id="@+id/exportSubscriptionsButton"
-
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -269,6 +339,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Budgets card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/budgetsCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -284,37 +355,62 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/budgets"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:text="@string/manage_budgets"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:switchTextAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/import_budgets_note"
-                        android:textColor="?android:attr/textColorSecondary" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/budgetsToggleButton"
+                            android:text="@string/budgets"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                        <Button
+                            android:id="@+id/budgetsToggleButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_budgets_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.budgetsSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{vm.budgetsSectionCollapsed ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/budgetsCardDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/manage_budgets"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:id="@+id/budgetsCardNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/budgetsCardDescription"
+                            android:switchTextAppearance="?attr/textAppearanceBodyMedium"
+                            android:text="@string/import_budgets_note"
+                            android:textColor="?android:attr/textColorSecondary" />
 
                         <Button
                             android:id="@+id/templateBudgetsButton"
                             style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/budgetsCardNote"
                             android:layout_alignParentEnd="true"
+                            android:layout_marginTop="8dp"
                             android:contentDescription="@string/download_budgets_template"
                             android:text="@string/template" />
 
@@ -344,6 +440,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Cloud card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cloudCard"
                 style="?attr/materialCardViewElevatedStyle"
@@ -359,23 +456,44 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cloud"
-                        android:textAppearance="?attr/textAppearanceHeadline5" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:text="@string/cloud_description"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/cloudToggleButton"
+                            android:text="@string/cloud"
+                            android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                        <Button
+                            android:id="@+id/cloudToggleButton"
+                            style="?attr/materialIconButtonOutlinedStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/toggle_cloud_visibility"
+                            android:gravity="end"
+                            app:collapsibleIcon="@{vm.cloudSectionCollapsed}"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/cloud_description"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:visibility="@{vm.cloudSectionCollapsed ? View.GONE : View.VISIBLE}" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{vm.cloudSectionCollapsed ? View.GONE : View.VISIBLE}">
 
                         <RelativeLayout
                             android:id="@+id/lastUpdateContainer"
@@ -433,7 +551,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="@{vm.periodicBackupSectionVisible ? View.VISIBLE : View.GONE}">
+                        android:visibility="@{vm.periodicBackupSectionVisible &amp;&amp; !vm.cloudSectionCollapsed ? View.VISIBLE : View.GONE}">
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_width="match_parent"

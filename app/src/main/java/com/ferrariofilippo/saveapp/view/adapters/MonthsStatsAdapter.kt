@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view.adapters
@@ -18,7 +18,9 @@ import com.ferrariofilippo.saveapp.model.statsitems.MonthTransactionsSum
 import com.google.android.material.divider.MaterialDivider
 
 class MonthsStatsAdapter(private val currency: Currencies, private val padding: Array<Int>) :
-    ListAdapter<MonthTransactionsSum, MonthsStatsAdapter.MonthsStatsViewHolder>(MonthsStatsComparator()) {
+    ListAdapter<MonthTransactionsSum, MonthsStatsAdapter.MonthsStatsViewHolder>(
+        MonthsStatsComparator()
+    ) {
     override fun onBindViewHolder(holder: MonthsStatsViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -46,9 +48,16 @@ class MonthsStatsAdapter(private val currency: Currencies, private val padding: 
 
         @SuppressLint("SetTextI18n")
         fun bind(item: MonthTransactionsSum) {
+            val locale = java.util.Locale.getDefault()
             monthNameItemView.text = item.name
             sumItemView.text =
-                String.format("(%.1f %%) %s %.2f", item.percentage, currency.toSymbol(), item.sum)
+                String.format(
+                    locale,
+                    "(%.1f%%) %s %.2f",
+                    item.percentage,
+                    currency.toSymbol(),
+                    item.sum
+                )
         }
 
         companion object {
