@@ -1,10 +1,10 @@
-// Copyright (c) 2024 Filippo Ferrario
+// Copyright (c) 2025 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.view
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,14 +90,15 @@ class StatsByNameFragment : Fragment() {
     private fun updateGraph() {
         try {
             val ctx = requireContext()
-            val darkModeFlags = ctx.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            val txtColor = ctx.getColor(
-                if (darkModeFlags == Configuration.UI_MODE_NIGHT_YES) R.color.white
-                else R.color.black
+            val txtColor = TypedValue()
+            ctx.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnBackground,
+                txtColor,
+                true
             )
 
-            binding.byNameStatsBarChart.xAxis.textColor = txtColor
-            binding.byNameStatsBarChart.axisLeft.textColor = txtColor
+            binding.byNameStatsBarChart.xAxis.textColor = txtColor.data
+            binding.byNameStatsBarChart.axisLeft.textColor = txtColor.data
             binding.byNameStatsBarChart.data = BarData(viewModel.dataSet)
             binding.byNameStatsBarChart.animateXY(msDuration, msDuration, Easing.Linear)
         } catch (e: Exception) {

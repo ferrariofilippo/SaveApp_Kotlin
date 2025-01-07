@@ -264,4 +264,6 @@
     <string name="toggle_budgets_visibility">Cambia la visibilità della sezione \"Budget\"</string>
     <string name="toggle_cloud_visibility">Cambia la visibilità della sezione \"Cloud\"</string>
     <string name="enable_formulas">Attiva formule</string>
+    <string name="dracula_theme">Dracula</string>
+    <string name="nord_theme">Nord</string>
 </resources>

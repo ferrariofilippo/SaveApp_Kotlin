@@ -35,11 +35,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val themesToStrings = mutableMapOf(
         SaveAppThemes.DefaultTheme to application.getString(R.string.default_theme),
         SaveAppThemes.DynamicColors to application.getString(R.string.dynamic_colors),
+        SaveAppThemes.Dracula to application.getString(R.string.dracula_theme),
+        SaveAppThemes.Nord to application.getString(R.string.nord_theme),
     )
 
     val stringToThemes = mutableMapOf(
         application.getString(R.string.default_theme) to SaveAppThemes.DefaultTheme,
         application.getString(R.string.dynamic_colors) to SaveAppThemes.DynamicColors,
+        application.getString(R.string.dracula_theme) to SaveAppThemes.Dracula,
+        application.getString(R.string.nord_theme) to SaveAppThemes.Nord,
     )
 
     fun toggleCurrenciesSectionVisibility() {

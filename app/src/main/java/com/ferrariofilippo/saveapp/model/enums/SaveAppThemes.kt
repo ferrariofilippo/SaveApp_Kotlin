@@ -5,7 +5,9 @@ package com.ferrariofilippo.saveapp.model.enums
 
 enum class SaveAppThemes(val id: Int) {
     DefaultTheme(0),
-    DynamicColors(1);
+    DynamicColors(1),
+    Dracula(2),
+    Nord(3);
 
     companion object {
         private val _map = entries.associateBy { it.id }

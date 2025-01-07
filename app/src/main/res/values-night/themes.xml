@@ -17,4 +17,36 @@
         <item name="colorSurfaceContainerHighest">@color/emerald_100</item>
         <item name="colorOnPrimaryFixedVariant">@color/gray_300</item>
     </style>
+
+    <!-- Nord theme. -->
+    <style name="Theme.Nord" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/nord8</item>
+        <item name="colorOnPrimary">@color/nord6</item>
+        <item name="colorPrimaryContainer">@color/nord8</item>
+        <item name="colorOnPrimaryContainer">@color/nord6</item>
+        <item name="colorSecondary">@color/nord7</item>
+        <item name="colorOnSecondary">@color/nord6</item>
+        <item name="colorSecondaryContainer">@color/nord7</item>
+        <item name="colorOnSecondaryContainer">@color/nord6</item>
+        <item name="colorError">@color/nord11</item>
+        <item name="colorOnError">@color/nord6</item>
+        <item name="colorOnBackground">@color/nord6</item>
+        <item name="colorSurface">@color/nord0</item>
+        <item name="colorOnSurface">@color/nord6</item>
+        <item name="colorSurfaceVariant">@color/nord8</item>
+        <item name="colorOnSurfaceVariant">@color/nord6</item>
+        <item name="colorOutline">@color/nord9</item>
+        <item name="colorOutlineVariant">@color/nord10</item>
+        <item name="colorOnPrimaryFixedVariant">@color/nord4</item>
+        <item name="colorSurfaceContainerHighest">@color/nord2</item>
+        <item name="colorSurfaceContainerHigh">@color/nord1</item>
+        <item name="colorSurfaceContainerLow">@color/nord2</item>
+        <item name="colorSurfaceContainer">@color/nord1</item>
+
+        <item name="android:colorBackground">@color/nord0</item>
+        <item name="android:statusBarColor">@color/nord0</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColor">@color/nord6</item>
+        <item name="android:textColorSecondary">@color/nord5</item>
+    </style>
 </resources>

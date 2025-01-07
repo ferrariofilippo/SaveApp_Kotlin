@@ -16,6 +16,8 @@ object ThemeManagerUtil {
         val currentTheme = SettingsUtil.getTheme().first()
         return when (currentTheme.id) {
             1 -> 0
+            2 -> R.style.Theme_Dracula
+            3 -> R.style.Theme_Nord
             else -> R.style.Theme_SaveApp
         }
     }

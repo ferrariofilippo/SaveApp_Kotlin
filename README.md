@@ -26,3 +26,5 @@ SaveApp is powered by the open-source libraries below. Please, consider supporti
  - <a href="https://github.com/square/retrofit">Retrofit 2</a> - <a href="http://www.apache.org/licenses/LICENSE-2.0">LICENSE</a><br />
  - Graphs are created using <a href="https://github.com/PhilJay/MPAndroidChart">MPAndroid Chart library</a> - <a href="http://www.apache.org/licenses/LICENSE-2.0">LICENSE</a><br/>
  - Exchange rates are fetched using <a href="https://www.frankfurter.app/">Frankfurter APIs</a> - <a href="https://github.com/hakanensari/frankfurter/blob/main/LICENSE">LICENSE</a>.<br/>
+ - <a href="https://draculatheme.com/">Dracula Theme</a> - <a href="https://github.com/dracula/template/blob/main/LICENSE">LICENSE</a><br />
+ - <a href="https://www.nordtheme.com/">Nord Theme</a> - <a href="https://github.com/nordtheme/nord/blob/develop/license">LICENSE</a><br />
