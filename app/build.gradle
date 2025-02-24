@@ -13,11 +13,17 @@ android {
     defaultConfig {
         applicationId "com.ferrariofilippo.saveapp"
         minSdk 29
-        targetSdk 34
-        versionCode 15
-        versionName "1.15"
+        targetSdk 35
+        versionCode 16
+        versionName "1.16"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -60,10 +66,10 @@ dependencies {
     implementation "com.google.android.material:material:1.12.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.7"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.8.5"
-    implementation "androidx.navigation:navigation-ui-ktx:2.8.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.8.7"
+    implementation "androidx.navigation:navigation-ui-ktx:2.8.7"
     implementation "androidx.compose.material3:material3:1.3.1"
-    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    implementation "androidx.datastore:datastore-preferences:1.1.2"
     implementation "androidx.room:room-runtime:2.6.1"
     implementation "androidx.room:room-ktx:2.6.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"
@@ -81,7 +87,7 @@ dependencies {
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
     implementation 'com.google.android.gms:play-services-auth:21.3.0'
 
-    annotationProcessor "androidx.room:room-compiler:2.6.1"
+    ksp "androidx.room:room-compiler:2.6.1"
 
     ksp "androidx.room:room-compiler:2.6.1"
 

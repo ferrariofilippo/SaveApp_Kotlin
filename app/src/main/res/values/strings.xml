@@ -45,7 +45,7 @@
     <string name="choose_date">Choose a date</string>
     <string name="amount_error">Amount is not valid</string>
     <string name="description_error">Description is empty</string>
-    <string name="payment_of">Payment of %s %s</string>
+    <string name="payment_of">Payment of %1$s %2$s</string>
     <string name="change_sorting">Change sorting order</string>
     <string name="shopping_cart">Shopping cart</string>
     <string name="vertical_arrow">Vertical arrow</string>
@@ -226,17 +226,16 @@
     <string name="bugs">Bugs</string>
     <string name="by_name">By name</string>
     <string name="result_not_found">No transaction found for this query</string>
-    <string name="average_transaction_value">Average transaction value</string>
-    <string name="current_week_sum">This week\'s sum</string>
-    <string name="current_month_sum">This month\'s sum</string>
-    <string name="current_month_frequency">This month\'s frequency</string>
+    <string name="average">Average</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
     <string name="average_monthly_sum">Average monthly sum</string>
-    <string name="average_monthly_frequency">Average monthly frequency</string>
-    <string name="frequencies">Frequencies</string>
-    <string name="sums">Sums</string>
+    <string name="average_monthly_count">Average monthly count</string>
+    <string name="count">Count</string>
+    <string name="sum">Sum</string>
     <string name="none">None</string>
     <string name="parent_tag">Parent tag</string>
-    <string name="tag_complete_name">%s/%s</string>
+    <string name="tag_complete_name">%1$s/%2$s</string>
     <string name="aggregate_sub_tags">Aggregate sub-tags</string>
     <string name="cannot_delete_tag_children">Cannot delete the tag. There is a sub-tag.</string>
     <string name="cannot_delete_tag">Cannot delete the tag.</string>
@@ -266,4 +265,12 @@
     <string name="enable_formulas">Enable formulas</string>
     <string name="dracula_theme">Dracula</string>
     <string name="nord_theme">Nord</string>
+    <string name="graph">Graph</string>
+    <string name="last_week">Last week</string>
+    <string name="last_month">Last month</string>
+    <string name="last_year">Last year</string>
+    <string name="toggle_graph">Toggle graph</string>
+    <string name="toggle_last_week">Toggle last week</string>
+    <string name="toggle_last_month">Toggle last month</string>
+    <string name="toggle_last_year">Toggle last year</string>
 </resources>

@@ -45,7 +45,7 @@
     <string name="choose_date">Scegli una data</string>
     <string name="amount_error">Il valore non è valido</string>
     <string name="description_error">La descrizione è vuota</string>
-    <string name="payment_of">Pagamento di %s %s</string>
+    <string name="payment_of">Pagamento di %1$s %2$s</string>
     <string name="change_sorting">Cambia l\'ordinamento</string>
     <string name="shopping_cart">Carrello della spesa</string>
     <string name="vertical_arrow">Freccia verticale</string>
@@ -226,17 +226,16 @@
     <string name="bugs">Bug</string>
     <string name="by_name">Per nome</string>
     <string name="result_not_found">Nessun movimento trovato per questa ricerca</string>
-    <string name="average_transaction_value">Valore medio del movimento</string>
-    <string name="current_week_sum">Somma di questa settimana</string>
-    <string name="current_month_sum">Somma di questo mese</string>
-    <string name="current_month_frequency">Frequenza di questo mese</string>
+    <string name="count">Conto</string>
+    <string name="sum">Somma</string>
+    <string name="average">Media</string>
+    <string name="min">Minimo</string>
+    <string name="max">Massimo</string>
     <string name="average_monthly_sum">Somma media mensile</string>
-    <string name="average_monthly_frequency">Frequenza media mensile</string>
-    <string name="frequencies">Frequenze</string>
-    <string name="sums">Somme</string>
+    <string name="average_monthly_count">Conto medio mensile</string>
     <string name="none">Nessuno</string>
     <string name="parent_tag">Tag genitore</string>
-    <string name="tag_complete_name">%s/%s</string>
+    <string name="tag_complete_name">%1$s/%2$s</string>
     <string name="aggregate_sub_tags">Aggrega sotto-tag</string>
     <string name="cannot_delete_tag_children">Impossibile eliminare il tag. Esistono dei sotto-tag.</string>
     <string name="cannot_delete_tag">Impossibile eliminare il tag.</string>
@@ -266,4 +265,12 @@
     <string name="enable_formulas">Attiva formule</string>
     <string name="dracula_theme">Dracula</string>
     <string name="nord_theme">Nord</string>
+    <string name="graph">Grafico</string>
+    <string name="last_week">Ultima settimana</string>
+    <string name="last_month">Ultimo mese</string>
+    <string name="last_year">Ultimo anno</string>
+    <string name="toggle_graph">Alterna grafico</string>
+    <string name="toggle_last_week">Alterna ultima settimana</string>
+    <string name="toggle_last_month">Alterna ultimo mese</string>
+    <string name="toggle_last_year">Alterna ultimo anno</string>
 </resources>

@@ -85,6 +85,23 @@ class StatsByNameFragment : Fragment() {
 
             viewModel.setHint(hint)
         }
+
+        setupButtons()
+    }
+
+    private fun setupButtons() {
+        binding.toggleLastWeekSection.setOnClickListener {
+            viewModel.changeLastWeekSectionVisibility()
+        }
+        binding.toggleLastMonthSection.setOnClickListener {
+            viewModel.changeLastMonthSectionVisibility()
+        }
+        binding.toggleLastYearSection.setOnClickListener {
+            viewModel.changeLastYearSectionVisibility()
+        }
+        binding.toggleGraphSection.setOnClickListener {
+            viewModel.changeGraphSectionVisibility()
+        }
     }
 
     private fun updateGraph() {

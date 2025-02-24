@@ -11,8 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.SaveAppApplication
-import com.ferrariofilippo.saveapp.model.ByNameStatsData
+import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import com.ferrariofilippo.saveapp.model.statsitems.ByNameStats
+import com.ferrariofilippo.saveapp.model.statsitems.ByNameStatsValues
 import com.ferrariofilippo.saveapp.util.SettingsUtil
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.data.BarDataSet
@@ -34,7 +36,7 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _showSumsObserver = Observer<Boolean> { value ->
         _graphTitle.value =
-            if (value) _app.getString(R.string.sums) else _app.getString(R.string.frequencies)
+            if (value) _app.getString(R.string.sum) else _app.getString(R.string.count)
 
         viewModelScope.launch {
             updateStats(query.value!!)
@@ -82,23 +84,11 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
     private val _showNotFoundMessage: MutableLiveData<Boolean> = MutableLiveData(false)
     val showNotFoundMessage: LiveData<Boolean> = _showNotFoundMessage
 
-    private val _currentMonthFrequency: MutableLiveData<Int> = MutableLiveData(0)
-    val currentMonthFrequency: LiveData<Int> = _currentMonthFrequency
-
-    private val _currentMonthSum: MutableLiveData<Double> = MutableLiveData(0.0)
-    val currentMonthSum: LiveData<Double> = _currentMonthSum
-
-    private val _currentWeekSum: MutableLiveData<Double> = MutableLiveData(0.0)
-    val currentWeekSum: LiveData<Double> = _currentWeekSum
-
-    private val _avgMonthlyFrequency: MutableLiveData<Int> = MutableLiveData(0)
-    val avgMonthlyFrequency: LiveData<Int> = _avgMonthlyFrequency
+    private val _avgMonthlyCount: MutableLiveData<Int> = MutableLiveData(0)
+    val avgMonthlyCount: LiveData<Int> = _avgMonthlyCount
 
     private val _avgMonthlySum: MutableLiveData<Double> = MutableLiveData(0.0)
     val avgMonthlySum: LiveData<Double> = _avgMonthlySum
-
-    private val _avgValue: MutableLiveData<Double> = MutableLiveData(0.0)
-    val avgValue: LiveData<Double> = _avgValue
 
     private val _graphTitle: MutableLiveData<String> = MutableLiveData("")
     val graphTitle: LiveData<String> = _graphTitle
@@ -107,10 +97,28 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
         MutableLiveData(application.getString(R.string.searchbar_hint))
     val hint: LiveData<String> = _hint
 
+    private val _lastWeekSectionCollapsed = MutableLiveData(false)
+    val lastWeekSectionCollapsed: LiveData<Boolean> = _lastWeekSectionCollapsed
+
+    private val _lastMonthSectionCollapsed = MutableLiveData(true)
+    val lastMonthSectionCollapsed: LiveData<Boolean> = _lastMonthSectionCollapsed
+
+    private val _lastYearSectionCollapsed = MutableLiveData(true)
+    val lastYearSectionCollapsed: LiveData<Boolean> = _lastYearSectionCollapsed
+
+    private val _graphSectionCollapsed = MutableLiveData(true)
+    val graphSectionCollapsed: LiveData<Boolean> = _graphSectionCollapsed
+
     private val _symbol = MutableLiveData(Currencies.EUR.toSymbol())
     val symbol: LiveData<String> = _symbol
 
     val query: MutableLiveData<String> = MutableLiveData("")
+
+    val lastWeekStats = ByNameStats()
+
+    val lastMonthStats = ByNameStats()
+
+    val lastYearStats = ByNameStats()
 
     var dataSet: BarDataSet = BarDataSet(listOf(), graphTitle.value)
 
@@ -157,13 +165,28 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
         _isShowingSums.value = showSums
     }
 
+    fun changeLastWeekSectionVisibility() {
+        _lastWeekSectionCollapsed.value = !_lastWeekSectionCollapsed.value!!
+    }
+
+    fun changeLastMonthSectionVisibility() {
+        _lastMonthSectionCollapsed.value = !_lastMonthSectionCollapsed.value!!
+    }
+
+    fun changeLastYearSectionVisibility() {
+        _lastYearSectionCollapsed.value = !_lastYearSectionCollapsed.value!!
+    }
+
+    fun changeGraphSectionVisibility() {
+        _graphSectionCollapsed.value = !_graphSectionCollapsed.value!!
+    }
+
     private suspend fun updateStats(q: String) {
         if (q.isEmpty()) {
             _showNotFoundMessage.value = true
             return
         }
 
-        val stats = ByNameStatsData()
         val transactions = _app.transactionRepository.getByDescriptionWithinOneYear(q)
         clearValues()
 
@@ -171,6 +194,7 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
             _showNotFoundMessage.value = true
             updateEntries()
         }
+
         _showNotFoundMessage.value = false
 
         val minDateTr = transactions.minByOrNull { t -> t.date }
@@ -179,43 +203,36 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
             return
         }
 
+        val stats = processTransactions(transactions)
+        lastWeekStats.setSum(stats.weekSum)
+        lastWeekStats.setAvg(if (stats.weekCount == 0) 0.0 else (stats.weekSum / stats.weekCount))
+        lastWeekStats.setCount(stats.weekCount)
+        lastWeekStats.setMax(stats.weekMax)
+        lastWeekStats.setMin(if (stats.weekMin == Double.MAX_VALUE) 0.0 else stats.weekMin)
+
+        lastMonthStats.setSum(stats.monthSum)
+        lastMonthStats.setAvg(if (stats.monthCount == 0) 0.0 else (stats.monthSum / stats.monthCount))
+        lastMonthStats.setCount(stats.monthCount)
+        lastMonthStats.setMax(stats.monthMax)
+        lastMonthStats.setMin(if (stats.monthMin == Double.MAX_VALUE) 0.0 else stats.monthMin)
+
+        lastYearStats.setSum(stats.yearSum)
+        lastYearStats.setAvg(if (stats.yearCount == 0) 0.0 else (stats.yearSum / stats.yearCount))
+        lastYearStats.setCount(stats.yearCount)
+        lastYearStats.setMax(stats.yearMax)
+        lastYearStats.setMin(if (stats.yearMin == Double.MAX_VALUE) 0.0 else stats.yearMin)
+
         val monthSpan = _today
             .minusYears(minDateTr.date.year.toLong())
             .minusDays(minDateTr.date.dayOfYear.toLong())
             .monthValue
 
-        val oneMonthAgo = _today.minusMonths(1)
-        val oneWeekAgo = _today.minusDays(7)
-        transactions.forEach { t ->
-            if (t.date.isAfter(oneMonthAgo)) {
-                stats.currentMonthFrequency++
-                stats.currentMonthSum += t.amount
-                if (t.date.isAfter(oneWeekAgo)) {
-                    stats.currentWeekSum += t.amount
-                }
-            }
-
-            val index = 11 - (_today.minusMonths(t.date.monthValue.toLong()).monthValue % 12)
-
-            _monthSums[index] += t.amount
-            _monthFrequencies[index]++
-
-            stats.frequency++
-            stats.transactionSum += t.amount
-        }
-
-        _avgValue.value =
-            if (stats.frequency == 0) 0.0 else (stats.transactionSum / stats.frequency)
-        _currentWeekSum.value = stats.currentWeekSum
-        _currentMonthSum.value = stats.currentMonthSum
-        _currentMonthFrequency.value = stats.currentMonthFrequency
-
         if (monthSpan == 0) {
             _avgMonthlySum.value = 0.0
-            _avgMonthlyFrequency.value = 0
+            _avgMonthlyCount.value = 0
         } else {
-            _avgMonthlySum.value = stats.transactionSum / monthSpan
-            _avgMonthlyFrequency.value = stats.frequency / monthSpan
+            _avgMonthlySum.value = stats.yearSum / monthSpan
+            _avgMonthlyCount.value = stats.yearCount / monthSpan
         }
 
         updateEntries()
@@ -248,5 +265,53 @@ class StatsByNameViewModel(application: Application) : AndroidViewModel(applicat
             _monthSums[i] = 0.0
             _monthFrequencies[i] = 0
         }
+    }
+
+    private fun processTransactions(transactions: List<Transaction>): ByNameStatsValues {
+        val stats = ByNameStatsValues()
+        val oneMonthAgo = _today.minusMonths(1)
+        val oneWeekAgo = _today.minusDays(7)
+
+        transactions.forEach { t ->
+            if (t.date.isAfter(oneMonthAgo)) {
+                stats.monthSum += t.amount
+                stats.monthCount++
+
+                if (t.amount < stats.monthMin) {
+                    stats.monthMin = t.amount
+                }
+                if (t.amount > stats.monthMax) {
+                    stats.monthMax = t.amount
+                }
+
+                if (t.date.isAfter(oneWeekAgo)) {
+                    stats.weekSum += t.amount
+                    stats.weekCount++
+
+                    if (t.amount < stats.weekMin) {
+                        stats.weekMin = t.amount
+                    }
+                    if (t.amount > stats.weekMax) {
+                        stats.weekMax = t.amount
+                    }
+                }
+            }
+
+            val index = 11 - (_today.minusMonths(t.date.monthValue.toLong()).monthValue % 12)
+            _monthSums[index] += t.amount
+            _monthFrequencies[index]++
+
+            stats.yearSum += t.amount
+            stats.yearCount++
+
+            if (t.amount < stats.yearMin) {
+                stats.yearMin = t.amount
+            }
+            if (t.amount > stats.yearMax) {
+                stats.yearMax = t.amount
+            }
+        }
+
+        return stats
     }
 }

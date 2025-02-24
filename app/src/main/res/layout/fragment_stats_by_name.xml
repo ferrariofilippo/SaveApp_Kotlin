@@ -44,8 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="6dp"
-                    android:maxLines="1"
                     android:inputType="textFilter"
+                    android:maxLines="1"
                     android:padding="0dp"
                     android:text="@={vm.query}"
                     android:textColor="?attr/colorOnPrimaryContainer" />
@@ -55,149 +55,476 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical"
                 android:visibility="@{vm.showNotFoundMessage ? View.GONE : View.VISIBLE}">
 
-                <TextView
+                <!-- Last Week -->
+                <RelativeLayout
+                    android:id="@+id/lastWeekTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.avgValue ?? vm.zero)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/average_transaction_value"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.currentWeekSum ?? vm.zero)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/current_week_sum"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.currentMonthSum ?? vm.zero)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/current_month_sum"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("# %d", vm.currentMonthFrequency ?? 0)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/current_month_frequency"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.avgMonthlySum ?? vm.zero)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/average_monthly_sum"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text='@{String.format("# %d", vm.avgMonthlyFrequency ?? 0)}'
-                    android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/average_monthly_frequency"
-                    android:textAppearance="?attr/textAppearanceCaption" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp" />
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/byNameTypeToggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
+                    <TextView
+                        style="?attr/textAppearanceHeadline6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/toggleLastWeekSection"
+                        android:text="@string/last_week"
+                        android:textColor="?attr/colorPrimary" />
 
                     <Button
-                        android:id="@+id/showFrequenciesButton"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/frequencies" />
+                        android:id="@+id/toggleLastWeekSection"
+                        style="?attr/materialIconButtonOutlinedStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/toggle_last_week"
+                        app:collapsibleIcon="@{vm.lastWeekSectionCollapsed}"
+                        app:strokeWidth="0dp" />
+                </RelativeLayout>
 
-                    <Button
-                        android:id="@+id/showSumsButton"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sums" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/byNameStatsBarChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="320dp"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/last_week_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{vm.graphTitle}"
-                    android:textAlignment="center"
-                    android:textAppearance="?attr/textAppearanceListItem" />
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="vertical"
+                    android:visibility="@{vm.lastWeekSectionCollapsed ? View.GONE : View.VISIBLE}">
+                    <!-- Sum -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastWeekStats.sum ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sum"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Average -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastWeekStats.avg ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Count -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("# %d", vm.lastWeekStats.count)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/count"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Min -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastWeekStats.min ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/min"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Max -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastWeekStats.max ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/max"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <RelativeLayout
+                    android:id="@+id/lastMonthTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="?attr/textAppearanceHeadline6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/toggleLastMonthSection"
+                        android:text="@string/last_month"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <Button
+                        android:id="@+id/toggleLastMonthSection"
+                        style="?attr/materialIconButtonOutlinedStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/toggle_last_month"
+                        app:collapsibleIcon="@{vm.lastMonthSectionCollapsed}"
+                        app:strokeWidth="0dp" />
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/last_month_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="vertical"
+                    android:visibility="@{vm.lastMonthSectionCollapsed ? View.GONE : View.VISIBLE}">
+                    <!-- Sum -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastMonthStats.sum ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sum"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Average -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastMonthStats.avg ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Count -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("# %d", vm.lastMonthStats.count)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/count"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Min -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastMonthStats.min ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/min"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Max -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastMonthStats.max ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/max"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <RelativeLayout
+                    android:id="@+id/lastYearTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="?attr/textAppearanceHeadline6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/toggleLastYearSection"
+                        android:text="@string/last_year"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <Button
+                        android:id="@+id/toggleLastYearSection"
+                        style="?attr/materialIconButtonOutlinedStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/toggle_last_year"
+                        app:collapsibleIcon="@{vm.lastYearSectionCollapsed}"
+                        app:strokeWidth="0dp" />
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/last_year_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="vertical"
+                    android:visibility="@{vm.lastYearSectionCollapsed ? View.GONE : View.VISIBLE}">
+                    <!-- Sum -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastYearStats.sum ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sum"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Average -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastYearStats.avg ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Count -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("# %d", vm.lastYearStats.count)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/count"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Min -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastYearStats.min ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/min"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Max -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.lastYearStats.max ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/max"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Average monthly sum -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%s %.2f", vm.symbol ?? "", vm.avgMonthlySum ?? vm.zero)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average_monthly_sum"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Average monthly count -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("# %d", vm.avgMonthlyCount)}'
+                        android:textAppearance="?attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/average_monthly_count"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <RelativeLayout
+                    android:id="@+id/graphSectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="?attr/textAppearanceHeadline6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/toggleGraphSection"
+                        android:text="@string/graph"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <Button
+                        android:id="@+id/toggleGraphSection"
+                        style="?attr/materialIconButtonOutlinedStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/toggle_graph"
+                        app:collapsibleIcon="@{vm.graphSectionCollapsed}"
+                        app:strokeWidth="0dp" />
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/graphSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="vertical"
+                    android:visibility="@{vm.graphSectionCollapsed ? View.GONE : View.VISIBLE}">
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/byNameTypeToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <Button
+                            android:id="@+id/showFrequenciesButton"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/count" />
+
+                        <Button
+                            android:id="@+id/showSumsButton"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sum" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/byNameStatsBarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{vm.graphTitle}"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceListItem" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <TextView

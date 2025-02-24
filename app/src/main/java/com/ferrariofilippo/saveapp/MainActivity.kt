@@ -4,14 +4,21 @@
 package com.ferrariofilippo.saveapp
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowInsets
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -212,6 +219,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        enableEdgeToEdge()
 
         saveApp.setCurrentActivity(this)
 
@@ -219,6 +227,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch { CurrencyUtil.init() }
 
         setupButtons()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setupInsets()
+        }
 
         _shouldOpenNewTransactionPage = intent.getIntExtra(
             OPEN_NEW_TRANSACTION_PAGE_INTENT_KEY,
@@ -325,6 +337,21 @@ class MainActivity : AppCompatActivity() {
         val appBar: BottomAppBar = findViewById(R.id.bottomAppBar)
         appBar.setOnMenuItemClickListener { menuItem: MenuItem ->
             onMenuItemClick(menuItem)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun setupInsets() {
+        val container = findViewById<FragmentContainerView>(R.id.containerView)
+        container.setOnApplyWindowInsetsListener { v, windowInsets ->
+            val statusInsets = windowInsets.getInsets(WindowInsets.Type.statusBars())
+            val navInsets = windowInsets.getInsets(WindowInsets.Type.systemBars())
+            v.updateLayoutParams<MarginLayoutParams> {
+                bottomMargin = navInsets.bottom
+                topMargin = statusInsets.top
+            }
+
+            WindowInsets.CONSUMED
         }
     }
 
