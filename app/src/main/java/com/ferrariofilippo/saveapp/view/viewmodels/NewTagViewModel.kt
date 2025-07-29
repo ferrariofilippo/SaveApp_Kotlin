@@ -4,7 +4,7 @@
 package com.ferrariofilippo.saveapp.view.viewmodels
 
 import android.app.Application
-import android.util.Log
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -90,7 +90,7 @@ class NewTagViewModel(application: Application) : AndroidViewModel(application) 
                 activity.findViewById(R.id.containerView),
                 if (tag.id == 0) R.string.tag_created else R.string.tag_updated,
                 Snackbar.LENGTH_SHORT
-            ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+            ).setAnchorView(activity.findViewById<View>(R.id.bottomAppBar)!!).show()
         } else {
             onNameChanged()
         }

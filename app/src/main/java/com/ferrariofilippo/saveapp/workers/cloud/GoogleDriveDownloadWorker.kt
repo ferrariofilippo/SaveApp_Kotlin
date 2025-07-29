@@ -79,9 +79,7 @@ class GoogleDriveDownloadWorker(context: Context, params: WorkerParameters) :
                     .execute()
 
                 for (type in fileTypesList) {
-                    val fileCopy = runBlocking {
-                        File.createTempFile("db_$type", "", app.cacheDir)
-                    }
+                    val fileCopy = File.createTempFile("db_$type", "", app.cacheDir)
                     val fileId = files.files
                         .sortedBy { f -> f.name }
                         .lastOrNull { f -> f.name.contains(if (type == "") "db" else type) }?.id

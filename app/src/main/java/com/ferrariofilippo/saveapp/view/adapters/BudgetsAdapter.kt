@@ -69,7 +69,8 @@ class BudgetsAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: TaggedBudget) {
             val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
-            val formatter = DateUtil.getFormatter(java.util.Locale.getDefault())
+            val locale = java.util.Locale.getDefault()
+            val formatter = DateUtil.getFormatter(locale)
             nameItemView.text = item.name
             dateFromItemView.text = String.format(from, item.from.format(formatter))
             dateToItemView.text = String.format(to, item.to.format(formatter))
@@ -81,11 +82,11 @@ class BudgetsAdapter(
                     itemView.rootView.findViewById(R.id.containerView),
                     item.tagName,
                     Snackbar.LENGTH_SHORT
-                ).setAnchorView(itemView.rootView.findViewById(R.id.bottomAppBar)).show()
+                ).setAnchorView(itemView.rootView.findViewById<View>(R.id.bottomAppBar)).show()
             }
             progressItemView.progress = (item.used * 100.0 / item.max).toInt()
-            usedItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.used)}"
-            maxItemView.text = "${currency.toSymbol()} ${String.format("%.2f", item.max)}"
+            usedItemView.text = "${currency.toSymbol()} ${String.format(locale, "%.2f", item.used)}"
+            maxItemView.text = "${currency.toSymbol()} ${String.format(locale, "%.2f", item.max)}"
         }
 
         companion object {

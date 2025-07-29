@@ -47,9 +47,13 @@ class YearStatsAdapter(val currency: Currencies, private val padding: Array<Int>
 
         @SuppressLint("SetTextI18n")
         fun bind(item: YearStats) {
+            val locale = java.util.Locale.getDefault()
+
             yearItemView.text = item.year.toString()
-            expensesItemView.text = String.format("%s %.2f", currency.toSymbol(), item.expenses)
-            incomesItemView.text = String.format("%s %.2f", currency.toSymbol(), item.incomes)
+            expensesItemView.text =
+                String.format(locale, "%s %.2f", currency.toSymbol(), item.expenses)
+            incomesItemView.text =
+                String.format(locale, "%s %.2f", currency.toSymbol(), item.incomes)
         }
 
         companion object {

@@ -157,7 +157,7 @@ class ManageTagsFragment : Fragment() {
                                 app.tagRepository.insert(item)
                                 TagUtil.incomeTagIds.add(item.id)
                             }
-                        }.setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+                        }.setAnchorView(activity.findViewById<View>(R.id.bottomAppBar)).show()
                 }
             }
         }
@@ -168,6 +168,6 @@ class ManageTagsFragment : Fragment() {
             act.findViewById(R.id.containerView),
             textRes,
             Snackbar.LENGTH_SHORT
-        ).setAnchorView(act.findViewById(R.id.bottomAppBar)).show()
+        ).setAnchorView(act.findViewById<View>(R.id.bottomAppBar)).show()
     }
 }

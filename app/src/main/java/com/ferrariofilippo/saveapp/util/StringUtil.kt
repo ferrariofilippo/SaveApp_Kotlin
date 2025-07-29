@@ -90,6 +90,7 @@ object StringUtil {
             compactAmount /= 1_000
         }
 
-        return String.format("%s %.2f%s", ticker, compactAmount, suffix)
+        val locale = java.util.Locale.getDefault()
+        return String.format(locale, "%s %.2f%s", ticker, compactAmount, suffix)
     }
 }

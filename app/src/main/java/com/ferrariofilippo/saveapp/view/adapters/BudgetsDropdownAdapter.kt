@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.ferrariofilippo.saveapp.R
 import com.ferrariofilippo.saveapp.model.taggeditems.TaggedBudget
-import com.ferrariofilippo.saveapp.util.ColorUtil
 import com.ferrariofilippo.saveapp.util.DateUtil
 
 class BudgetsDropdownAdapter(

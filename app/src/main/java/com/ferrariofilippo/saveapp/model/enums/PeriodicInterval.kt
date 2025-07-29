@@ -12,6 +12,6 @@ enum class PeriodicInterval(val minutes: Long) {
 
     companion object {
         private val map = PeriodicInterval.entries.associateBy { it.minutes }
-        fun from(minutes: Long): PeriodicInterval = map[minutes] ?: PeriodicInterval.WEEKLY
+        fun from(minutes: Long): PeriodicInterval = map[minutes] ?: WEEKLY
     }
 }

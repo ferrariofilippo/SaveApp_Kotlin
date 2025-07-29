@@ -73,11 +73,12 @@ class NewBudgetFragment : Fragment() {
 
         val application = requireActivity().application as SaveAppApplication
         val budget = runBlocking { application.budgetRepository.getById(itemId) } ?: return
+        val locale = java.util.Locale.getDefault()
 
         viewModel.editingBudget = budget
         viewModel.setIsUsedInputVisible(true)
-        viewModel.setAmount(String.format("%.2f", budget.max))
-        viewModel.setUsed(String.format("%.2f", budget.used))
+        viewModel.setAmount(String.format(locale, "%.2f", budget.max))
+        viewModel.setUsed(String.format(locale, "%.2f", budget.used))
         viewModel.setName(budget.name)
         viewModel.setFromDate(budget.from)
         viewModel.setToDate(budget.to)

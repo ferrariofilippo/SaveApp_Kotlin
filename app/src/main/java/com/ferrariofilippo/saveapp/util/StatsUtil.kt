@@ -16,7 +16,7 @@ import com.ferrariofilippo.saveapp.SaveAppApplication
 import com.ferrariofilippo.saveapp.model.SummaryStatistics
 import com.ferrariofilippo.saveapp.model.entities.Transaction
 import com.ferrariofilippo.saveapp.workers.statistics.StatisticsIntegrityCheckerWorker
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
@@ -113,7 +113,7 @@ object StatsUtil {
     suspend fun startIntegrityCheckInterval(app: SaveAppApplication) {
         val wManager = WorkManager.getInstance(app)
         try {
-            if (wManager.getWorkInfosByTagFlow(PERIODIC_INTEGRITY_CHECK_TAG).first() == null) {
+            if (wManager.getWorkInfosByTagFlow(PERIODIC_INTEGRITY_CHECK_TAG).firstOrNull() == null) {
                 updateIntegrityCheckInterval(app)
             }
         } catch (_: NoSuchElementException) {

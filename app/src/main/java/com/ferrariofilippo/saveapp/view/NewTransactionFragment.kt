@@ -82,20 +82,21 @@ class NewTransactionFragment : Fragment() {
 
         viewModel.setIsSubscription(!isTransaction)
         viewModel.setIsSubscriptionSwitchEnabled(false)
+        val locale = java.util.Locale.getDefault()
 
         if (isTransaction) {
             val transaction =
                 runBlocking { application.transactionRepository.getById(itemId) } ?: return
 
             viewModel.editingTransaction = transaction
-            viewModel.setAmount(String.format("%.2f", transaction.amount))
+            viewModel.setAmount(String.format(locale, "%.2f", transaction.amount))
             viewModel.setDescription(transaction.description)
             viewModel.setDate(transaction.date)
         } else {
             val sub = runBlocking { application.subscriptionRepository.getById(itemId) } ?: return
 
             viewModel.editingSubscription = sub
-            viewModel.setAmount(String.format("%.2f", sub.amount))
+            viewModel.setAmount(String.format(locale, "%.2f", sub.amount))
             viewModel.setDescription(sub.description)
             viewModel.setDate(sub.creationDate)
             viewModel.setRenewalType(sub.renewalType)

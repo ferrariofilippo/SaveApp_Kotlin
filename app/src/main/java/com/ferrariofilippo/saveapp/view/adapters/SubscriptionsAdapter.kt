@@ -70,7 +70,8 @@ class SubscriptionsAdapter(
 
         fun bind(item: TaggedSubscription) {
             val colorRes = ColorUtil.getColorIdFromHex(item.tagColor)
-            amountItemView.text = String.format("%s %.2f", currency.toSymbol(), item.amount)
+            val locale = java.util.Locale.getDefault()
+            amountItemView.text = String.format(locale, "%s %.2f", currency.toSymbol(), item.amount)
             descriptionItemView.text = item.description
             nextRenewalItemView.text =
                 item.nextRenewal.format(DateUtil.getFormatter(java.util.Locale.getDefault()))
@@ -83,7 +84,7 @@ class SubscriptionsAdapter(
                     itemView.rootView.findViewById(R.id.containerView),
                     item.tagName,
                     Snackbar.LENGTH_SHORT
-                ).setAnchorView(itemView.rootView.findViewById(R.id.bottomAppBar)).show()
+                ).setAnchorView(itemView.rootView.findViewById<View>(R.id.bottomAppBar)).show()
             }
         }
 

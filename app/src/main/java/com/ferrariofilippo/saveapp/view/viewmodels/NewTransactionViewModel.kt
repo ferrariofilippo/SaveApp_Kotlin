@@ -260,7 +260,7 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
                     activity.findViewById(R.id.containerView),
                     getSaveSnackBarMessage(),
                     Snackbar.LENGTH_SHORT
-                ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+                ).setAnchorView(activity.findViewById<View>(R.id.bottomAppBar)).show()
             }
         } else {
             onAmountChanged.invoke()
@@ -284,9 +284,10 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
                 amount = str.toDoubleOrNull()
             }
 
+            val locale = java.util.Locale.getDefault()
             setAmount(
                 if (amount == null) ""
-                else String.format("%.2f", amount)
+                else String.format(locale, "%.2f", amount)
             )
         }
     }
@@ -380,7 +381,7 @@ class NewTransactionViewModel(application: Application) : AndroidViewModel(appli
         }
 
         Snackbar.make(activity.findViewById(R.id.containerView), msg, Snackbar.LENGTH_SHORT)
-            .setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+            .setAnchorView(activity.findViewById<View>(R.id.bottomAppBar)).show()
     }
 
     private fun getSaveSnackBarMessage(): Int {

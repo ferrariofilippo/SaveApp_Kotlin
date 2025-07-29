@@ -235,7 +235,7 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
                 activity.findViewById(R.id.containerView),
                 if (editingBudget != null) R.string.budget_updated else R.string.budget_created,
                 Snackbar.LENGTH_SHORT
-            ).setAnchorView(activity.findViewById(R.id.bottomAppBar)).show()
+            ).setAnchorView(activity.findViewById<View>(R.id.bottomAppBar)).show()
         } else {
             onAmountChanged.invoke()
             onUsedChanged.invoke()
@@ -245,21 +245,23 @@ class NewBudgetViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun amountOnFocusChange(v: View, hasFocus: Boolean) {
+        val locale = java.util.Locale.getDefault()
         if (!hasFocus) {
             val amount = _amount.replace(",", ".").toDoubleOrNull()
             setAmount(
                 if (amount == null) ""
-                else String.format("%.2f", amount)
+                else String.format(locale, "%.2f", amount)
             )
         }
     }
 
     fun usedOnFocusChange(v: View, hasFocus: Boolean) {
+        val locale = java.util.Locale.getDefault()
         if (!hasFocus) {
             val used = _used.replace(",", ".").toDoubleOrNull()
             setUsed(
                 if (used == null) ""
-                else String.format("%.2f", used)
+                else String.format(locale, "%.2f", used)
             )
         }
     }
