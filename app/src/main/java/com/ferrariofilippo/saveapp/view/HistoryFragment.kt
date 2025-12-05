@@ -119,7 +119,7 @@ class HistoryFragment : Fragment() {
     private fun setupRecyclerGestures() {
         val gestureCallback = object : RecyclerEditAndDeleteGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
+                val position = viewHolder.bindingAdapterPosition
                 val adapter = binding.transactionsRecyclerView.adapter as HistoryAdapter
                 val transaction = adapter.getItemAt(position)
 

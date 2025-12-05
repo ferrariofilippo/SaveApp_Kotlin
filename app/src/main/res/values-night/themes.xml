@@ -28,7 +28,7 @@
         <item name="colorOnSecondary">@color/nord6</item>
         <item name="colorSecondaryContainer">@color/nord7</item>
         <item name="colorOnSecondaryContainer">@color/nord6</item>
-        <item name="colorError">@color/nord11</item>
+        <item name="errorTextColor">@color/nord11</item>
         <item name="colorOnError">@color/nord6</item>
         <item name="colorOnBackground">@color/nord6</item>
         <item name="colorSurface">@color/nord0</item>

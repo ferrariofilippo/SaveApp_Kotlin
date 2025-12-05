@@ -104,7 +104,7 @@ class BudgetsFragment : Fragment() {
     private fun setupRecyclerGestures(recyclerView: RecyclerView) {
         val gestureCallback = object : RecyclerEditAndDeleteGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
+                val position = viewHolder.bindingAdapterPosition
                 val adapter = recyclerView.adapter as BudgetsAdapter
                 val budget = adapter.getItemAt(position)
 

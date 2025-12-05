@@ -273,4 +273,11 @@
     <string name="toggle_last_week">Toggle last week</string>
     <string name="toggle_last_month">Toggle last month</string>
     <string name="toggle_last_year">Toggle last year</string>
+    <string name="age_verification_error">Age Verification Error</string>
+    <string name="close_app">Close App</string>
+    <string name="parental_access_denied">Access denied by parental supervision settings.</string>
+    <string name="parental_access_pending">Access pending parental approval.</string>
+    <string name="unknown_age_verification">Unknown age verification status.</string>
+    <string name="minimum_age_warning">You must be at least 3 to use this application.</string>
+    <string name="unable_to_verify_age">Unable to verify your age. Please, visit the Play Store to confirm you age.</string>
 </resources>

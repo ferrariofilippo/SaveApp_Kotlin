@@ -273,4 +273,11 @@
     <string name="toggle_last_week">Alterna ultima settimana</string>
     <string name="toggle_last_month">Alterna ultimo mese</string>
     <string name="toggle_last_year">Alterna ultimo anno</string>
+    <string name="age_verification_error">Errore durante Verifica Età</string>
+    <string name="close_app">Chiudi App</string>
+    <string name="parental_access_denied">Accesso negato dalle impostazioni di controllo genitoriale.</string>
+    <string name="parental_access_pending">Accesso in attesa di approvazione genitoriale.</string>
+    <string name="unknown_age_verification">Stato di verifica dell\'età sconosciuto.</string>
+    <string name="minimum_age_warning">Devi avere almeno 3 anni per poter usare questa applicazione.</string>
+    <string name="unable_to_verify_age">Impossibile verificare la tua età. Visita il Play Store e conferma la tua età.</string>
 </resources>

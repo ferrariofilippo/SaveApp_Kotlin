@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ferrariofilippo.saveapp.R
 import kotlin.math.absoluteValue
+import androidx.core.graphics.drawable.toDrawable
 
 class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecoration() {
     private lateinit var background: Drawable
@@ -21,7 +22,7 @@ class CustomRecyclerDecorator(private val ctx: Context) : RecyclerView.ItemDecor
 
     private fun init() {
         background =
-            ColorDrawable(ContextCompat.getColor(ctx, R.color.red_200))
+            ContextCompat.getColor(ctx, R.color.red_200).toDrawable()
         initiated = true
     }
 
@@ -80,14 +81,14 @@ abstract class RecyclerEditAndDeleteGestures(private val ctx: Context) :
     private fun init() {
         val deleteColor = TypedValue()
         val editColor = TypedValue()
-        ctx.theme.resolveAttribute(com.google.android.material.R.attr.colorError, deleteColor, true)
+        ctx.theme.resolveAttribute(com.google.android.material.R.attr.errorTextColor, deleteColor, true)
         ctx.theme.resolveAttribute(
             com.google.android.material.R.attr.colorPrimaryContainer,
             editColor,
             true
         )
-        deleteBackground = ColorDrawable(deleteColor.data)
-        editBackground = ColorDrawable(editColor.data)
+        deleteBackground = deleteColor.data.toDrawable()
+        editBackground = editColor.data.toDrawable()
 
         deleteIcon = ContextCompat.getDrawable(ctx, R.drawable.baseline_delete_24)!!
         editIcon = ContextCompat.getDrawable(ctx, R.drawable.baseline_edit_24)!!
@@ -111,7 +112,8 @@ abstract class RecyclerEditAndDeleteGestures(private val ctx: Context) :
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (viewHolder.adapterPosition == -1 || (dX < 0 && viewHolder.adapterPosition == editOnlyRow)) {
+        if (viewHolder.bindingAdapterPosition == -1 ||
+            (dX < 0 && viewHolder.bindingAdapterPosition == editOnlyRow)) {
             return
         }
 

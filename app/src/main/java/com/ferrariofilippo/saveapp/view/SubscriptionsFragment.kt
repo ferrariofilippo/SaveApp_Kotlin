@@ -87,7 +87,7 @@ class SubscriptionsFragment : Fragment() {
     private fun setupRecyclerGestures() {
         val gestureCallback = object : RecyclerEditAndDeleteGestures(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
+                val position = viewHolder.bindingAdapterPosition
                 val adapter = binding.subscriptionsRecyclerView.adapter as SubscriptionsAdapter
                 val sub = adapter.getItemAt(position)
 

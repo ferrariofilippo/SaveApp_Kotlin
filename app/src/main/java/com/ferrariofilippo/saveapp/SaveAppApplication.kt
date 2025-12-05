@@ -54,13 +54,15 @@ class SaveAppApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         LogUtil.setLogFilePath(filesDir.absolutePath)
-        Thread.setDefaultUncaughtExceptionHandler { _, e ->
+        val oldHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
             LogUtil.logException(
                 e,
                 javaClass.kotlin.simpleName ?: "",
                 "defaultUncaughtExceptionHandler",
                 false
             )
+            oldHandler?.uncaughtException(t, e)
             Runtime.getRuntime().exit(1)
         }
     }

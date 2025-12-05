@@ -26,6 +26,7 @@ import androidx.navigation.findNavController
 import androidx.work.WorkManager
 import androidx.work.await
 import com.ferrariofilippo.saveapp.model.enums.Currencies
+import com.ferrariofilippo.saveapp.util.AgeSignalsUtil
 import com.ferrariofilippo.saveapp.util.BudgetUtil
 import com.ferrariofilippo.saveapp.util.CloudStorageUtil
 import com.ferrariofilippo.saveapp.util.ColorUtil
@@ -223,19 +224,21 @@ class MainActivity : AppCompatActivity() {
 
         saveApp.setCurrentActivity(this)
 
-        lifecycleScope.launch { SubscriptionUtil.validateSubscriptions(saveApp) }
-        lifecycleScope.launch { CurrencyUtil.init() }
-
-        setupButtons()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             setupInsets()
         }
 
-        _shouldOpenNewTransactionPage = intent.getIntExtra(
-            OPEN_NEW_TRANSACTION_PAGE_INTENT_KEY,
-            0
-        ) == OPEN_NEW_TRANSACTION_PAGE_INTENT_CODE
+        AgeSignalsUtil.verifyUserAge(this) {
+            lifecycleScope.launch { SubscriptionUtil.validateSubscriptions(saveApp) }
+            lifecycleScope.launch { CurrencyUtil.init() }
+
+            setupButtons()
+
+            _shouldOpenNewTransactionPage = intent.getIntExtra(
+                OPEN_NEW_TRANSACTION_PAGE_INTENT_KEY,
+                0
+            ) == OPEN_NEW_TRANSACTION_PAGE_INTENT_CODE
+        }
     }
 
     override fun onStart() {

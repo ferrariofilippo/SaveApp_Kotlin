@@ -32,7 +32,7 @@
         <item name="colorOnSecondary">@color/dracula_background</item>
         <item name="colorSecondaryContainer">@color/dracula_purple</item>
         <item name="colorOnSecondaryContainer">@color/dracula_background</item>
-        <item name="colorError">@color/dracula_red</item>
+        <item name="errorTextColor">@color/dracula_red</item>
         <item name="colorOnError">@color/dracula_background</item>
         <item name="colorOnBackground">@color/dracula_foreground</item>
         <item name="colorSurface">@color/dracula_background</item>
@@ -63,7 +63,7 @@
         <item name="colorOnSecondary">@color/nord0</item>
         <item name="colorSecondaryContainer">@color/nord7</item>
         <item name="colorOnSecondaryContainer">@color/nord0</item>
-        <item name="colorError">@color/nord11</item>
+        <item name="errorTextColor">@color/nord11</item>
         <item name="colorOnError">@color/nord0</item>
         <item name="colorOnBackground">@color/nord0</item>
         <item name="colorSurface">@color/nord6</item>

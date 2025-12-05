@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import androidx.core.net.toUri
 
 class SettingsFragment : Fragment() {
     private lateinit var viewModel: SettingsViewModel
@@ -143,11 +144,11 @@ class SettingsFragment : Fragment() {
         binding.manageTagsButton.setOnClickListener { act.goToManageTags() }
         binding.manageDataButton.setOnClickListener { act.goToManageData() }
         binding.creditsButton.setOnClickListener {
-            val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin")
+            val uri = "https://github.com/ferrariofilippo/SaveApp_Kotlin".toUri()
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
         binding.reportBugButton.setOnClickListener {
-            val uri = Uri.parse("https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/new")
+            val uri = "https://github.com/ferrariofilippo/SaveApp_Kotlin/issues/new".toUri()
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
         binding.clearLogsButton.setOnClickListener {
@@ -162,7 +163,7 @@ class SettingsFragment : Fragment() {
             act.exportLogFile.launch("saveapp.log")
         }
         binding.privacyButton.setOnClickListener {
-            val uri = Uri.parse("https://saveapp.vercel.app/privacy")
+            val uri = "https://saveapp.vercel.app/privacy".toUri()
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
         binding.currenciesCollapseButton.setOnClickListener {
