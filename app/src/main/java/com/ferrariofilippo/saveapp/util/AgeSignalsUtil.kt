@@ -66,9 +66,11 @@ object AgeSignalsUtil {
                         showErrorMessageAndCloseApp(activity, msg)
                     } else {
                         updateLastCheck()
+                        onSuccess()        
                     }
                 } catch (fe: NumberFormatException) {
                     updateLastCheck()
+                    onSuccess()
                 }
             }
     }
