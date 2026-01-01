@@ -280,4 +280,11 @@
     <string name="unknown_age_verification">Unknown age verification status.</string>
     <string name="minimum_age_warning">You must be at least 3 to use this application.</string>
     <string name="unable_to_verify_age">Unable to verify your age. Please, visit the Play Store to confirm you age.</string>
+    <string name="age_verification_error_2">Unable to verify your age. Please, install or enable the Play Store.</string>
+    <string name="age_verification_error_3">Unable to verify your age. Please, check your network connection.</string>
+    <string name="age_verification_error_4">Unable to verify your age. Please, install or enable Play Services.</string>
+    <string name="age_verification_error_5">Unable to verify your age. Please, update your Play Store version.</string>
+    <string name="age_verification_error_6">Unable to verify your age. Please, update your Play Store version.</string>
+    <string name="age_verification_error_7">Unable to verify your age. Please, update Play Services.</string>
+    <string name="age_verification_error_8">Unable to verify your age. Please, try again later.</string>
 </resources>

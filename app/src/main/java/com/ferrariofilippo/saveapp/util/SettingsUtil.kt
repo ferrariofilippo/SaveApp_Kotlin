@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Filippo Ferrario
+// Copyright (c) 2026 Filippo Ferrario
 // Licensed under the MIT License. See the LICENSE.
 
 package com.ferrariofilippo.saveapp.util
@@ -34,6 +34,9 @@ object SettingsUtil {
     private val PERIODIC_BACKUP_INTERVAL = longPreferencesKey("periodic_backup_interval")
     private val PERIODIC_BACKUP_REQUIRES_WIFI =
         booleanPreferencesKey("periodic_backup_requires_wifi")
+
+    private val LAST_AGE_VERIFICATION = stringPreferencesKey("last_age_verification_time_stamp")
+    private val AGE_VERIFICATION_ATTEMPTS = intPreferencesKey("age_verification_attempts")
 
     private var settingsStore: DataStore<Preferences>? = null
 
@@ -200,6 +203,38 @@ object SettingsUtil {
             }
             .map { preferences ->
                 preferences[PERIODIC_BACKUP_REQUIRES_WIFI] ?: true
+            }
+    }
+
+    suspend fun setLastAgeVerificationTimeStamp(timestamp: String) {
+        settingsStore!!.edit { pref ->
+            pref[LAST_AGE_VERIFICATION] = timestamp
+        }
+    }
+
+    fun getLastAgeVerificationTimeStamp(): Flow<String> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[LAST_AGE_VERIFICATION] ?: ""
+            }
+    }
+
+    suspend fun setAgeVerificationAttempts(count: Int) {
+        settingsStore!!.edit { pref ->
+            pref[AGE_VERIFICATION_ATTEMPTS] = count
+        }
+    }
+
+    fun getAgeVerificationAttempts(): Flow<Int> {
+        return settingsStore!!.data
+            .catch {
+                emit(emptyPreferences())
+            }
+            .map { preferences ->
+                preferences[AGE_VERIFICATION_ATTEMPTS] ?: 0
             }
     }
 }

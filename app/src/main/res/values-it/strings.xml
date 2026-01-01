@@ -280,4 +280,11 @@
     <string name="unknown_age_verification">Stato di verifica dell\'età sconosciuto.</string>
     <string name="minimum_age_warning">Devi avere almeno 3 anni per poter usare questa applicazione.</string>
     <string name="unable_to_verify_age">Impossibile verificare la tua età. Visita il Play Store e conferma la tua età.</string>
+    <string name="age_verification_error_2">Impossibile verificare la tua età. Installa o abilita il Play Store.</string>
+    <string name="age_verification_error_3">Impossibile verificare la tua età. Controlla la tua connessione.</string>
+    <string name="age_verification_error_4">Impossibile verificare la tua età. Installa o aggiorna Play Services.</string>
+    <string name="age_verification_error_5">Impossibile verificare la tua età. Aggiorna la tua versione di Play Store.</string>
+    <string name="age_verification_error_6">Impossibile verificare la tua età. Aggiorna la tua versione di Play Store.</string>
+    <string name="age_verification_error_7">Impossibile verificare la tua età. Aggiorna PLay Services.</string>
+    <string name="age_verification_error_8">Impossibile verificare la tua età. Riprova più tardi.</string>
 </resources>
