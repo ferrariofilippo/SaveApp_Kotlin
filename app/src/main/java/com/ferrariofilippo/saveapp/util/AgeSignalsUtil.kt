@@ -26,7 +26,14 @@ object AgeSignalsUtil {
         ageSignalsManager
             .checkAgeSignals(AgeSignalsRequest.builder().build())
             .addOnSuccessListener { ageSignalsResult ->
-                val msgId = when (ageSignalsResult.userStatus()) {
+                val status = ageSignalsResult.userStatus()
+                if (status == null) {
+                    updateLastCheck()
+                    onSuccess()
+                    return@addOnSuccessListener
+                }
+
+                val msgId = when (status) {
                     AgeSignalsVerificationStatus.SUPERVISED_APPROVAL_DENIED ->
                         R.string.parental_access_denied
 
@@ -85,9 +92,11 @@ object AgeSignalsUtil {
             .setMessage(getLocalizedString(activity, msg))
             .setCancelable(false)
             .setPositiveButton(getLocalizedString(activity, R.string.close_app)) { _, _ ->
+                activity.finishAffinity()
                 Runtime.getRuntime().exit(0)
             }
             .setOnDismissListener {
+                activity.finishAffinity()
                 Runtime.getRuntime().exit(0)
             }
             .show()
@@ -108,10 +117,8 @@ object AgeSignalsUtil {
 
     private fun updateLastCheck() {
         runBlocking {
-            SettingsUtil.setLastAgeVerificationTimeStamp(
-                LocalDate.now().toString()
-            )
+            SettingsUtil.setLastAgeVerificationTimeStamp(LocalDate.now().toString())
+            SettingsUtil.setAgeVerificationAttempts(0)
         }
-        runBlocking { SettingsUtil.setAgeVerificationAttempts(0) }
     }
 }
